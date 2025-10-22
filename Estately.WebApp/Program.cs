@@ -39,8 +39,6 @@ namespace Estately.WebApp
                 app.UseHsts();
             }
             
-
-
             app.UseHttpsRedirection();
             app.UseRouting();
 
