@@ -25,8 +25,8 @@ namespace Estately.WebApp
             builder.Services.AddDbContext<AppDBContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            //builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            //builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             //builder.Services.AddScoped<IServiceDepartment, ServiceDepartment>();
 
             var app = builder.Build();
