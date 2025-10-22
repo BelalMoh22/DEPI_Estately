@@ -21,6 +21,13 @@ namespace Estately.WebApp
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });
 
+
+
+
+
+
+
+
             //Add Context with Connection 
             builder.Services.AddDbContext<AppDBContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
