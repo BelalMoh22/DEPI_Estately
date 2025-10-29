@@ -7,9 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTO%27s\" />
-    <Folder Include="Implementation\" />
+    <Compile Remove="DTO%27s\**" />
+    <EmbeddedResource Remove="DTO%27s\**" />
+    <None Remove="DTO%27s\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Interfaces\" />
+    <Folder Include="Implementations\" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
 
   <ItemGroup>
