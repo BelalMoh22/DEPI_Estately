@@ -38,7 +38,6 @@ namespace Estately.WebApp
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
             app.UseStaticFiles();
 
             app.UseHttpsRedirection();
@@ -51,7 +50,6 @@ namespace Estately.WebApp
                 //pattern: "{controller=Home}/{action=Index}/{id?}")
                 pattern: "{controller=App}/{action=Index}/{id?}")
                 .WithStaticAssets();
-
             app.Run();
         }
     }
