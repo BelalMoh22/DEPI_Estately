@@ -1,66 +1,82 @@
-﻿using Estately.Core.Interfaces;
+﻿
 using Estately.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Estately.Infrastructure.Repository
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         private readonly AppDBContext _context;
-
+        private readonly DbSet<TEntity> _dbSet;
         public Repository(AppDBContext context)
         {
             _context = context;
+            _dbSet = _context.Set<TEntity>();
         }
 
-        public ValueTask<TEntity> AddAsync(TEntity entity)
+        #region Methods
+        public async ValueTask<TEntity> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbSet.FindAsync(id);
         }
 
-        public ValueTask<TEntity> GetByIdAsync(int id)
+        public async ValueTask<IEnumerable<TEntity>> ReadAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dbSet.AsNoTracking().ToListAsync();
         }
 
-        public ValueTask<IEnumerable<TEntity>> ReadAllAsync()
+        public async ValueTask<IEnumerable<TEntity>> ReadAllIncluding(params string[] includes)
         {
-            throw new NotImplementedException();
+            IQueryable<TEntity> query = _dbSet.AsQueryable();
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.AsNoTracking().ToListAsync();
         }
 
-        public ValueTask<IEnumerable<TEntity>> ReadAllIncluding(params string[] includes)
+        public async ValueTask<IEnumerable<TEntity>> ReadWithPagination(int page, int pageSize)
         {
-            throw new NotImplementedException();
+            if (page < 1) page = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            var pagedList = _dbSet.AsNoTracking()
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize);
+            return await pagedList.ToListAsync();
         }
 
-        public ValueTask<IEnumerable<TEntity>> ReadWithPagination(int page, int pageSize)
+        public async ValueTask<IEnumerable<TEntity>> Search(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await _dbSet.Where(predicate).AsNoTracking().ToListAsync();
         }
 
-        public ValueTask<IEnumerable<TEntity>> Search(Expression<Func<TEntity, bool>> predicate)
+        public void AddAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            _dbSet.AddAsync(entity);
         }
-
         public void UpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Update(entity);
         }
 
         public void DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = _dbSet.Find(id);
+            if (entity != null)
+            {
+                _dbSet.Remove(entity);
+            }
         }
 
         public int GetMaxId()
         {
-            throw new NotImplementedException();
+            var property = _context.Model.FindEntityType(typeof(TEntity)).FindPrimaryKey().Properties.Select(x => x.Name).Single();
+
+            var maxId = _dbSet.AsNoTracking().Max(e => EF.Property<int>(e, property));
+
+            return maxId;
         }
-    }
+    } 
+    #endregion
 }

@@ -1,11 +1,3 @@
-using Estately.Core.Interfaces;
-using Estately.Infrastructure.Data;
-using Estately.Infrastructure.Repository;
-using Estately.Infrastructure.UnitOfWork;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Text.Json.Serialization;
-
 namespace Estately.WebApp
 {
     public class Program
@@ -25,8 +17,9 @@ namespace Estately.WebApp
             builder.Services.AddDbContext<AppDBContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             //builder.Services.AddScoped<IServiceDepartment, ServiceDepartment>();
 
             var app = builder.Build();
@@ -38,18 +31,18 @@ namespace Estately.WebApp
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            
+            app.UseStaticFiles();
+
             app.UseHttpsRedirection();
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
+                //pattern: "{controller=Home}/{action=Index}/{id?}")
+                pattern: "{controller=App}/{action=Index}/{id?}")
                 .WithStaticAssets();
-
             app.Run();
         }
     }
