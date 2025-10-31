@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace Estately.WebApp.Controllers
+﻿namespace Estately.WebApp.Controllers
 {
     public class AppController : Controller
     {

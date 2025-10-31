@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Estately.Core.Interfaces;
-using Estately.Infrastructure.Data;
-
-namespace Estately.Infrastructure.UnitOfWork
+﻿namespace Estately.Infrastructure.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {

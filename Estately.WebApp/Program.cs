@@ -1,11 +1,3 @@
-using Estately.Core.Interfaces;
-using Estately.Infrastructure.Data;
-using Estately.Infrastructure.Repository;
-using Estately.Infrastructure.UnitOfWork;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Text.Json.Serialization;
-
 namespace Estately.WebApp
 {
     public class Program

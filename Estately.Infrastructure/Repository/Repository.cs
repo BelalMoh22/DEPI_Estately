@@ -1,13 +1,4 @@
-﻿using Estately.Core.Interfaces;
-using Estately.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Estately.Infrastructure.Repository
+﻿namespace Estately.Infrastructure.Repository
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {

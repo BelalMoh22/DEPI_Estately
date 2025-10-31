@@ -1,0 +1,9 @@
+﻿global using System;
+global using System.Text.Json.Serialization;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.AspNetCore.Mvc;
+global using Estately.Core.Entities;
+global using Estately.Core.Interfaces;
+global using Estately.Infrastructure.Data;
+global using Estately.Infrastructure.Repository;
+global using Estately.Infrastructure.UnitOfWork;

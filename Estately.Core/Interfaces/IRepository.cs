@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace Estately.Core.Interfaces
+﻿namespace Estately.Core.Interfaces
 {
     public interface IRepository<TEntity> where TEntity : class
     {
