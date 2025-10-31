@@ -2,7 +2,7 @@
 {
     public interface IRepository<TEntity> where TEntity : class
     {
-        ValueTask<TEntity> AddAsync(TEntity entity);
+        void AddAsync(TEntity entity);
         ValueTask<TEntity> GetByIdAsync(int id);
         ValueTask<IEnumerable<TEntity>> ReadAllAsync();
         ValueTask<IEnumerable<TEntity>> ReadAllIncluding(params string[] includes);
