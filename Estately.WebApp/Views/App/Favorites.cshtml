@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "My Favorites | Estately";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="hero page-inner overlay"
+     style="background-image: url('~/images/hero_bg_2.jpg')">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-9 text-center mt-5">
+                <h1 class="heading" data-aos="fade-up">My Favorites</h1>
+
+                <nav aria-label="breadcrumb"
+                     data-aos="fade-up"
+                     data-aos-delay="200">
+                    <ol class="breadcrumb text-center justify-content-center">
+                        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="App">Home</a></li>
+                        <li class="breadcrumb-item active text-white-50"
+                            aria-current="page">
+                            My Favorites
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="section2" class="section">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-8">
+                <h2 class="font-weight-bold heading header-Text mb-4">
+                    Your Saved Properties
+                </h2>
+                <p class="text-black-50">
+                    Manage your favorite properties and easily access them later.
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+        </div>
+    </div>
+</div>
+

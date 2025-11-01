@@ -1,0 +1,150 @@
+﻿@{
+    ViewData["Title"] = "My Account | Estately";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="hero page-inner overlay"
+     style="background-image: url('~/images/hero_bg_1.jpg')">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-9 text-center mt-5">
+                <h1 class="heading" data-aos="fade-up">My Account</h1>
+
+                <nav aria-label="breadcrumb"
+                     data-aos="fade-up"
+                     data-aos-delay="200">
+                    <ol class="breadcrumb text-center justify-content-center">
+                        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="App">Home</a></li>
+                        <li class="breadcrumb-item active text-white-50"
+                            aria-current="page">
+                            My Account
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="section2" class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 mb-5">
+                <div class="sidebar">
+                    <h3 class="mb-4">My Account</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a href="#" class="active d-block p-3 rounded">Profile</a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="#" class="d-block p-3 rounded text-black-50">My Properties</a>
+                        </li>
+                        <li class="mb-2">
+                            <a asp-action="Favorites" asp-controller="App" class="d-block p-3 rounded text-black-50">Favorites</a>
+                        </li>
+                        <li class="mb-2">
+                            <a asp-action="Contact" asp-controller="App" class="d-block p-3 rounded text-black-50">Messages</a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="#" class="d-block p-3 rounded text-black-50">Settings</a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="#" class="d-block p-3 rounded text-black-50">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="account-content">
+                    <h2 class="mb-4 heading header-Text">Profile Information</h2>
+
+                    <div class="row mb-5">
+                        <div class="col-md-4 text-center">
+                            <div class="profile-avatar mb-3">
+                                <img src="~/images/person_1-min.jpg"
+                                     alt="Profile"
+                                     class="img-fluid rounded-circle"
+                                     style="width: 150px; height: 150px; object-fit: cover" />
+                            </div>
+                            <button class="btn btn-outline-primary change-photo">Change Photo</button>
+                        </div>
+                        <div class="col-md-8">
+                            <form>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="firstName" class="form-label">First Name</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               id="firstName"
+                                               value="John" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="lastName" class="form-label">Last Name</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               id="lastName"
+                                               value="Doe" />
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email"
+                                           class="form-control"
+                                           id="email"
+                                           value="john.doe@example.com" />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Phone</label>
+                                    <input type="tel"
+                                           class="form-control"
+                                           id="phone"
+                                           value="+20 123 456 7890" />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Address</label>
+                                    <textarea class="form-control" id="address" rows="2">123 Main Street, Cairo, Egypt</textarea>
+                                </div>
+                                <button type="submit" class="btn button text-white">
+                                    Save Changes
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            <h3 class="mb-4 heading header-Text">Account Statistics</h3>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="card">
+                                        <div class="card-body text-center">
+                                            <h4 class="header-Text">24</h4>
+                                            <p class="text-black-50">Saved Properties</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card">
+                                        <div class="card-body text-center">
+                                            <h4 class="header-Text">8</h4>
+                                            <p class="text-black-50">Active Listings</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card">
+                                        <div class="card-body text-center">
+                                            <h4 class="header-Text">156</h4>
+                                            <p class="text-black-50">Total Views</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
