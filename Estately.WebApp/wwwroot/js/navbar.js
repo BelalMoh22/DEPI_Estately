@@ -49,10 +49,10 @@ function initMobileMenu() {
   }
 }
 
-// Function to set active navigation link based on current page
+// Function to set active navigation link based on current page URL
 function setActiveNavLink() {
-  const currentPage = window.location.pathname.split("/").pop() || "index.html";
-
+  const currentPath = window.location.pathname.toLowerCase().trim();
+  
   // Get all nav links in desktop menu
   const desktopNavLinks = document.querySelectorAll(
     ".navbar .navbar-nav .nav-link"
@@ -66,14 +66,39 @@ function setActiveNavLink() {
   // Combine both desktop and mobile nav links
   const allNavLinks = [...desktopNavLinks, ...mobileNavLinks];
 
-  allNavLinks.forEach((link) => {
-    const linkHref = link.getAttribute("href");
+  // Extract current route parts
+  const currentParts = currentPath.split("/").filter(p => p && p !== "");
+  const currentController = currentParts.length >= 1 ? currentParts[0] : "";
+  const currentAction = currentParts.length >= 2 ? currentParts[1] : (currentParts.length === 1 && currentParts[0] === "app" ? "index" : currentParts[0] || "index");
 
-    // Check if the link matches the current page
-    if (linkHref === currentPage) {
+  allNavLinks.forEach((link) => {
+    const linkHref = link.getAttribute("href")?.toLowerCase().trim() || "";
+    
+    // Remove active class first
+    link.classList.remove("active");
+    
+    // Extract link route parts
+    const hrefParts = linkHref.split("/").filter(p => p && p !== "");
+    const linkController = hrefParts.length >= 1 ? hrefParts[0] : "";
+    const linkAction = hrefParts.length >= 2 ? hrefParts[1] : (hrefParts.length === 1 && hrefParts[0] === "app" ? "index" : hrefParts[0] || "");
+    
+    // Check if this link matches the current route
+    let isActive = false;
+    
+    // Controller must match "app"
+    if (linkController === "app" && currentController === "app") {
+      // Special handling for Index action
+      if (linkAction === "index") {
+        // Match if current action is "index" or if we're at /App or root
+        isActive = currentAction === "index" || currentPath === "/app" || currentPath === "/app/" || currentPath === "/" || (currentParts.length === 1 && currentParts[0] === "app");
+      } else {
+        // For other actions, exact match required
+        isActive = linkAction === currentAction;
+      }
+    }
+    
+    if (isActive) {
       link.classList.add("active");
-    } else {
-      link.classList.remove("active");
     }
   });
 }

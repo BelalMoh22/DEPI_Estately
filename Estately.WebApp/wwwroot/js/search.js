@@ -48,29 +48,41 @@ document.addEventListener("DOMContentLoaded", function () {
   const priceMaxInput = document.getElementById("priceMaxInput");
 
   if (priceMinSlider && priceMaxSlider && priceMinInput && priceMaxInput) {
-    // Update input values when sliders change
-    priceMinSlider.addEventListener("input", function () {
-      const value = parseInt(this.value).toLocaleString();
-      priceMinInput.value = value;
-    });
+    // Function to update price min input
+    function updatePriceMinInput() {
+      const sliderValue = priceMinSlider.value;
+      priceMinInput.value = sliderValue;
+    }
+    
+    // Function to update price max input
+    function updatePriceMaxInput() {
+      const sliderValue = priceMaxSlider.value;
+      priceMaxInput.value = sliderValue;
+    }
 
-    priceMaxSlider.addEventListener("input", function () {
-      const value = parseInt(this.value).toLocaleString();
-      priceMaxInput.value = value;
-    });
+    // Update input values when sliders change
+    priceMinSlider.addEventListener("input", updatePriceMinInput);
+    priceMinSlider.addEventListener("change", updatePriceMinInput);
+
+    priceMaxSlider.addEventListener("input", updatePriceMaxInput);
+    priceMaxSlider.addEventListener("change", updatePriceMaxInput);
 
     // Update slider values when inputs change
     priceMinInput.addEventListener("input", function () {
-      const value = parseInt(this.value.replace(/,/g, ""));
-      if (!isNaN(value)) {
+      let value = this.value.toString().replace(/[^\d]/g, "");
+      value = parseInt(value);
+      if (!isNaN(value) && value >= 0) {
         priceMinSlider.value = value;
+        this.value = value;
       }
     });
 
     priceMaxInput.addEventListener("input", function () {
-      const value = parseInt(this.value.replace(/,/g, ""));
-      if (!isNaN(value)) {
+      let value = this.value.toString().replace(/[^\d]/g, "");
+      value = parseInt(value);
+      if (!isNaN(value) && value >= 0) {
         priceMaxSlider.value = value;
+        this.value = value;
       }
     });
   }
@@ -128,7 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Reset range sliders
       const sliders = section.querySelectorAll(".range-slider");
       sliders.forEach((slider) => {
-        if (slider.id === "priceMin") slider.value = 500000;
+        if (slider.id === "priceMin") slider.value = 5000000;
         if (slider.id === "priceMax") slider.value = 25000000;
         if (slider.id === "areaMin") slider.value = 50;
         if (slider.id === "areaMax") slider.value = 400;
@@ -137,8 +149,8 @@ document.addEventListener("DOMContentLoaded", function () {
       // Reset range inputs
       const inputs = section.querySelectorAll('input[type="number"]');
       inputs.forEach((input) => {
-        if (input.id === "priceMinInput") input.value = "500,000";
-        if (input.id === "priceMaxInput") input.value = "25,000,000";
+        if (input.id === "priceMinInput") input.value = 5000000;
+        if (input.id === "priceMaxInput") input.value = 25000000;
         if (input.id === "areaMinInput") input.value = "50";
         if (input.id === "areaMaxInput") input.value = "400";
       });
@@ -239,8 +251,8 @@ function resetAllFilters() {
   const areaMinInput = document.getElementById("areaMinInput");
   const areaMaxInput = document.getElementById("areaMaxInput");
 
-  if (priceMinInput) priceMinInput.value = "500,000";
-  if (priceMaxInput) priceMaxInput.value = "25,000,000";
+  if (priceMinInput) priceMinInput.value = 5000000;
+  if (priceMaxInput) priceMaxInput.value = 25000000;
   if (areaMinInput) areaMinInput.value = "50";
   if (areaMaxInput) areaMaxInput.value = "400";
 

@@ -7,11 +7,11 @@
 <div class="hero">
     <div class="hero-slide">
         <div class="img overlay"
-             style="background-image: url('images/hero_bg_3.jpg')"></div>
+             style="background-image: url('@Url.Content("~/images/hero_bg_3.jpg")')"></div>
         <div class="img overlay"
-             style="background-image: url('images/hero_bg_2.jpg')"></div>
+             style="background-image: url('@Url.Content("~/images/hero_bg_2.jpg")')"></div>
         <div class="img overlay"
-             style="background-image: url('images/hero_bg_1.jpg')"></div>
+             style="background-image: url('@Url.Content("~/images/hero_bg_1.jpg")')"></div>
     </div>
 
     <div class="container mt-5">
@@ -426,8 +426,8 @@
                     <div class="property-slider">
                         <!-- Start of Item -->
                         <div class="property-item">
-                            <a href="property-single.html" class="img">
-                                <img src="images/img_1.jpg" alt="Image" class="img-fluid" />
+                            <a asp-action="PropertySingle" asp-controller="App" class="img">
+                                <img src="~/images/img_1.jpg" alt="Image" class="img-fluid" />
                             </a>
                             <div class="property-content">
                                 <div class="price mb-2">
@@ -448,7 +448,7 @@
                                         </span>
                                     </div>
 
-                                    <a href="property-single.html"
+                                    <a asp-action="PropertySingle" asp-controller="App"
                                        class="btn button py-2 px-3">See details</a>
                                 </div>
                             </div>
@@ -456,8 +456,8 @@
                         <!--/ End of .item -->
                         <!-- Start of Item -->
                         <div class="property-item">
-                            <a href="property-single.html" class="img">
-                                <img src="images/img_1.jpg" alt="Image" class="img-fluid" />
+                            <a asp-action="PropertySingle" asp-controller="App" class="img">
+                                <img src="~/images/img_1.jpg" alt="Image" class="img-fluid" />
                             </a>
                             <div class="property-content">
                                 <div class="price mb-2">
@@ -478,7 +478,7 @@
                                         </span>
                                     </div>
 
-                                    <a href="property-single.html"
+                                    <a asp-action="PropertySingle" asp-controller="App"
                                        class="btn button py-2 px-3">See details</a>
                                 </div>
                             </div>
@@ -486,8 +486,8 @@
                         <!--/ End of .item -->
                         <!-- Start of Item -->
                         <div class="property-item">
-                            <a href="property-single.html" class="img">
-                                <img src="images/img_1.jpg" alt="Image" class="img-fluid" />
+                            <a asp-action="PropertySingle" asp-controller="App" class="img">
+                                <img src="~/images/img_1.jpg" alt="Image" class="img-fluid" />
                             </a>
                             <div class="property-content">
                                 <div class="price mb-2">
@@ -508,7 +508,7 @@
                                         </span>
                                     </div>
 
-                                    <a href="property-single.html"
+                                    <a asp-action="PropertySingle" asp-controller="App"
                                        class="btn button py-2 px-3">See details</a>
                                 </div>
                             </div>
@@ -516,8 +516,8 @@
                         <!--/ End of .item -->
                         <!-- Start of Item -->
                         <div class="property-item">
-                            <a href="property-single.html" class="img">
-                                <img src="images/img_1.jpg" alt="Image" class="img-fluid" />
+                            <a asp-action="PropertySingle" asp-controller="App" class="img">
+                                <img src="~/images/img_1.jpg" alt="Image" class="img-fluid" />
                             </a>
                             <div class="property-content">
                                 <div class="price mb-2">
@@ -538,7 +538,7 @@
                                         </span>
                                     </div>
 
-                                    <a href="property-single.html"
+                                    <a asp-action="PropertySingle" asp-controller="App"
                                        class="btn button py-2 px-3">See details</a>
                                 </div>
                             </div>
@@ -589,7 +589,7 @@
             <div class="testimonial-slider">
                 <div class="item">
                     <div class="testimonial">
-                        <img src="images/person_1-min.jpg"
+                        <img src="~/images/person_1-min.jpg"
                              alt="Image"
                              class="img-fluid rounded-circle w-25 mb-4" />
                         <div class="rate">
@@ -614,7 +614,7 @@
 
                 <div class="item">
                     <div class="testimonial">
-                        <img src="images/person_2-min.jpg"
+                        <img src="~/images/person_2-min.jpg"
                              alt="Image"
                              class="img-fluid rounded-circle w-25 mb-4" />
                         <div class="rate">
@@ -639,7 +639,7 @@
 
                 <div class="item">
                     <div class="testimonial">
-                        <img src="images/person_3-min.jpg"
+                        <img src="~/images/person_3-min.jpg"
                              alt="Image"
                              class="img-fluid rounded-circle w-25 mb-4" />
                         <div class="rate">
@@ -666,7 +666,7 @@
 
                 <div class="item">
                     <div class="testimonial">
-                        <img src="images/person_4-min.jpg"
+                        <img src="~/images/person_4-min.jpg"
                              alt="Image"
                              class="img-fluid rounded-circle w-25 mb-4" />
                         <div class="rate">
@@ -709,7 +709,7 @@
         <div class="row justify-content-between mb-5">
             <div class="col-lg-7 mb-5 mb-lg-0 order-lg-2">
                 <div class="img-about dots">
-                    <img src="images/hero_bg_3.jpg" alt="Image" class="img-fluid" />
+                    <img src="~/images/hero_bg_3.jpg" alt="Image" class="img-fluid" />
                 </div>
             </div>
             <div class="col-lg-4">
@@ -796,7 +796,7 @@
         <div class="col-lg-7 mx-auto text-center">
             <h2 class="mb-4">Be a part of our growing real state agents</h2>
             <p>
-                <a href="contact.html" target="_blank" class="btn button text-white py-3 px-4">Apply for Real Estate agent</a>
+                <a asp-action="Contact" asp-controller="App" class="btn button text-white py-3 px-4">Apply for Real Estate agent</a>
             </p>
         </div>
         <!-- /.col-lg-7 -->
