@@ -11,7 +11,6 @@ namespace Estately.Core.Entities
         [StringLength(255)]
         public string BranchName { get; set; }
 
-        [Required]
         [StringLength(10)]
         public string ManagerName { get; set; }
 
@@ -24,9 +23,9 @@ namespace Estately.Core.Entities
         [Unicode(false)]
         public string Phone { get; set; }
 
-        public bool IsDeleted { get; set; } = false;
+        public bool? IsDeleted { get; set; }
 
         [InverseProperty("Branch")]
-        public virtual ICollection<TblDepartment> TblDepartments { get; set; } = new List<TblDepartment>();
+        public virtual ICollection<TblBranchDepartment> TblBranchDepartments { get; set; } = new List<TblBranchDepartment>();
     }
 }

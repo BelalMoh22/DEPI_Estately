@@ -5,88 +5,107 @@
         private readonly AppDBContext _context;
 
         public IRepository<TblAppointment> AppointmentRepository { get; }
+        public IRepository<TblAppointmentStatus> AppointmentStatusRepository { get; }
         public IRepository<TblBranch> BranchRepository { get; }
+        public IRepository<TblBranchDepartment> BranchDepartmentRepository { get; }
         public IRepository<TblCity> CityRepository { get; }
         public IRepository<TblClientProfile> ClientProfileRepository { get; }
-        public IRepository<TblCommission> CommissionRepository { get; }
         public IRepository<TblDepartment> DepartmentRepository { get; }
         public IRepository<TblDeveloperProfile> DeveloperProfileRepository { get; }
+        public IRepository<TblDocumentType> DocumentTypeRepository { get; }
         public IRepository<TblEmployee> EmployeeRepository { get; }
         public IRepository<TblEmployeeClient> EmployeeClientRepository { get; }
         public IRepository<TblFavorite> FavoriteRepository { get; }
-        public IRepository<TblPayment> PaymentRepository { get; }
         public IRepository<TblProperty> PropertyRepository { get; }
+        public IRepository<TblPropertyDocument> PropertyDocumentRepository { get; }
         public IRepository<TblPropertyFeature> PropertyFeatureRepository { get; }
         public IRepository<TblPropertyFeaturesMapping> PropertyFeaturesMappingRepository { get; }
+        public IRepository<TblPropertyHistory> PropertyHistoryRepository { get; }
         public IRepository<TblPropertyImage> PropertyImageRepository { get; }
+        public IRepository<TblPropertyStatus> PropertyStatusRepository { get; }
         public IRepository<TblPropertyType> PropertyTypeRepository { get; }
-        public IRepository<TblTransaction> TransactionRepository { get; }
         public IRepository<TblUser> UserRepository { get; }
         public IRepository<TblUserType> UserTypeRepository { get; }
         public IRepository<TblZone> ZoneRepository { get; }
+        public IRepository<LKPPropertyHistoryType> PropertyHistoryTypeRepository { get; }
 
         public UnitOfWork(AppDBContext context,
-                          IRepository<TblAppointment> appointmentRepository,
-                          IRepository<TblBranch> branchRepository,
-                          IRepository<TblCity> cityRepository,
-                          IRepository<TblClientProfile> clientProfileRepository,
-                          IRepository<TblCommission> commissionRepository,
-                          IRepository<TblDepartment> departmentRepository,
-                          IRepository<TblDeveloperProfile> developerProfileRepository,
-                          IRepository<TblEmployee> employeeRepository,
-                          IRepository<TblEmployeeClient> employeeClientRepository,
-                          IRepository<TblFavorite> favoriteRepository,
-                          IRepository<TblPayment> paymentRepository,
-                          IRepository<TblProperty> propertyRepository,
-                          IRepository<TblPropertyFeature> propertyFeatureRepository,
-                          IRepository<TblPropertyFeaturesMapping> propertyFeaturesMappingRepository,
-                          IRepository<TblPropertyImage> propertyImageRepository,
-                          IRepository<TblPropertyType> propertyTypeRepository,
-                          IRepository<TblTransaction> transactionRepository,
-                          IRepository<TblUser> userRepository,
-                          IRepository<TblUserType> userTypeRepository,
-                          IRepository<TblZone> zoneRepository)
+
+            IRepository<TblAppointment> appointmentRepo,
+            IRepository<TblAppointmentStatus> appointmentStatusRepo,
+            IRepository<TblBranch> branchRepo,
+            IRepository<TblBranchDepartment> branchDeptRepo,
+            IRepository<TblCity> cityRepo,
+            IRepository<TblClientProfile> clientProfileRepo,
+            IRepository<TblDepartment> departmentRepo,
+            IRepository<TblDeveloperProfile> developerProfileRepo,
+            IRepository<TblDocumentType> documentTypeRepo,
+            IRepository<TblEmployee> employeeRepo,
+            IRepository<TblEmployeeClient> employeeClientRepo,
+            IRepository<TblFavorite> favoriteRepo,
+            IRepository<TblProperty> propertyRepo,
+            IRepository<TblPropertyDocument> propertyDocumentRepo,
+            IRepository<TblPropertyFeature> propertyFeatureRepo,
+            IRepository<TblPropertyFeaturesMapping> propertyFeaturesMappingRepo,
+            IRepository<TblPropertyHistory> propertyHistoryRepo,
+            IRepository<TblPropertyImage> propertyImageRepo,
+            IRepository<TblPropertyStatus> propertyStatusRepo,
+            IRepository<TblPropertyType> propertyTypeRepo,
+            IRepository<TblUser> userRepo,
+            IRepository<TblUserType> userTypeRepo,
+            IRepository<TblZone> zoneRepo,
+            IRepository<LKPPropertyHistoryType> propertyHistoryTypeRepo
+            )
         {
             _context = context;
-            AppointmentRepository = appointmentRepository?? throw new ArgumentNullException(nameof(appointmentRepository));
-            BranchRepository = branchRepository?? throw new ArgumentNullException(nameof(branchRepository));
-            CityRepository = cityRepository?? throw new ArgumentNullException(nameof(cityRepository));
-            ClientProfileRepository = clientProfileRepository?? throw new ArgumentNullException(nameof(clientProfileRepository));
-            CommissionRepository = commissionRepository?? throw new ArgumentNullException(nameof(commissionRepository));
-            DepartmentRepository = departmentRepository?? throw new ArgumentNullException(nameof(departmentRepository));
-            DeveloperProfileRepository = developerProfileRepository?? throw new ArgumentNullException(nameof(developerProfileRepository));
-            EmployeeRepository = employeeRepository?? throw new ArgumentNullException(nameof(employeeRepository));
-            EmployeeClientRepository = employeeClientRepository?? throw new ArgumentNullException(nameof(employeeClientRepository));
-            FavoriteRepository = favoriteRepository?? throw new ArgumentNullException(nameof(favoriteRepository));
-            PaymentRepository = paymentRepository?? throw new ArgumentNullException(nameof(paymentRepository));
-            PropertyRepository = propertyRepository?? throw new ArgumentNullException(nameof(propertyRepository));
-            PropertyFeatureRepository = propertyFeatureRepository?? throw new ArgumentNullException(nameof(propertyFeatureRepository));
-            PropertyFeaturesMappingRepository = propertyFeaturesMappingRepository?? throw new ArgumentNullException(nameof(propertyFeaturesMappingRepository));
-            PropertyImageRepository = propertyImageRepository?? throw new ArgumentNullException(nameof(propertyImageRepository));
-            PropertyTypeRepository = propertyTypeRepository?? throw new ArgumentNullException(nameof(propertyTypeRepository));
-            TransactionRepository = transactionRepository?? throw new ArgumentNullException(nameof(transactionRepository));
-            UserRepository = userRepository?? throw new ArgumentNullException(nameof(userRepository));
-            UserTypeRepository = userTypeRepository?? throw new ArgumentNullException(nameof(userTypeRepository));
-            ZoneRepository = zoneRepository?? throw new ArgumentNullException(nameof(zoneRepository));
+
+            AppointmentRepository = appointmentRepo ?? throw new ArgumentNullException(nameof(appointmentRepo));
+            AppointmentStatusRepository = appointmentStatusRepo ?? throw new ArgumentNullException(nameof(appointmentStatusRepo));
+
+            BranchRepository = branchRepo ?? throw new ArgumentNullException(nameof(branchRepo));
+            BranchDepartmentRepository = branchDeptRepo ?? throw new ArgumentNullException(nameof(branchDeptRepo));
+
+            CityRepository = cityRepo ?? throw new ArgumentNullException(nameof(cityRepo));
+            ClientProfileRepository = clientProfileRepo ?? throw new ArgumentNullException(nameof(clientProfileRepo));
+            DepartmentRepository = departmentRepo ?? throw new ArgumentNullException(nameof(departmentRepo));
+            DeveloperProfileRepository = developerProfileRepo ?? throw new ArgumentNullException(nameof(developerProfileRepo));
+
+            DocumentTypeRepository = documentTypeRepo ?? throw new ArgumentNullException(nameof(documentTypeRepo));
+
+            EmployeeRepository = employeeRepo ?? throw new ArgumentNullException(nameof(employeeRepo));
+            EmployeeClientRepository = employeeClientRepo ?? throw new ArgumentNullException(nameof(employeeClientRepo));
+
+            FavoriteRepository = favoriteRepo ?? throw new ArgumentNullException(nameof(favoriteRepo));
+
+            PropertyRepository = propertyRepo ?? throw new ArgumentNullException(nameof(propertyRepo));
+            PropertyDocumentRepository = propertyDocumentRepo ?? throw new ArgumentNullException(nameof(propertyDocumentRepo));
+            PropertyFeatureRepository = propertyFeatureRepo ?? throw new ArgumentNullException(nameof(propertyFeatureRepo));
+            PropertyFeaturesMappingRepository = propertyFeaturesMappingRepo ?? throw new ArgumentNullException(nameof(propertyFeaturesMappingRepo));
+            PropertyHistoryRepository = propertyHistoryRepo ?? throw new ArgumentNullException(nameof(propertyHistoryRepo));
+            PropertyImageRepository = propertyImageRepo ?? throw new ArgumentNullException(nameof(propertyImageRepo));
+            PropertyStatusRepository = propertyStatusRepo ?? throw new ArgumentNullException(nameof(propertyStatusRepo));
+            PropertyTypeRepository = propertyTypeRepo ?? throw new ArgumentNullException(nameof(propertyTypeRepo));
+
+            UserRepository = userRepo ?? throw new ArgumentNullException(nameof(userRepo));
+            UserTypeRepository = userTypeRepo ?? throw new ArgumentNullException(nameof(userTypeRepo));
+
+            ZoneRepository = zoneRepo ?? throw new ArgumentNullException(nameof(zoneRepo));
+
+            PropertyHistoryTypeRepository = propertyHistoryTypeRepo ?? throw new ArgumentNullException(nameof(propertyHistoryTypeRepo));
         }
 
-        public int Complete()
-        {
-            return _context.SaveChanges();
-        }
+
+        public int Complete() => _context.SaveChanges();
 
         private bool _disposed = false;
         protected virtual void Dispose(bool disposing)
         {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    _context.Dispose();
-                }
-            }
+            if (!_disposed && disposing)
+                _context.Dispose();
+
             _disposed = true;
         }
+
         public void Dispose()
         {
             Dispose(true);

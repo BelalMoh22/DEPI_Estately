@@ -2,6 +2,7 @@
 #nullable disable
 namespace Estately.Core.Entities
 {
+
     [Table("TblUserType")]
     public partial class TblUserType
     {
@@ -12,7 +13,6 @@ namespace Estately.Core.Entities
         [StringLength(255)]
         public string UserTypeName { get; set; }
 
-        [Required]
         [StringLength(500)]
         public string Description { get; set; }
 

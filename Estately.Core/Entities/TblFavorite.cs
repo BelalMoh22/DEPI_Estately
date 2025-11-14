@@ -2,19 +2,22 @@
 #nullable disable
 namespace Estately.Core.Entities
 {
+
+    [Index("ClientProfileID", Name = "IX_TblFavorites_ClientProfileID")]
+    [Index("PropertyID", Name = "IX_TblFavorites_PropertyID")]
     public partial class TblFavorite
     {
         [Key]
         public int FavoriteID { get; set; }
-        [Required]
+
         public int ClientProfileID { get; set; }
-        [Required]
+
         public int PropertyID { get; set; }
 
         [Column(TypeName = "datetime")]
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
-        public bool IsDeleted { get; set; } = false;
+        public bool? IsDeleted { get; set; }
 
         [ForeignKey("ClientProfileID")]
         [InverseProperty("TblFavorites")]
