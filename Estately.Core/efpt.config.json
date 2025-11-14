@@ -1,0 +1,145 @@
+﻿{
+   "CodeGenerationMode": 5,
+   "ContextClassName": "AppDBContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": true,
+   "IrregularWords": null,
+   "MinimumProductVersion": "2.6.1224",
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Entities",
+   "PluralRules": null,
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "Estately.Core",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "SingularRules": null,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[LKPPropertyHistoryTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblAppointments]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblAppointmentStatus]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblBranchDepartments]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblBranches]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblCities]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblClientProfiles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblDepartments]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblDeveloperProfiles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblDocumentTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblEmployeeClients]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblEmployees]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblFavorites]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblProperties]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblPropertyDocuments]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblPropertyFeatures]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblPropertyFeaturesMapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblPropertyHistory]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblPropertyImages]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblPropertyStatus]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblPropertyTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblUsers]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblUserType]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblZones]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": true,
+   "UseDatabaseNamesForRoutines": true,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseInternalAccessModifiersForSprocsAndFunctions": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false,
+   "UseT4Split": false
+}

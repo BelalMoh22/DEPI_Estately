@@ -2,6 +2,7 @@
 #nullable disable
 namespace Estately.Core.Entities
 {
+
     public partial class TblPropertyType
     {
         [Key]
