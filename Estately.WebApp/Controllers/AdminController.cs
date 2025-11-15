@@ -227,12 +227,12 @@ namespace Estately.WebApp.Controllers
         public async Task<IActionResult> Properties(int page = 1, int pageSize = 10, string? searchTerm = null)
         {
 
-            var allProperties = await _unitOfWork.PropertyRepository.ReadAllIncluding("PropertyType", "Status", "Zone", "DeveloperProfile");
+            var allProperties = await _unitOfWork.PropertyRepository.ReadAllIncluding("PropertyType", "Status", "Zone", "DeveloperProfile", "Agent");
             var query = allProperties.AsQueryable();
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                query = query.Where(p => p.Title.Contains(searchTerm) || p.Address.Contains(searchTerm));
+                query = query.Where(p => p.PropertyCode.Contains(searchTerm) || p.Address.Contains(searchTerm));
             }
 
             var totalCount = query.Count();
@@ -251,7 +251,7 @@ namespace Estately.WebApp.Controllers
                     PropertyTypeID = p.PropertyTypeID,
                     StatusId = p.StatusId,
                     ZoneID = p.ZoneID,
-                    Title = p.Title,
+                    Title = p.PropertyCode, // Using PropertyCode as Title since entity doesn't have Title
                     Address = p.Address,
                     Price = p.Price,
                     Description = p.Description,
@@ -259,10 +259,20 @@ namespace Estately.WebApp.Controllers
                     ListingDate = p.ListingDate,
                     ExpectedRentPrice = p.ExpectedRentPrice,
                     IsDeleted = p.IsDeleted,
+                    AgentId = p.AgentId,
+                    YearBuilt = p.YearBuilt,
+                    FloorsNo = p.FloorsNo,
+                    BedsNo = p.BedsNo,
+                    BathsNo = p.BathsNo,
+                    Latitude = p.Latitude,
+                    Longitude = p.Longitude,
+                    IsFurnished = p.IsFurnished,
+                    PropertyCode = p.PropertyCode,
                     DeveloperName = p.DeveloperProfile?.DeveloperName,
                     PropertyTypeName = p.PropertyType?.TypeName,
                     StatusName = p.Status?.StatusName,
-                    ZoneName = p.Zone?.ZoneName
+                    ZoneName = p.Zone?.ZoneName,
+                    AgentName = p.Agent != null ? $"{p.Agent.FirstName} {p.Agent.LastName}" : null
                 }).ToList(),
                 PropertyTypes = (await _unitOfWork.PropertyTypeRepository.ReadAllAsync())
                     .Select(pt => new LkpPropertyTypeViewModel { PropertyTypeID = pt.PropertyTypeID, TypeName = pt.TypeName }).ToList(),
@@ -288,6 +298,8 @@ namespace Estately.WebApp.Controllers
             ViewBag.PropertyStatuses = new SelectList(await _unitOfWork.PropertyStatusRepository.ReadAllAsync(), "StatusID", "StatusName");
             ViewBag.DeveloperProfiles = new SelectList(await _unitOfWork.DeveloperProfileRepository.ReadAllAsync(), "DeveloperProfileID", "DeveloperName");
             ViewBag.Zones = new SelectList(await _unitOfWork.ZoneRepository.ReadAllAsync(), "ZoneID", "ZoneName");
+            var agents = await _unitOfWork.EmployeeRepository.ReadAllAsync();
+            ViewBag.Agents = new SelectList(agents.Select(e => new { e.EmployeeID, FullName = $"{e.FirstName} {e.LastName}" }), "EmployeeID", "FullName");
             return View(new PropertyViewModel { ListingDate = DateTime.Now });
         }
 
@@ -303,14 +315,22 @@ namespace Estately.WebApp.Controllers
                     PropertyTypeID = model.PropertyTypeID,
                     StatusId = model.StatusId,
                     ZoneID = model.ZoneID,
-                    Title = model.Title,
                     Address = model.Address,
                     Price = model.Price,
                     Description = model.Description,
                     Area = model.Area,
                     ListingDate = model.ListingDate,
                     ExpectedRentPrice = model.ExpectedRentPrice,
-                    IsDeleted = false
+                    IsDeleted = false,
+                    AgentId = model.AgentId,
+                    YearBuilt = model.YearBuilt,
+                    FloorsNo = model.FloorsNo,
+                    BedsNo = model.BedsNo,
+                    BathsNo = model.BathsNo,
+                    Latitude = model.Latitude,
+                    Longitude = model.Longitude,
+                    IsFurnished = model.IsFurnished,
+                    PropertyCode = model.PropertyCode
                 };
 
                 _unitOfWork.PropertyRepository.AddAsync(property);
@@ -323,6 +343,8 @@ namespace Estately.WebApp.Controllers
             ViewBag.PropertyStatuses = new SelectList(await _unitOfWork.PropertyStatusRepository.ReadAllAsync(), "StatusID", "StatusName");
             ViewBag.DeveloperProfiles = new SelectList(await _unitOfWork.DeveloperProfileRepository.ReadAllAsync(), "DeveloperProfileID", "DeveloperName");
             ViewBag.Zones = new SelectList(await _unitOfWork.ZoneRepository.ReadAllAsync(), "ZoneID", "ZoneName");
+            var agents = await _unitOfWork.EmployeeRepository.ReadAllAsync();
+            ViewBag.Agents = new SelectList(agents.Select(e => new { e.EmployeeID, FullName = $"{e.FirstName} {e.LastName}" }), "EmployeeID", "FullName");
             return View(model);
         }
 
@@ -339,20 +361,30 @@ namespace Estately.WebApp.Controllers
                 PropertyTypeID = property.PropertyTypeID,
                 StatusId = property.StatusId,
                 ZoneID = property.ZoneID,
-                Title = property.Title,
+                Title = property.PropertyCode, // Using PropertyCode as Title
                 Address = property.Address,
                 Price = property.Price,
                 Description = property.Description,
                 Area = property.Area,
                 ListingDate = property.ListingDate,
                 ExpectedRentPrice = property.ExpectedRentPrice,
-                IsDeleted = property.IsDeleted
+                IsDeleted = property.IsDeleted,
+                AgentId = property.AgentId,
+                YearBuilt = property.YearBuilt,
+                FloorsNo = property.FloorsNo,
+                BedsNo = property.BedsNo,
+                BathsNo = property.BathsNo,
+                Latitude = property.Latitude,
+                Longitude = property.Longitude,
+                IsFurnished = property.IsFurnished,
+                PropertyCode = property.PropertyCode
             };
 
             ViewBag.PropertyTypes = new SelectList(await _unitOfWork.PropertyTypeRepository.ReadAllAsync(), "PropertyTypeID", "TypeName", property.PropertyTypeID);
             ViewBag.PropertyStatuses = new SelectList(await _unitOfWork.PropertyStatusRepository.ReadAllAsync(), "StatusID", "StatusName", property.StatusId);
             ViewBag.DeveloperProfiles = new SelectList(await _unitOfWork.DeveloperProfileRepository.ReadAllAsync(), "DeveloperProfileID", "DeveloperName", property.DeveloperProfileID);
             ViewBag.Zones = new SelectList(await _unitOfWork.ZoneRepository.ReadAllAsync(), "ZoneID", "ZoneName", property.ZoneID);
+            ViewBag.Agents = new SelectList(await _unitOfWork.EmployeeRepository.ReadAllAsync(), "EmployeeID", "FirstName", property.AgentId);
             return View(model);
         }
 
@@ -369,7 +401,6 @@ namespace Estately.WebApp.Controllers
                 property.PropertyTypeID = model.PropertyTypeID;
                 property.StatusId = model.StatusId;
                 property.ZoneID = model.ZoneID;
-                property.Title = model.Title;
                 property.Address = model.Address;
                 property.Price = model.Price;
                 property.Description = model.Description;
@@ -377,6 +408,15 @@ namespace Estately.WebApp.Controllers
                 property.ListingDate = model.ListingDate;
                 property.ExpectedRentPrice = model.ExpectedRentPrice;
                 property.IsDeleted = model.IsDeleted;
+                property.AgentId = model.AgentId;
+                property.YearBuilt = model.YearBuilt;
+                property.FloorsNo = model.FloorsNo;
+                property.BedsNo = model.BedsNo;
+                property.BathsNo = model.BathsNo;
+                property.Latitude = model.Latitude;
+                property.Longitude = model.Longitude;
+                property.IsFurnished = model.IsFurnished;
+                property.PropertyCode = model.PropertyCode;
 
                 _unitOfWork.PropertyRepository.UpdateAsync(property);
                 _unitOfWork.Complete();
@@ -388,6 +428,7 @@ namespace Estately.WebApp.Controllers
             ViewBag.PropertyStatuses = new SelectList(await _unitOfWork.PropertyStatusRepository.ReadAllAsync(), "StatusID", "StatusName", model.StatusId);
             ViewBag.DeveloperProfiles = new SelectList(await _unitOfWork.DeveloperProfileRepository.ReadAllAsync(), "DeveloperProfileID", "DeveloperName", model.DeveloperProfileID);
             ViewBag.Zones = new SelectList(await _unitOfWork.ZoneRepository.ReadAllAsync(), "ZoneID", "ZoneName", model.ZoneID);
+            ViewBag.Agents = new SelectList(await _unitOfWork.EmployeeRepository.ReadAllAsync(), "EmployeeID", "FirstName", model.AgentId);
             return View(model);
         }
 
@@ -783,7 +824,7 @@ namespace Estately.WebApp.Controllers
             var allAppointments = await _unitOfWork.AppointmentRepository.ReadAllIncluding("Property", "Status", "EmployeeClient.Employee", "EmployeeClient.ClientProfile");
             var query = allAppointments.AsQueryable();
             if (!string.IsNullOrEmpty(searchTerm))
-                query = query.Where(a => (a.Property != null && a.Property.Title.Contains(searchTerm)) || (a.Notes != null && a.Notes.Contains(searchTerm)));
+                query = query.Where(a => (a.Property != null && a.Property.Address.Contains(searchTerm)) || (a.Notes != null && a.Notes.Contains(searchTerm)));
 
             var totalCount = query.Count();
             var appointments = query.OrderByDescending(a => a.AppointmentDate).Skip((page - 1) * pageSize).Take(pageSize).ToList();
@@ -797,7 +838,7 @@ namespace Estately.WebApp.Controllers
                 AppointmentDate = a.AppointmentDate,
                 Notes = a.Notes,
                 StatusName = a.Status?.StatusName,
-                PropertyTitle = a.Property?.Title,
+                PropertyTitle = a.Property?.Address,
                 ClientName = a.EmployeeClient?.ClientProfile?.FirstName + " " + a.EmployeeClient?.ClientProfile?.LastName,
                 EmployeeName = a.EmployeeClient?.Employee?.FirstName + " " + a.EmployeeClient?.Employee?.LastName
             }).ToList();
@@ -865,7 +906,7 @@ namespace Estately.WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Employees(int page = 1, int pageSize = 10, string? searchTerm = null)
         {
-            var allEmployees = await _unitOfWork.EmployeeRepository.ReadAllIncluding("Department", "User");
+            var allEmployees = await _unitOfWork.EmployeeRepository.ReadAllIncluding("BranchDepartment", "JobTitle", "ReportsToNavigation", "User");
             var query = allEmployees.AsQueryable();
             if (!string.IsNullOrEmpty(searchTerm))
                 query = query.Where(e => e.FirstName.Contains(searchTerm) || e.LastName.Contains(searchTerm) || e.Phone.Contains(searchTerm));
@@ -877,21 +918,28 @@ namespace Estately.WebApp.Controllers
             {
                 EmployeeID = e.EmployeeID,
                 UserID = e.UserID,
-                DepartmentID = e.DepartmentID,
-                ManagerName = e.ManagerName,
+                BranchDepartmentId = e.BranchDepartmentId,
+                JobTitleId = e.JobTitleId,
+                ReportsTo = e.ReportsTo,
                 FirstName = e.FirstName,
                 LastName = e.LastName,
                 Gender = e.Gender,
                 Age = e.Age,
                 Phone = e.Phone,
-                JobTitle = e.JobTitle,
+                Nationalid = e.Nationalid,
+                ProfilePhoto = e.ProfilePhoto,
                 Salary = e.Salary,
                 HireDate = e.HireDate,
                 IsActive = e.IsActive,
-                DepartmentName = e.Department?.DepartmentName,
+                BranchDepartmentName = e.BranchDepartment != null ? $"{e.BranchDepartment.Branch?.BranchName} - {e.BranchDepartment.Department?.DepartmentName}" : null,
+                JobTitleName = e.JobTitle?.JobTitleName,
+                ReportsToName = e.ReportsToNavigation != null ? $"{e.ReportsToNavigation.FirstName} {e.ReportsToNavigation.LastName}" : null,
                 Username = e.User?.Username
             }).ToList();
-            ViewBag.Departments = new SelectList(await _unitOfWork.DepartmentRepository.ReadAllAsync(), "DepartmentID", "DepartmentName");
+            ViewBag.BranchDepartments = new SelectList(await _unitOfWork.BranchDepartmentRepository.ReadAllIncluding("Branch", "Department"), "BranchDepartmentID", "BranchDepartmentID");
+            ViewBag.JobTitles = new SelectList(await _unitOfWork.JobTitleRepository.ReadAllAsync(), "JobTitleId", "JobTitleName");
+            var reportsToEmployees = await _unitOfWork.EmployeeRepository.ReadAllAsync();
+            ViewBag.ReportsToEmployees = new SelectList(reportsToEmployees.Select(e => new { e.EmployeeID, FullName = $"{e.FirstName} {e.LastName}" }), "EmployeeID", "FullName");
             ViewBag.Users = new SelectList(await _unitOfWork.UserRepository.ReadAllAsync(), "UserID", "Username");
             ViewBag.Page = page;
             ViewBag.PageSize = pageSize;
@@ -904,7 +952,10 @@ namespace Estately.WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateEmployee()
         {
-            ViewBag.Departments = new SelectList(await _unitOfWork.DepartmentRepository.ReadAllAsync(), "DepartmentID", "DepartmentName");
+            ViewBag.BranchDepartments = new SelectList(await _unitOfWork.BranchDepartmentRepository.ReadAllIncluding("Branch", "Department"), "BranchDepartmentID", "BranchDepartmentID");
+            ViewBag.JobTitles = new SelectList(await _unitOfWork.JobTitleRepository.ReadAllAsync(), "JobTitleId", "JobTitleName");
+            var reportsToEmployees = await _unitOfWork.EmployeeRepository.ReadAllAsync();
+            ViewBag.ReportsToEmployees = new SelectList(reportsToEmployees.Select(e => new { e.EmployeeID, FullName = $"{e.FirstName} {e.LastName}" }), "EmployeeID", "FullName");
             ViewBag.Users = new SelectList(await _unitOfWork.UserRepository.ReadAllAsync(), "UserID", "Username");
             return View(new EmployeeViewModel());
         }
@@ -917,14 +968,16 @@ namespace Estately.WebApp.Controllers
                 _unitOfWork.EmployeeRepository.AddAsync(new TblEmployee
                 {
                     UserID = model.UserID,
-                    DepartmentID = model.DepartmentID,
-                    ManagerName = model.ManagerName,
+                    BranchDepartmentId = model.BranchDepartmentId,
+                    JobTitleId = model.JobTitleId,
+                    ReportsTo = model.ReportsTo,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     Gender = model.Gender,
                     Age = model.Age,
                     Phone = model.Phone,
-                    JobTitle = model.JobTitle,
+                    Nationalid = model.Nationalid,
+                    ProfilePhoto = model.ProfilePhoto,
                     Salary = model.Salary,
                     HireDate = model.HireDate ?? DateTime.Now,
                     IsActive = true
@@ -932,7 +985,10 @@ namespace Estately.WebApp.Controllers
                 _unitOfWork.Complete();
                 return RedirectToAction("Employees");
             }
-            ViewBag.Departments = new SelectList(await _unitOfWork.DepartmentRepository.ReadAllAsync(), "DepartmentID", "DepartmentName");
+            ViewBag.BranchDepartments = new SelectList(await _unitOfWork.BranchDepartmentRepository.ReadAllIncluding("Branch", "Department"), "BranchDepartmentID", "BranchDepartmentID");
+            ViewBag.JobTitles = new SelectList(await _unitOfWork.JobTitleRepository.ReadAllAsync(), "JobTitleId", "JobTitleName");
+            var reportsToEmployees = await _unitOfWork.EmployeeRepository.ReadAllAsync();
+            ViewBag.ReportsToEmployees = new SelectList(reportsToEmployees.Select(e => new { e.EmployeeID, FullName = $"{e.FirstName} {e.LastName}" }), "EmployeeID", "FullName");
             ViewBag.Users = new SelectList(await _unitOfWork.UserRepository.ReadAllAsync(), "UserID", "Username");
             return View(model);
         }
@@ -946,19 +1002,23 @@ namespace Estately.WebApp.Controllers
             {
                 EmployeeID = employee.EmployeeID,
                 UserID = employee.UserID,
-                DepartmentID = employee.DepartmentID,
-                ManagerName = employee.ManagerName,
+                BranchDepartmentId = employee.BranchDepartmentId,
+                JobTitleId = employee.JobTitleId,
+                ReportsTo = employee.ReportsTo,
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
                 Gender = employee.Gender,
                 Age = employee.Age,
                 Phone = employee.Phone,
-                JobTitle = employee.JobTitle,
+                Nationalid = employee.Nationalid,
+                ProfilePhoto = employee.ProfilePhoto,
                 Salary = employee.Salary,
                 HireDate = employee.HireDate,
                 IsActive = employee.IsActive
             };
-            ViewBag.Departments = new SelectList(await _unitOfWork.DepartmentRepository.ReadAllAsync(), "DepartmentID", "DepartmentName", employee.DepartmentID);
+            ViewBag.BranchDepartments = new SelectList(await _unitOfWork.BranchDepartmentRepository.ReadAllIncluding("Branch", "Department"), "BranchDepartmentID", "BranchDepartmentID", employee.BranchDepartmentId);
+            ViewBag.JobTitles = new SelectList(await _unitOfWork.JobTitleRepository.ReadAllAsync(), "JobTitleId", "JobTitleName", employee.JobTitleId);
+            ViewBag.ReportsToEmployees = new SelectList(await _unitOfWork.EmployeeRepository.ReadAllAsync(), "EmployeeID", "FirstName", employee.ReportsTo);
             ViewBag.Users = new SelectList(await _unitOfWork.UserRepository.ReadAllAsync(), "UserID", "Username", employee.UserID);
             return View(model);
         }
@@ -972,14 +1032,16 @@ namespace Estately.WebApp.Controllers
                 if (employee != null)
                 {
                     employee.UserID = model.UserID;
-                    employee.DepartmentID = model.DepartmentID;
-                    employee.ManagerName = model.ManagerName;
+                    employee.BranchDepartmentId = model.BranchDepartmentId;
+                    employee.JobTitleId = model.JobTitleId;
+                    employee.ReportsTo = model.ReportsTo;
                     employee.FirstName = model.FirstName;
                     employee.LastName = model.LastName;
                     employee.Gender = model.Gender;
                     employee.Age = model.Age;
                     employee.Phone = model.Phone;
-                    employee.JobTitle = model.JobTitle;
+                    employee.Nationalid = model.Nationalid;
+                    employee.ProfilePhoto = model.ProfilePhoto;
                     employee.Salary = model.Salary;
                     employee.HireDate = model.HireDate;
                     employee.IsActive = model.IsActive;

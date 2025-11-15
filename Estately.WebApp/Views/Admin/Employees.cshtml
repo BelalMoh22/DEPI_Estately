@@ -38,7 +38,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Department</th>
+                    <th>Branch Department</th>
                     <th>Job Title</th>
                     <th>Phone</th>
                     <th>Status</th>
@@ -51,8 +51,8 @@
                     <tr>
                         <td>@emp.EmployeeID</td>
                         <td>@emp.FirstName @emp.LastName</td>
-                        <td>@(emp.DepartmentName ?? "N/A")</td>
-                        <td>@emp.JobTitle</td>
+                        <td>@(emp.BranchDepartmentName ?? "N/A")</td>
+                        <td>@(emp.JobTitleName ?? "N/A")</td>
                         <td>@emp.Phone</td>
                         <td>
                             @if (emp.IsActive == true)

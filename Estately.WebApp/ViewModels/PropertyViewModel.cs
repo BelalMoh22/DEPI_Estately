@@ -22,9 +22,8 @@ namespace Estately.WebApp.ViewModels
         [Display(Name = "Zone")]
         public int ZoneID { get; set; }
 
-        [Required(ErrorMessage = "Title is required")]
         [StringLength(255)]
-        public string Title { get; set; } = string.Empty;
+        public string? Title { get; set; }
 
         [Required(ErrorMessage = "Address is required")]
         [StringLength(255)]
@@ -52,9 +51,46 @@ namespace Estately.WebApp.ViewModels
         [Display(Name = "Is Deleted")]
         public bool? IsDeleted { get; set; }
 
+        [Display(Name = "Agent")]
+        public int? AgentId { get; set; }
+
+        [Display(Name = "Year Built")]
+        public int? YearBuilt { get; set; }
+
+        [Required(ErrorMessage = "Floors Number is required")]
+        [Display(Name = "Floors Number")]
+        public int FloorsNo { get; set; }
+
+        [Required(ErrorMessage = "Beds Number is required")]
+        [Display(Name = "Beds Number")]
+        public int BedsNo { get; set; }
+
+        [Required(ErrorMessage = "Baths Number is required")]
+        [Display(Name = "Baths Number")]
+        public int BathsNo { get; set; }
+
+        [Required(ErrorMessage = "Latitude is required")]
+        [Display(Name = "Latitude")]
+        public decimal Latitude { get; set; }
+
+        [Required(ErrorMessage = "Longitude is required")]
+        [Display(Name = "Longitude")]
+        public decimal Longitude { get; set; }
+
+        [Display(Name = "Is Furnished")]
+        public bool? IsFurnished { get; set; }
+
+        [Required(ErrorMessage = "Property Code is required")]
+        [StringLength(50)]
+        [Display(Name = "Property Code")]
+        public string PropertyCode { get; set; } = string.Empty;
+
         // Navigation properties for display
         [Display(Name = "Developer Name")]
         public string? DeveloperName { get; set; }
+
+        [Display(Name = "Agent Name")]
+        public string? AgentName { get; set; }
 
         [Display(Name = "Property Type")]
         public string? PropertyTypeName { get; set; }

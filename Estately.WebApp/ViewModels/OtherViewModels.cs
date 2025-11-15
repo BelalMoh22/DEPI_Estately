@@ -80,12 +80,15 @@ namespace Estately.WebApp.ViewModels
         [Display(Name = "User")]
         public int UserID { get; set; }
 
-        [Display(Name = "Department")]
-        public int? DepartmentID { get; set; }
+        [Display(Name = "Branch Department")]
+        public int? BranchDepartmentId { get; set; }
 
-        [StringLength(255)]
-        [Display(Name = "Manager Name")]
-        public string? ManagerName { get; set; }
+        [Required(ErrorMessage = "Job Title is required")]
+        [Display(Name = "Job Title")]
+        public int JobTitleId { get; set; }
+
+        [Display(Name = "Reports To")]
+        public int? ReportsTo { get; set; }
 
         [Required(ErrorMessage = "First Name is required")]
         [StringLength(255)]
@@ -109,10 +112,14 @@ namespace Estately.WebApp.ViewModels
         [StringLength(50)]
         public string Phone { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Job Title is required")]
-        [StringLength(255)]
-        [Display(Name = "Job Title")]
-        public string JobTitle { get; set; } = string.Empty;
+        [Required(ErrorMessage = "National ID is required")]
+        [StringLength(14)]
+        [Display(Name = "National ID")]
+        public string Nationalid { get; set; } = string.Empty;
+
+        [StringLength(800)]
+        [Display(Name = "Profile Photo")]
+        public string? ProfilePhoto { get; set; }
 
         [Required(ErrorMessage = "Salary is required")]
         [Range(0, double.MaxValue)]
@@ -125,8 +132,14 @@ namespace Estately.WebApp.ViewModels
         [Display(Name = "Is Active")]
         public bool? IsActive { get; set; }
 
-        [Display(Name = "Department Name")]
-        public string? DepartmentName { get; set; }
+        [Display(Name = "Branch Department Name")]
+        public string? BranchDepartmentName { get; set; }
+
+        [Display(Name = "Job Title Name")]
+        public string? JobTitleName { get; set; }
+
+        [Display(Name = "Reports To Name")]
+        public string? ReportsToName { get; set; }
 
         [Display(Name = "Username")]
         public string? Username { get; set; }
