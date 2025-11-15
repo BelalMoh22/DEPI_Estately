@@ -14,12 +14,12 @@ namespace Estately.WebApp
             });
 
             //Add Context with Connection 
-            //builder.Services.AddDbContext<AppDBContext>(options =>
-            //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddDbContext<AppDBContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
-            //builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            //builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             //builder.Services.AddScoped<IServiceDepartment, ServiceDepartment>();
 
             // Add session support for admin authentication

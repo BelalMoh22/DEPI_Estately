@@ -19,15 +19,31 @@
    "T4TemplatePath": null,
    "Tables": [
       {
-         "Name": "[dbo].[LKPPropertyHistoryTypes]",
+         "Name": "[dbo].[LkpAppointmentStatus]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LkpDocumentTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LkpPropertyHistoryTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LkpPropertyStatus]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LkpPropertyTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LkpUserType]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[TblAppointments]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[TblAppointmentStatus]",
          "ObjectType": 0
       },
       {
@@ -47,15 +63,15 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[TblClientPropertyInterests]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[TblDepartments]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[TblDeveloperProfiles]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[TblDocumentTypes]",
          "ObjectType": 0
       },
       {
@@ -68,6 +84,10 @@
       },
       {
          "Name": "[dbo].[TblFavorites]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblJobTitles]",
          "ObjectType": 0
       },
       {
@@ -95,19 +115,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[TblPropertyStatus]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[TblPropertyTypes]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[TblUsers]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[TblUserType]",
          "ObjectType": 0
       },
       {

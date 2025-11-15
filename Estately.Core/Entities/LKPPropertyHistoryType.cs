@@ -1,13 +1,12 @@
-﻿
-namespace Estately.Core.Entities
+﻿namespace Estately.Core.Entities
 {
-    public partial class LKPPropertyHistoryType
+    public partial class LkpPropertyHistoryType
     {
         [Key]
         public int HistoryTypeID { get; set; }
 
         [Required]
-        [StringLength(100)]
+        [StringLength(255)]
         public string Name { get; set; }
 
         [StringLength(255)]

@@ -501,12 +501,12 @@ namespace Estately.WebApp.Controllers
             var totalCount = query.Count();
             var zones = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
-            ViewBag.Zones = zones.Select(z => new ZoneViewModel 
-            { 
-                ZoneID = z.ZoneID, 
-                ZoneName = z.ZoneName, 
+            ViewBag.Zones = zones.Select(z => new ZoneViewModel
+            {
+                ZoneID = z.ZoneID,
+                ZoneName = z.ZoneName,
                 CityID = z.CityID,
-                CityName = z.City?.CityName 
+                CityName = z.City?.CityName
             }).ToList();
             ViewBag.Cities = new SelectList(await _unitOfWork.CityRepository.ReadAllAsync(), "CityID", "CityName");
             ViewBag.Page = page;
@@ -1189,4 +1189,3 @@ namespace Estately.WebApp.Controllers
         #endregion
     }
 }
-
