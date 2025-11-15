@@ -2,11 +2,11 @@
 namespace Estately.Core.Entities
 {
 
-    [Table("TblPropertyStatus")]
-    public partial class TblPropertyStatus
+    [Table("TblAppointmentStatus")]
+    public partial class LkpAppointmentStatus
     {
         [Key]
-        public int StatusID { get; set; }
+        public int StatusId { get; set; }
 
         [Required]
         [StringLength(255)]
@@ -16,6 +16,6 @@ namespace Estately.Core.Entities
         public string Description { get; set; }
 
         [InverseProperty("Status")]
-        public virtual TblProperty TblProperty { get; set; }
+        public virtual TblAppointment TblAppointment { get; set; }
     }
 }

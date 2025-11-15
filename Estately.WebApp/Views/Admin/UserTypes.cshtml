@@ -1,0 +1,51 @@
+@{
+    ViewData["Title"] = "User Types Management";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+    var userTypes = ViewBag.UserTypes as List<Estately.WebApp.ViewModels.LkpUserTypeViewModel> ?? new();
+}
+
+<div class="table-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4>User Types Management</h4>
+        <a asp-action="CreateUserType" asp-controller="Admin" class="btn btn-admin">
+            <i class="bi bi-plus-circle me-2"></i>Add New User Type
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User Type Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ut in userTypes)
+                {
+                    <tr>
+                        <td>@ut.UserTypeID</td>
+                        <td>@ut.UserTypeName</td>
+                        <td>@(ut.Description ?? "N/A")</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a asp-action="EditUserType" asp-controller="Admin" asp-route-id="@ut.UserTypeID" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form method="post" asp-action="DeleteUserType" asp-controller="Admin" asp-route-id="@ut.UserTypeID" class="d-inline" 
+                                      onsubmit="return confirm('Are you sure?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

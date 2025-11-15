@@ -1,0 +1,44 @@
+@model Estately.WebApp.ViewModels.DepartmentViewModel
+@{
+    ViewData["Title"] = "Create Department";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<div class="table-container">
+    <h4>Create New Department</h4>
+    
+    <form method="post" asp-action="CreateDepartment" asp-controller="Admin" class="mt-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="DepartmentName" class="form-label"></label>
+                <input asp-for="DepartmentName" class="form-control" />
+                <span asp-validation-for="DepartmentName" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="ManagerName" class="form-label"></label>
+                <input asp-for="ManagerName" class="form-control" />
+                <span asp-validation-for="ManagerName" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" type="email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-admin me-2">Create Department</button>
+            <a asp-action="Departments" asp-controller="Admin" class="btn btn-admin-outline">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

@@ -1,0 +1,110 @@
+@model Estately.WebApp.ViewModels.UserListViewModel
+@{
+    ViewData["Title"] = "Users Management";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<div class="table-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4>Users Management</h4>
+        <a asp-action="CreateUser" asp-controller="Admin" class="btn btn-admin">
+            <i class="bi bi-plus-circle me-2"></i>Add User
+        </a>
+        <a asp-action="" asp-controller="Admin" class="btn btn-admin">
+            <i class="bi bi-plus-circle me-2"></i>Edit User
+        </a>
+        <a asp-action="" asp-controller="Admin" class="btn btn-admin">
+            <i class="bi bi-plus-circle me-2"></i>Delete User
+        </a>
+    </div>
+
+    <form method="get" asp-action="Users" asp-controller="Admin" class="mb-4">
+        <div class="row">
+            <div class="col-md-8">
+                <input type="text" name="searchTerm" class="form-control" placeholder="Search by email or username..." value="@Model.SearchTerm" />
+            </div>
+            <div class="col-md-2">
+                <input type="number" name="pageSize" class="form-control" value="@Model.PageSize" min="5" max="100" />
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-admin w-100">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>User Type</th>
+                    <th>Is Employee</th>
+                    <th>Is Client</th>
+                    <th>Is Developer</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Users)
+                {
+                    <tr>
+                        <td>@user.UserID</td>
+                        <td>@user.Username</td>
+                        <td>@user.Email</td>
+                        <td>@(user.UserTypeName ?? "N/A")</td>
+                        <td>@(user.IsEmployee == true ? "Yes" : "No")</td>
+                        <td>@(user.IsClient == true ? "Yes" : "No")</td>
+                        <td>@(user.IsDeveloper == true ? "Yes" : "No")</td>
+                        <td>
+                            @if (user.IsDeleted == true)
+                            {
+                                <span class="badge bg-danger">Inactive</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a asp-action="EditUser" asp-controller="Admin" asp-route-id="@user.UserID" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form method="post" asp-action="ToggleUserStatus" asp-controller="Admin" asp-route-id="@user.UserID" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-@(user.IsDeleted == true ? "success" : "warning")">
+                                        <i class="bi bi-@(user.IsDeleted == true ? "check-circle" : "x-circle")"></i>
+                                    </button>
+                                </form>
+                                <form method="post" asp-action="DeleteUser" asp-controller="Admin" asp-route-id="@user.UserID" class="d-inline" 
+                                      onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (Model.TotalPages > 1)
+    {
+        <nav>
+            <ul class="pagination justify-content-center">
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.Page ? "active" : "")">
+                        <a class="page-link" asp-action="Users" asp-controller="Admin" 
+                           asp-route-page="@i" asp-route-pageSize="@Model.PageSize" asp-route-searchTerm="@Model.SearchTerm">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</div>
+

@@ -1,0 +1,99 @@
+@{
+    ViewData["Title"] = "Branches Management";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+    var branches = ViewBag.Branches as List<Estately.WebApp.ViewModels.BranchViewModel> ?? new();
+    var page = (int)(ViewBag.Page ?? 1);
+    var pageSize = (int)(ViewBag.PageSize ?? 10);
+    var totalPages = (int)(ViewBag.TotalPages ?? 1);
+    var searchTerm = ViewBag.SearchTerm as string;
+}
+
+<div class="table-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4>Branches Management</h4>
+        <a asp-action="CreateBranch" asp-controller="Admin" class="btn btn-admin">
+            <i class="bi bi-plus-circle me-2"></i>Add New Branch
+        </a>
+    </div>
+
+    <form method="get" asp-action="Branches" asp-controller="Admin" class="mb-4">
+        <div class="row">
+            <div class="col-md-8">
+                <input type="text" name="searchTerm" class="form-control" placeholder="Search branches..." value="@searchTerm" />
+            </div>
+            <div class="col-md-2">
+                <input type="number" name="pageSize" class="form-control" value="@pageSize" min="5" max="100" />
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-admin w-100">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Branch Name</th>
+                    <th>Manager</th>
+                    <th>Address</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var branch in branches)
+                {
+                    <tr>
+                        <td>@branch.BranchID</td>
+                        <td>@branch.BranchName</td>
+                        <td>@(branch.ManagerName ?? "N/A")</td>
+                        <td>@branch.Address</td>
+                        <td>@branch.Phone</td>
+                        <td>
+                            @if (branch.IsDeleted == true)
+                            {
+                                <span class="badge bg-danger">Deleted</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a asp-action="EditBranch" asp-controller="Admin" asp-route-id="@branch.BranchID" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form method="post" asp-action="DeleteBranch" asp-controller="Admin" asp-route-id="@branch.BranchID" class="d-inline" 
+                                      onsubmit="return confirm('Are you sure?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (totalPages > 1)
+    {
+        <nav>
+            <ul class="pagination justify-content-center">
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == page ? "active" : "")">
+                        <a class="page-link" asp-action="Branches" asp-controller="Admin" 
+                           asp-route-page="@i" asp-route-pageSize="@pageSize" asp-route-searchTerm="@searchTerm">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</div>
+

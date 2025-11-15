@@ -22,6 +22,15 @@ namespace Estately.WebApp
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             //builder.Services.AddScoped<IServiceDepartment, ServiceDepartment>();
 
+            // Add session support for admin authentication
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -35,6 +44,10 @@ namespace Estately.WebApp
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            
+            // Enable session middleware
+            app.UseSession();
+            
             app.UseAuthorization();
 
             app.MapStaticAssets();

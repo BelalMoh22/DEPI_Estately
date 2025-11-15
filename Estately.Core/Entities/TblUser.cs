@@ -52,6 +52,6 @@ namespace Estately.Core.Entities
 
         [ForeignKey("UserTypeID")]
         [InverseProperty("TblUsers")]
-        public virtual TblUserType UserType { get; set; }
+        public virtual LkpUserType UserType { get; set; }
     }
 }

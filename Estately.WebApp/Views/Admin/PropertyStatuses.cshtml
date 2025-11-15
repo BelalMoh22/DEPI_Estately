@@ -1,0 +1,52 @@
+@{
+    ViewData["Title"] = "Property Statuses Management";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+    var statuses = ViewBag.PropertyStatuses as List<Estately.WebApp.ViewModels.LkpPropertyStatusViewModel> ?? new();
+}
+
+<div class="table-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4>Property Statuses Management</h4>
+        <a asp-action="CreatePropertyStatus" asp-controller="Admin" class="btn btn-admin">
+            <i class="bi bi-plus-circle me-2"></i>Add New Status
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Status Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var status in statuses)
+                {
+                    <tr>
+                        <td>@status.StatusID</td>
+                        <td>@status.StatusName</td>
+                        <td>@(status.Description ?? "N/A")</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a asp-action="EditPropertyStatus" asp-controller="Admin" asp-route-id="@status.StatusID" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form method="post" asp-action="DeletePropertyStatus" asp-controller="Admin" asp-route-id="@status.StatusID" class="d-inline" 
+                                      onsubmit="return confirm('Are you sure?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

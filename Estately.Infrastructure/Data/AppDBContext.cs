@@ -21,7 +21,7 @@ namespace Estately.Infrastructure.Data {
 
         public virtual DbSet<TblAppointment> TblAppointments { get; set; }
 
-        public virtual DbSet<TblAppointmentStatus> TblAppointmentStatuses { get; set; }
+        public virtual DbSet<LkpAppointmentStatus> TblAppointmentStatuses { get; set; }
 
         public virtual DbSet<TblBranch> TblBranches { get; set; }
 
@@ -35,7 +35,7 @@ namespace Estately.Infrastructure.Data {
 
         public virtual DbSet<TblDeveloperProfile> TblDeveloperProfiles { get; set; }
 
-        public virtual DbSet<TblDocumentType> TblDocumentTypes { get; set; }
+        public virtual DbSet<LkpDocumentType> TblDocumentTypes { get; set; }
 
         public virtual DbSet<TblEmployee> TblEmployees { get; set; }
 
@@ -55,13 +55,13 @@ namespace Estately.Infrastructure.Data {
 
         public virtual DbSet<TblPropertyImage> TblPropertyImages { get; set; }
 
-        public virtual DbSet<TblPropertyStatus> TblPropertyStatuses { get; set; }
+        public virtual DbSet<LkpPropertyStatus> TblPropertyStatuses { get; set; }
 
-        public virtual DbSet<TblPropertyType> TblPropertyTypes { get; set; }
+        public virtual DbSet<LkpPropertyType> TblPropertyTypes { get; set; }
 
         public virtual DbSet<TblUser> TblUsers { get; set; }
 
-        public virtual DbSet<TblUserType> TblUserTypes { get; set; }
+        public virtual DbSet<LkpUserType> TblUserTypes { get; set; }
 
         public virtual DbSet<TblZone> TblZones { get; set; }
 
@@ -128,7 +128,7 @@ namespace Estately.Infrastructure.Data {
                     .HasConstraintName("FK_TblDeveloperProfiles_TblUsers");
             });
 
-            modelBuilder.Entity<TblDocumentType>(entity =>
+            modelBuilder.Entity<LkpDocumentType>(entity =>
             {
                 entity.HasKey(e => e.DocumentTypeID).HasName("PK__TblDocum__DBA390C11FF5415F");
             });

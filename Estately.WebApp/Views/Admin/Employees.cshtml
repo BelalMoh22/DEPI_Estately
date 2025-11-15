@@ -1,0 +1,101 @@
+@{
+    ViewData["Title"] = "Employees Management";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+    var employees = ViewBag.Employees as List<Estately.WebApp.ViewModels.EmployeeViewModel> ?? new();
+    var departments = ViewBag.Departments as SelectList ?? new SelectList(new List<object>());
+    var users = ViewBag.Users as SelectList ?? new SelectList(new List<object>());
+    var page = (int)(ViewBag.Page ?? 1);
+    var pageSize = (int)(ViewBag.PageSize ?? 10);
+    var totalPages = (int)(ViewBag.TotalPages ?? 1);
+    var searchTerm = ViewBag.SearchTerm as string;
+}
+
+<div class="table-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4>Employees Management</h4>
+        <a asp-action="CreateEmployee" asp-controller="Admin" class="btn btn-admin">
+            <i class="bi bi-plus-circle me-2"></i>Add New Employee
+        </a>
+    </div>
+
+    <form method="get" asp-action="Employees" asp-controller="Admin" class="mb-4">
+        <div class="row">
+            <div class="col-md-8">
+                <input type="text" name="searchTerm" class="form-control" placeholder="Search employees..." value="@searchTerm" />
+            </div>
+            <div class="col-md-2">
+                <input type="number" name="pageSize" class="form-control" value="@pageSize" min="5" max="100" />
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-admin w-100">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Job Title</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var emp in employees)
+                {
+                    <tr>
+                        <td>@emp.EmployeeID</td>
+                        <td>@emp.FirstName @emp.LastName</td>
+                        <td>@(emp.DepartmentName ?? "N/A")</td>
+                        <td>@emp.JobTitle</td>
+                        <td>@emp.Phone</td>
+                        <td>
+                            @if (emp.IsActive == true)
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Inactive</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a asp-action="EditEmployee" asp-controller="Admin" asp-route-id="@emp.EmployeeID" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form method="post" asp-action="DeleteEmployee" asp-controller="Admin" asp-route-id="@emp.EmployeeID" class="d-inline" 
+                                      onsubmit="return confirm('Are you sure?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (totalPages > 1)
+    {
+        <nav>
+            <ul class="pagination justify-content-center">
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == page ? "active" : "")">
+                        <a class="page-link" asp-action="Employees" asp-controller="Admin" 
+                           asp-route-page="@i" asp-route-pageSize="@pageSize" asp-route-searchTerm="@searchTerm">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</div>
+

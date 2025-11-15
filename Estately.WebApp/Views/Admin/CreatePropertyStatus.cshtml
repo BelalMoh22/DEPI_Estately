@@ -1,0 +1,37 @@
+@model Estately.WebApp.ViewModels.LkpPropertyStatusViewModel
+@{
+    ViewData["Title"] = "Create Property Status";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<div class="table-container">
+    <h4>Create New Property Status</h4>
+    
+    <form method="post" asp-action="CreatePropertyStatus" asp-controller="Admin" class="mt-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="StatusName" class="form-label"></label>
+                <input asp-for="StatusName" class="form-control" />
+                <span asp-validation-for="StatusName" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-admin me-2">Create Property Status</button>
+            <a asp-action="PropertyStatuses" asp-controller="Admin" class="btn btn-admin-outline">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

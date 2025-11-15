@@ -4,7 +4,7 @@ namespace Estately.Core.Entities
 {
 
     [Table("TblUserType")]
-    public partial class TblUserType
+    public partial class LkpUserType
     {
         [Key]
         public int UserTypeID { get; set; }
