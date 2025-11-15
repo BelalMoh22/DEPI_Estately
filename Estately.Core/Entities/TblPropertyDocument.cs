@@ -25,7 +25,7 @@ namespace Estately.Core.Entities
 
         [ForeignKey("DocumentTypeID")]
         [InverseProperty("TblPropertyDocuments")]
-        public virtual TblDocumentType DocumentType { get; set; }
+        public virtual LkpDocumentType DocumentType { get; set; }
 
         [ForeignKey("PropertyID")]
         [InverseProperty("TblPropertyDocuments")]

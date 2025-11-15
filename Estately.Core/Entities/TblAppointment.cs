@@ -32,6 +32,6 @@ namespace Estately.Core.Entities
 
         [ForeignKey("StatusID")]
         [InverseProperty("TblAppointment")]
-        public virtual TblAppointmentStatus Status { get; set; }
+        public virtual LkpAppointmentStatus Status { get; set; }
     }
 }

@@ -1,0 +1,75 @@
+@model Estately.WebApp.ViewModels.UserViewModel
+@{
+    ViewData["Title"] = "Create User";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<div class="table-container">
+    <h4>Create New User</h4>
+    
+    <form method="post" asp-action="CreateUser" asp-controller="Admin" class="mt-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="Username" class="form-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" type="email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="PasswordHash" class="form-label"></label>
+                <input asp-for="PasswordHash" class="form-control" type="password" />
+                <span asp-validation-for="PasswordHash" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="UserTypeID" class="form-label"></label>
+                <select asp-for="UserTypeID" asp-items="@(ViewBag.UserTypes as SelectList)" class="form-select">
+                    <option value="">-- Select User Type --</option>
+                </select>
+                <span asp-validation-for="UserTypeID" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="IsEmployee" id="IsEmployee" value="true" />
+                    <input type="hidden" name="IsEmployee" value="false" />
+                    <label class="form-check-label" for="IsEmployee">Is Employee</label>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="IsClient" id="IsClient" value="true" />
+                    <input type="hidden" name="IsClient" value="false" />
+                    <label class="form-check-label" for="IsClient">Is Client</label>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="IsDeveloper" id="IsDeveloper" value="true" />
+                    <input type="hidden" name="IsDeveloper" value="false" />
+                    <label class="form-check-label" for="IsDeveloper">Is Developer</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-admin me-2">Create User</button>
+            <a asp-action="Users" asp-controller="Admin" class="btn btn-admin-outline">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

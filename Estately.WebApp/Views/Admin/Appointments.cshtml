@@ -1,0 +1,84 @@
+@{
+    ViewData["Title"] = "Appointments Management";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+    var appointments = ViewBag.Appointments as List<Estately.WebApp.ViewModels.AppointmentViewModel> ?? new();
+    var page = (int)(ViewBag.Page ?? 1);
+    var pageSize = (int)(ViewBag.PageSize ?? 10);
+    var totalPages = (int)(ViewBag.TotalPages ?? 1);
+    var searchTerm = ViewBag.SearchTerm as string;
+}
+
+<div class="table-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4>Appointments Management</h4>
+    </div>
+
+    <form method="get" asp-action="Appointments" asp-controller="Admin" class="mb-4">
+        <div class="row">
+            <div class="col-md-8">
+                <input type="text" name="searchTerm" class="form-control" placeholder="Search appointments..." value="@searchTerm" />
+            </div>
+            <div class="col-md-2">
+                <input type="number" name="pageSize" class="form-control" value="@pageSize" min="5" max="100" />
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-admin w-100">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Property</th>
+                    <th>Client</th>
+                    <th>Employee</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var appointment in appointments)
+                {
+                    <tr>
+                        <td>@appointment.AppointmentID</td>
+                        <td>@(appointment.PropertyTitle ?? "N/A")</td>
+                        <td>@(appointment.ClientName ?? "N/A")</td>
+                        <td>@(appointment.EmployeeName ?? "N/A")</td>
+                        <td>@appointment.AppointmentDate.ToString("MM/dd/yyyy HH:mm")</td>
+                        <td>@(appointment.StatusName ?? "N/A")</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <form method="post" asp-action="DeleteAppointment" asp-controller="Admin" asp-route-id="@appointment.AppointmentID" class="d-inline" 
+                                      onsubmit="return confirm('Are you sure?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (totalPages > 1)
+    {
+        <nav>
+            <ul class="pagination justify-content-center">
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == page ? "active" : "")">
+                        <a class="page-link" asp-action="Appointments" asp-controller="Admin" 
+                           asp-route-page="@i" asp-route-pageSize="@pageSize" asp-route-searchTerm="@searchTerm">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</div>
+

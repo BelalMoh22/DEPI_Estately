@@ -3,7 +3,7 @@
 namespace Estately.Core.Entities
 {
 
-    public partial class TblPropertyType
+    public partial class LkpPropertyType
     {
         [Key]
         public int PropertyTypeID { get; set; }

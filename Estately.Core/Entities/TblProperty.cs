@@ -50,11 +50,11 @@ namespace Estately.Core.Entities
 
         [ForeignKey("PropertyTypeID")]
         [InverseProperty("TblProperties")]
-        public virtual TblPropertyType PropertyType { get; set; }
+        public virtual LkpPropertyType PropertyType { get; set; }
 
         [ForeignKey("StatusId")]
         [InverseProperty("TblProperty")]
-        public virtual TblPropertyStatus Status { get; set; }
+        public virtual LkpPropertyStatus Status { get; set; }
 
         [InverseProperty("Property")]
         public virtual ICollection<TblAppointment> TblAppointments { get; set; } = new List<TblAppointment>();

@@ -5,14 +5,14 @@
         private readonly AppDBContext _context;
 
         public IRepository<TblAppointment> AppointmentRepository { get; }
-        public IRepository<TblAppointmentStatus> AppointmentStatusRepository { get; }
+        public IRepository<LkpAppointmentStatus> AppointmentStatusRepository { get; }
         public IRepository<TblBranch> BranchRepository { get; }
         public IRepository<TblBranchDepartment> BranchDepartmentRepository { get; }
         public IRepository<TblCity> CityRepository { get; }
         public IRepository<TblClientProfile> ClientProfileRepository { get; }
         public IRepository<TblDepartment> DepartmentRepository { get; }
         public IRepository<TblDeveloperProfile> DeveloperProfileRepository { get; }
-        public IRepository<TblDocumentType> DocumentTypeRepository { get; }
+        public IRepository<LkpDocumentType> DocumentTypeRepository { get; }
         public IRepository<TblEmployee> EmployeeRepository { get; }
         public IRepository<TblEmployeeClient> EmployeeClientRepository { get; }
         public IRepository<TblFavorite> FavoriteRepository { get; }
@@ -22,24 +22,24 @@
         public IRepository<TblPropertyFeaturesMapping> PropertyFeaturesMappingRepository { get; }
         public IRepository<TblPropertyHistory> PropertyHistoryRepository { get; }
         public IRepository<TblPropertyImage> PropertyImageRepository { get; }
-        public IRepository<TblPropertyStatus> PropertyStatusRepository { get; }
-        public IRepository<TblPropertyType> PropertyTypeRepository { get; }
+        public IRepository<LkpPropertyStatus> PropertyStatusRepository { get; }
+        public IRepository<LkpPropertyType> PropertyTypeRepository { get; }
         public IRepository<TblUser> UserRepository { get; }
-        public IRepository<TblUserType> UserTypeRepository { get; }
+        public IRepository<LkpUserType> UserTypeRepository { get; }
         public IRepository<TblZone> ZoneRepository { get; }
         public IRepository<LKPPropertyHistoryType> PropertyHistoryTypeRepository { get; }
 
         public UnitOfWork(AppDBContext context,
 
             IRepository<TblAppointment> appointmentRepo,
-            IRepository<TblAppointmentStatus> appointmentStatusRepo,
+            IRepository<LkpAppointmentStatus> appointmentStatusRepo,
             IRepository<TblBranch> branchRepo,
             IRepository<TblBranchDepartment> branchDeptRepo,
             IRepository<TblCity> cityRepo,
             IRepository<TblClientProfile> clientProfileRepo,
             IRepository<TblDepartment> departmentRepo,
             IRepository<TblDeveloperProfile> developerProfileRepo,
-            IRepository<TblDocumentType> documentTypeRepo,
+            IRepository<LkpDocumentType> documentTypeRepo,
             IRepository<TblEmployee> employeeRepo,
             IRepository<TblEmployeeClient> employeeClientRepo,
             IRepository<TblFavorite> favoriteRepo,
@@ -49,10 +49,10 @@
             IRepository<TblPropertyFeaturesMapping> propertyFeaturesMappingRepo,
             IRepository<TblPropertyHistory> propertyHistoryRepo,
             IRepository<TblPropertyImage> propertyImageRepo,
-            IRepository<TblPropertyStatus> propertyStatusRepo,
-            IRepository<TblPropertyType> propertyTypeRepo,
+            IRepository<LkpPropertyStatus> propertyStatusRepo,
+            IRepository<LkpPropertyType> propertyTypeRepo,
             IRepository<TblUser> userRepo,
-            IRepository<TblUserType> userTypeRepo,
+            IRepository<LkpUserType> userTypeRepo,
             IRepository<TblZone> zoneRepo,
             IRepository<LKPPropertyHistoryType> propertyHistoryTypeRepo
             )
