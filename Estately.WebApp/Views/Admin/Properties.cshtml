@@ -31,12 +31,13 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Title</th>
+                    <th>Property Code</th>
                     <th>Address</th>
                     <th>Type</th>
                     <th>Status</th>
                     <th>Price</th>
                     <th>Area</th>
+                    <th>Beds/Baths</th>
                     <th>Zone</th>
                     <th>Actions</th>
                 </tr>
@@ -46,12 +47,13 @@
                 {
                     <tr>
                         <td>@property.PropertyID</td>
-                        <td>@property.Title</td>
+                        <td>@property.PropertyCode</td>
                         <td>@property.Address</td>
                         <td>@(property.PropertyTypeName ?? "N/A")</td>
                         <td>@(property.StatusName ?? "N/A")</td>
                         <td>@property.Price.ToString("C")</td>
                         <td>@property.Area m²</td>
+                        <td>@property.BedsNo / @property.BathsNo</td>
                         <td>@(property.ZoneName ?? "N/A")</td>
                         <td>
                             <div class="btn-group btn-group-sm">
