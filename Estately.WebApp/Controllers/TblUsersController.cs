@@ -234,13 +234,13 @@ namespace Estately.WebApp.Controllers
         // =======================================================
         // TOGGLE ACTIVE / INACTIVE
         // =======================================================
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ToggleStatus(int id)
-        {
-            await _serviceUser.ToggleStatusAsync(id);
-            return RedirectToAction(nameof(Index));
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> ToggleStatus(int id)
+        //{
+        //    await _serviceUser.ToggleStatusAsync(id);
+        //    return RedirectToAction(nameof(Index));
+        //}
 
         // =======================================================
         // ASSIGN ROLE
