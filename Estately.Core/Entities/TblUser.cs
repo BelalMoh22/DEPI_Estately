@@ -7,7 +7,7 @@
         [Key]
         public int UserID { get; set; }
 
-        public int? UserTypeID { get; set; }
+        public int? UserTypeID { get; set; } = 1;
 
         [Required]
         [StringLength(255)]
@@ -23,34 +23,34 @@
         [Unicode(false)]
         public string PasswordHash { get; set; }
 
-        public bool? IsEmployee { get; set; }
+        public bool? IsEmployee { get; set; } = false;
 
-        public bool? IsClient { get; set; }
+        public bool? IsClient { get; set; } = true;
 
-        public bool? IsDeveloper { get; set; }
+        public bool? IsDeveloper { get; set; } = false;
 
         [Column(TypeName = "datetime")]
-        public DateTime? CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
 
-        public bool? IsDeleted { get; set; }
-
-        [InverseProperty("User")]
-        public virtual TblClientProfile TblClientProfile { get; set; }
+        public bool? IsDeleted { get; set; } = false;
 
         [InverseProperty("User")]
-        public virtual TblDeveloperProfile TblDeveloperProfile { get; set; }
+        public virtual TblClientProfile? TblClientProfile { get; set; }
 
         [InverseProperty("User")]
-        public virtual TblEmployee TblEmployee { get; set; }
+        public virtual TblDeveloperProfile? TblDeveloperProfile { get; set; }
 
         [InverseProperty("User")]
-        public virtual ICollection<TblPropertyDocument> TblPropertyDocuments { get; set; } = new List<TblPropertyDocument>();
+        public virtual TblEmployee? TblEmployee { get; set; }
 
         [InverseProperty("User")]
-        public virtual ICollection<TblPropertyHistory> TblPropertyHistories { get; set; } = new List<TblPropertyHistory>();
+        public virtual ICollection<TblPropertyDocument>? TblPropertyDocuments { get; set; } = new List<TblPropertyDocument>();
+
+        [InverseProperty("User")]
+        public virtual ICollection<TblPropertyHistory>? TblPropertyHistories { get; set; } = new List<TblPropertyHistory>();
 
         [ForeignKey("UserTypeID")]
         [InverseProperty("TblUsers")]
-        public virtual LkpUserType UserType { get; set; }
+        public virtual LkpUserType? UserType { get; set; }
     }
 }

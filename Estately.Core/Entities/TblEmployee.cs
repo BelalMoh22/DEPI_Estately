@@ -40,41 +40,41 @@
         public string Nationalid { get; set; }
 
         [StringLength(800)]
-        public string ProfilePhoto { get; set; }
+        public string? ProfilePhoto { get; set; }
 
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Salary { get; set; }
 
         [Column(TypeName = "datetime")]
-        public DateTime? HireDate { get; set; }
+        public DateTime? HireDate { get; set; } = DateTime.Now;
 
-        public bool? IsActive { get; set; }
+        public bool? IsActive { get; set; } = true;
 
-        public bool? IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; } = false;
 
         [ForeignKey("BranchDepartmentId")]
         [InverseProperty("TblEmployees")]
-        public virtual TblBranchDepartment BranchDepartment { get; set; }
+        public virtual TblBranchDepartment? BranchDepartment { get; set; }
 
         [InverseProperty("ReportsToNavigation")]
-        public virtual ICollection<TblEmployee> InverseReportsToNavigation { get; set; } = new List<TblEmployee>();
+        public virtual ICollection<TblEmployee>? InverseReportsToNavigation { get; set; } = new List<TblEmployee>();
 
         [ForeignKey("JobTitleId")]
         [InverseProperty("TblEmployees")]
-        public virtual TblJobTitle JobTitle { get; set; }
+        public virtual TblJobTitle? JobTitle { get; set; }
 
         [ForeignKey("ReportsTo")]
         [InverseProperty("InverseReportsToNavigation")]
-        public virtual TblEmployee ReportsToNavigation { get; set; }
+        public virtual TblEmployee? ReportsToNavigation { get; set; }
 
         [InverseProperty("Employee")]
-        public virtual ICollection<TblEmployeeClient> TblEmployeeClients { get; set; } = new List<TblEmployeeClient>();
+        public virtual ICollection<TblEmployeeClient>? TblEmployeeClients { get; set; } = new List<TblEmployeeClient>();
 
         [InverseProperty("Agent")]
-        public virtual ICollection<TblProperty> TblProperties { get; set; } = new List<TblProperty>();
+        public virtual ICollection<TblProperty>? TblProperties { get; set; } = new List<TblProperty>();
 
         [ForeignKey("UserID")]
         [InverseProperty("TblEmployee")]
-        public virtual TblUser User { get; set; }
+        public virtual TblUser? User { get; set; }
     }
 }

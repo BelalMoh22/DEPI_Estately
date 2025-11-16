@@ -10,9 +10,9 @@
         public string TypeName { get; set; }
 
         [StringLength(255)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [InverseProperty("PropertyType")]
-        public virtual ICollection<TblProperty> TblProperties { get; set; } = new List<TblProperty>();
+        public virtual ICollection<TblProperty>? TblProperties { get; set; } = new List<TblProperty>();
     }
 }

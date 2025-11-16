@@ -18,18 +18,18 @@
         public DateTime AppointmentDate { get; set; }
 
         [Column(TypeName = "text")]
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
 
         [ForeignKey("EmployeeClientID")]
         [InverseProperty("TblAppointments")]
-        public virtual TblEmployeeClient EmployeeClient { get; set; }
+        public virtual TblEmployeeClient? EmployeeClient { get; set; }
 
         [ForeignKey("PropertyID")]
         [InverseProperty("TblAppointments")]
-        public virtual TblProperty Property { get; set; }
+        public virtual TblProperty? Property { get; set; }
 
         [ForeignKey("StatusID")]
         [InverseProperty("TblAppointment")]
-        public virtual LkpAppointmentStatus Status { get; set; }
+        public virtual LkpAppointmentStatus? Status { get; set; }
     }
 }

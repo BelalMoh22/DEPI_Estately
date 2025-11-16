@@ -11,9 +11,9 @@
         public string StatusName { get; set; }
 
         [StringLength(255)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [InverseProperty("Status")]
-        public virtual TblAppointment TblAppointment { get; set; }
+        public virtual TblAppointment? TblAppointment { get; set; }
     }
 }

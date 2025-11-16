@@ -13,16 +13,16 @@
         public int PropertyID { get; set; }
 
         [Column(TypeName = "datetime")]
-        public DateTime? CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
 
-        public bool? IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; } = false;
 
         [ForeignKey("ClientProfileID")]
         [InverseProperty("TblFavorites")]
-        public virtual TblClientProfile ClientProfile { get; set; }
+        public virtual TblClientProfile? ClientProfile { get; set; }
 
         [ForeignKey("PropertyID")]
         [InverseProperty("TblFavorites")]
-        public virtual TblProperty Property { get; set; }
+        public virtual TblProperty? Property { get; set; }
     }
 }

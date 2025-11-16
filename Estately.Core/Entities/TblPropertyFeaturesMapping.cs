@@ -14,16 +14,16 @@
 
         [StringLength(255)]
         [Unicode(false)]
-        public string Value { get; set; }
+        public string? Value { get; set; }
 
-        public bool? IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; } = false;
 
         [ForeignKey("FeatureID")]
         [InverseProperty("TblPropertyFeaturesMappings")]
-        public virtual TblPropertyFeature Feature { get; set; }
+        public virtual TblPropertyFeature? Feature { get; set; }
 
         [ForeignKey("PropertyID")]
         [InverseProperty("TblPropertyFeaturesMappings")]
-        public virtual TblProperty Property { get; set; }
+        public virtual TblProperty? Property { get; set; }
     }
 }

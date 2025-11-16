@@ -10,17 +10,17 @@
         public int PropertyId { get; set; }
 
         [Column(TypeName = "datetime")]
-        public DateTime? InterestDate { get; set; }
+        public DateTime? InterestDate { get; set; } = DateTime.Now;
 
         [StringLength(800)]
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
 
         [ForeignKey("ClientProfileId")]
         [InverseProperty("TblClientPropertyInterests")]
-        public virtual TblClientProfile ClientProfile { get; set; }
+        public virtual TblClientProfile? ClientProfile { get; set; }
 
         [ForeignKey("PropertyId")]
         [InverseProperty("TblClientPropertyInterests")]
-        public virtual TblProperty Property { get; set; }
+        public virtual TblProperty? Property { get; set; }
     }
 }

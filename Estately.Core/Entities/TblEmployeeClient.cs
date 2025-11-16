@@ -13,19 +13,19 @@
         public int ClientProfileID { get; set; }
 
         [Column(TypeName = "datetime")]
-        public DateTime? AssignmentDate { get; set; }
+        public DateTime? AssignmentDate { get; set; } = DateTime.Now;
 
-        public bool? IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; } = false;
 
         [ForeignKey("ClientProfileID")]
         [InverseProperty("TblEmployeeClients")]
-        public virtual TblClientProfile ClientProfile { get; set; }
+        public virtual TblClientProfile? ClientProfile { get; set; }
 
         [ForeignKey("EmployeeID")]
         [InverseProperty("TblEmployeeClients")]
-        public virtual TblEmployee Employee { get; set; }
+        public virtual TblEmployee? Employee { get; set; }
 
         [InverseProperty("EmployeeClient")]
-        public virtual ICollection<TblAppointment> TblAppointments { get; set; } = new List<TblAppointment>();
+        public virtual ICollection<TblAppointment>? TblAppointments { get; set; } = new List<TblAppointment>();
     }
 }

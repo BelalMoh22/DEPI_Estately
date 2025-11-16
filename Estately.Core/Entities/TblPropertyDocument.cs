@@ -17,21 +17,21 @@
         public string FilePath { get; set; }
 
         [Column(TypeName = "datetime")]
-        public DateTime UploadedAt { get; set; }
+        public DateTime? UploadedAt { get; set; } = DateTime.Now;
 
         [StringLength(500)]
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
 
         [ForeignKey("DocumentTypeID")]
         [InverseProperty("TblPropertyDocuments")]
-        public virtual LkpDocumentType DocumentType { get; set; }
+        public virtual LkpDocumentType? DocumentType { get; set; }
 
         [ForeignKey("PropertyID")]
         [InverseProperty("TblPropertyDocuments")]
-        public virtual TblProperty Property { get; set; }
+        public virtual TblProperty? Property { get; set; }
 
         [ForeignKey("UserID")]
         [InverseProperty("TblPropertyDocuments")]
-        public virtual TblUser User { get; set; }
+        public virtual TblUser? User { get; set; }
     }
 }

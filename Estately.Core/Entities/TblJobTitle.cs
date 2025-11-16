@@ -10,11 +10,11 @@
         public string JobTitleName { get; set; }
 
         [StringLength(255)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        public bool? IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; } = false;
 
         [InverseProperty("JobTitle")]
-        public virtual ICollection<TblEmployee> TblEmployees { get; set; } = new List<TblEmployee>();
+        public virtual ICollection<TblEmployee>? TblEmployees { get; set; } = new List<TblEmployee>();
     }
 }

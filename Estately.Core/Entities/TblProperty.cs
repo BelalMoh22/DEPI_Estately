@@ -35,18 +35,18 @@
         public int BathsNo { get; set; }
 
         [StringLength(500)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [Column(TypeName = "decimal(10, 2)")]
         public decimal Area { get; set; }
 
         [Column(TypeName = "datetime")]
-        public DateTime ListingDate { get; set; }
+        public DateTime? ListingDate { get; set; } = DateTime.Now;
 
         [Column(TypeName = "decimal(10, 2)")]
         public decimal? ExpectedRentPrice { get; set; }
 
-        public bool? IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; } = false;
 
         [Column(TypeName = "decimal(9, 6)")]
         public decimal Latitude { get; set; }
@@ -54,7 +54,7 @@
         [Column(TypeName = "decimal(9, 6)")]
         public decimal Longitude { get; set; }
 
-        public bool? IsFurnished { get; set; }
+        public bool? IsFurnished { get; set; } = false;
 
         [Required]
         [StringLength(50)]
@@ -62,43 +62,43 @@
 
         [ForeignKey("AgentId")]
         [InverseProperty("TblProperties")]
-        public virtual TblEmployee Agent { get; set; }
+        public virtual TblEmployee? Agent { get; set; }
 
         [ForeignKey("DeveloperProfileID")]
         [InverseProperty("TblProperties")]
-        public virtual TblDeveloperProfile DeveloperProfile { get; set; }
+        public virtual TblDeveloperProfile? DeveloperProfile { get; set; }
 
         [ForeignKey("PropertyTypeID")]
         [InverseProperty("TblProperties")]
-        public virtual LkpPropertyType PropertyType { get; set; }
+        public virtual LkpPropertyType? PropertyType { get; set; }
 
         [ForeignKey("StatusId")]
         [InverseProperty("TblProperties")]
-        public virtual LkpPropertyStatus Status { get; set; }
+        public virtual LkpPropertyStatus? Status { get; set; }
 
         [InverseProperty("Property")]
-        public virtual ICollection<TblAppointment> TblAppointments { get; set; } = new List<TblAppointment>();
+        public virtual ICollection<TblAppointment>? TblAppointments { get; set; } = new List<TblAppointment>();
 
         [InverseProperty("Property")]
-        public virtual ICollection<TblClientPropertyInterest> TblClientPropertyInterests { get; set; } = new List<TblClientPropertyInterest>();
+        public virtual ICollection<TblClientPropertyInterest>? TblClientPropertyInterests { get; set; } = new List<TblClientPropertyInterest>();
 
         [InverseProperty("Property")]
-        public virtual ICollection<TblFavorite> TblFavorites { get; set; } = new List<TblFavorite>();
+        public virtual ICollection<TblFavorite>? TblFavorites { get; set; } = new List<TblFavorite>();
 
         [InverseProperty("Property")]
-        public virtual ICollection<TblPropertyDocument> TblPropertyDocuments { get; set; } = new List<TblPropertyDocument>();
+        public virtual ICollection<TblPropertyDocument>? TblPropertyDocuments { get; set; } = new List<TblPropertyDocument>();
 
         [InverseProperty("Property")]
-        public virtual ICollection<TblPropertyFeaturesMapping> TblPropertyFeaturesMappings { get; set; } = new List<TblPropertyFeaturesMapping>();
+        public virtual ICollection<TblPropertyFeaturesMapping>? TblPropertyFeaturesMappings { get; set; } = new List<TblPropertyFeaturesMapping>();
 
         [InverseProperty("Property")]
-        public virtual ICollection<TblPropertyHistory> TblPropertyHistories { get; set; } = new List<TblPropertyHistory>();
+        public virtual ICollection<TblPropertyHistory>? TblPropertyHistories { get; set; } = new List<TblPropertyHistory>();
 
         [InverseProperty("Property")]
-        public virtual ICollection<TblPropertyImage> TblPropertyImages { get; set; } = new List<TblPropertyImage>();
+        public virtual ICollection<TblPropertyImage>? TblPropertyImages { get; set; } = new List<TblPropertyImage>();
 
         [ForeignKey("ZoneID")]
         [InverseProperty("TblProperties")]
-        public virtual TblZone Zone { get; set; }
+        public virtual TblZone? Zone { get; set; }
     }
 }

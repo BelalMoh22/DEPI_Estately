@@ -10,9 +10,9 @@
         public string Name { get; set; }
 
         [StringLength(255)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [InverseProperty("HistoryType")]
-        public virtual ICollection<TblPropertyHistory> TblPropertyHistories { get; set; } = new List<TblPropertyHistory>();
+        public virtual ICollection<TblPropertyHistory>? TblPropertyHistories { get; set; } = new List<TblPropertyHistory>();
     }
 }

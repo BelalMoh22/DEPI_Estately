@@ -9,20 +9,20 @@
         public int UserID { get; set; }
 
         [StringLength(255)]
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
         [StringLength(255)]
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
 
         [StringLength(50)]
         [Unicode(false)]
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
 
         [StringLength(255)]
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
         [StringLength(800)]
-        public string ProfilePhoto { get; set; }
+        public string? ProfilePhoto { get; set; }
 
         [Column(TypeName = "datetime")]
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
@@ -30,16 +30,16 @@
         public bool? IsDeleted { get; set; } = false;
 
         [InverseProperty("ClientProfile")]
-        public virtual ICollection<TblClientPropertyInterest> TblClientPropertyInterests { get; set; } = new List<TblClientPropertyInterest>();
+        public virtual ICollection<TblClientPropertyInterest>? TblClientPropertyInterests { get; set; } = new List<TblClientPropertyInterest>();
 
         [InverseProperty("ClientProfile")]
-        public virtual ICollection<TblEmployeeClient> TblEmployeeClients { get; set; } = new List<TblEmployeeClient>();
+        public virtual ICollection<TblEmployeeClient>? TblEmployeeClients { get; set; } = new List<TblEmployeeClient>();
 
         [InverseProperty("ClientProfile")]
-        public virtual ICollection<TblFavorite> TblFavorites { get; set; } = new List<TblFavorite>();
+        public virtual ICollection<TblFavorite>? TblFavorites { get; set; } = new List<TblFavorite>();
 
         [ForeignKey("UserID")]
         [InverseProperty("TblClientProfile")]
-        public virtual TblUser User { get; set; }
+        public virtual TblUser? User { get; set; }
     }
 }

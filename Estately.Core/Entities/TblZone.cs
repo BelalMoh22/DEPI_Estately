@@ -14,13 +14,13 @@
         [Unicode(false)]
         public string ZoneName { get; set; }
 
-        public bool? IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; } = false;
 
         [ForeignKey("CityID")]
         [InverseProperty("TblZones")]
-        public virtual TblCity City { get; set; }
+        public virtual TblCity? City { get; set; }
 
         [InverseProperty("Zone")]
-        public virtual ICollection<TblProperty> TblProperties { get; set; } = new List<TblProperty>();
+        public virtual ICollection<TblProperty>? TblProperties { get; set; } = new List<TblProperty>();
     }
 }
