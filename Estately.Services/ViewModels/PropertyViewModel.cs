@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Estately.WebApp.ViewModels
+namespace Estately.Services.ViewModels
 {
     public class PropertyViewModel
     {

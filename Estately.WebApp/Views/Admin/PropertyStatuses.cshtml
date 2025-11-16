@@ -1,7 +1,7 @@
 @{
     ViewData["Title"] = "Property Statuses Management";
     Layout = "~/Views/Admin/_AdminLayout.cshtml";
-    var statuses = ViewBag.PropertyStatuses as List<Estately.WebApp.ViewModels.LkpPropertyStatusViewModel> ?? new();
+    var statuses = ViewBag.PropertyStatuses as List<Estately.Services.ViewModels.LkpPropertyStatusViewModel> ?? new();
 }
 
 <div class="table-container">
