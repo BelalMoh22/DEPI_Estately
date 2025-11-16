@@ -219,23 +219,25 @@
 <table class="table table-striped table-hover">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(m => m.Users.First().Email)</th>
-            <th>@Html.DisplayNameFor(m => m.Users.First().Username)</th>
+            <th>UserId</th>
+            <th>Email</th>
+            <th>Username</th>
             <th>User Type</th>
-            <th>Status</th>
+            @* <th>Status</th> *@
             <th>Created At</th>
-            <th style="width:220px;">Actions</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var user in Model.Users)
         {
             <tr>
+                <td>@user.UserID</td>
                 <td>@user.Email</td>
                 <td>@user.Username</td>
                 <td>@user.UserTypeName</td>
 
-                <td>
+                @* <td>
                     @if (user.IsDeleted == true)
                     {
                         <span class="badge bg-danger">Inactive</span>
@@ -244,12 +246,13 @@
                     {
                         <span class="badge bg-success">Active</span>
                     }
-                </td>
+                </td> *@
 
                 <td>@user.CreatedAt?.ToString("yyyy-MM-dd")</td>
 
                 <td>
                     <a asp-action="Edit" asp-route-id="@user.UserID" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Details" asp-route-id="@user.UserID" class="btn btn-info btn-sm">Details</a>
 
                     <form asp-action="ToggleStatus" asp-route-id="@user.UserID"
                           method="post" style="display:inline;">
@@ -267,20 +270,17 @@
     </tbody>
 </table>
 
-<!-- Pagination -->
 @if (Model.TotalPages > 1)
 {
     <nav>
         <ul class="pagination justify-content-center">
             @for (int i = 1; i <= Model.TotalPages; i++)
             {
-                <li class="page-item @(i == Model.Page ? "active" : "")">
+                <li class="page-item @(Model.Page == i ? "active" : "")">
                     <a class="page-link"
-                       asp-action="Index"
                        asp-route-page="@i"
                        asp-route-pageSize="@Model.PageSize"
                        asp-route-search="@Model.SearchTerm">
-
                         @i
                     </a>
                 </li>

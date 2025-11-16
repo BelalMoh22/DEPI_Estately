@@ -1,8 +1,5 @@
-﻿using Estately.Core.Entities;
-using Estately.Core.Interfaces;
-using Estately.Services.Interfaces;
-using Estately.Services.ViewModels;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+
 namespace Estately.Services.Implementations
 {
     //public class ServiceUser : IServiceUser
@@ -84,32 +81,37 @@ namespace Estately.Services.Implementations
             _unitOfWork = unitOfWork;
         }
 
-        // =====================================
-        // PAGINATION + SEARCH + LIST VIEWMODEL
-        // =====================================
-        public async Task<UserListViewModel> GetUsersPagedAsync(int page, int pageSize, string? searchTerm)
+        // ====================================================
+        // 1. LIST USERS (SEARCH + PAGINATION)
+        // ====================================================
+        public async Task<UserListViewModel> GetUsersPagedAsync(int page, int pageSize, string? search)
         {
-            var allUsers = await _unitOfWork.UserRepository.ReadAllIncluding("UserType");
-            var query = allUsers.AsQueryable();
+            // Step 1: Load all users with UserType
+            var users = await _unitOfWork.UserRepository.ReadAllIncluding("UserType");
+            var query = users.AsQueryable();
 
-            if (!string.IsNullOrEmpty(searchTerm))
+            // Step 2: Filtering
+            if (!string.IsNullOrWhiteSpace(search))
             {
                 query = query.Where(u =>
-                    u.Email.Contains(searchTerm) ||
-                    u.Username.Contains(searchTerm));
+                    u.Email.Contains(search) ||
+                    u.Username.Contains(search));
             }
 
+            // Step 3: Total count AFTER FILTER
             int totalCount = query.Count();
 
-            var users = query
-                .OrderByDescending(u => u.CreatedAt)
+            // Step 4: Pagination
+            var pagedUsers = query
+                .OrderBy(u => u.UserID)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
+            // Step 5: Build ViewModel
             return new UserListViewModel
             {
-                Users = users.Select(ConvertToViewModel).ToList(),
+                Users = pagedUsers.Select(ConvertToViewModel).ToList(),
                 UserTypes = (await _unitOfWork.UserTypeRepository.ReadAllAsync())
                     .Select(ut => new LkpUserTypeViewModel
                     {
@@ -119,23 +121,24 @@ namespace Estately.Services.Implementations
                     }).ToList(),
                 Page = page,
                 PageSize = pageSize,
-                SearchTerm = searchTerm,
+                SearchTerm = search,
                 TotalCount = totalCount
             };
         }
 
-        // =====================================
-        // GET SINGLE USER AS VIEWMODEL
-        // =====================================
+        // ====================================================
+        // 2. GET USER BY ID
+        // ====================================================
         public async Task<UserViewModel?> GetUserVMAsync(int id)
         {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+            var users = await _unitOfWork.UserRepository.ReadAllIncluding("UserType");
+            var user = users.FirstOrDefault(x => x.UserID == id);
             return user == null ? null : ConvertToViewModel(user);
         }
 
-        // =====================================
-        // CREATE USER
-        // =====================================
+        // ====================================================
+        // 3. CREATE USER
+        // ====================================================
         public async Task CreateUserAsync(UserViewModel model)
         {
             var user = new TblUser
@@ -155,9 +158,9 @@ namespace Estately.Services.Implementations
             await _unitOfWork.CompleteAsync();
         }
 
-        // =====================================
-        // UPDATE USER
-        // =====================================
+        // ====================================================
+        // 4. UPDATE USER
+        // ====================================================
         public async Task UpdateUserAsync(UserViewModel model)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(model.UserID);
@@ -178,9 +181,9 @@ namespace Estately.Services.Implementations
             await _unitOfWork.CompleteAsync();
         }
 
-        // =====================================
-        // SOFT DELETE USER
-        // =====================================
+        // ====================================================
+        // 5. DELETE USER (SOFT DELETE)
+        // ====================================================
         public async Task DeleteUserAsync(int id)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
@@ -192,9 +195,9 @@ namespace Estately.Services.Implementations
             await _unitOfWork.CompleteAsync();
         }
 
-        // =====================================
-        // TOGGLE STATUS (ACTIVE / DELETED)
-        // =====================================
+        // ====================================================
+        // 6. TOGGLE ACTIVE / INACTIVE
+        // ====================================================
         public async Task ToggleStatusAsync(int id)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
@@ -206,9 +209,9 @@ namespace Estately.Services.Implementations
             await _unitOfWork.CompleteAsync();
         }
 
-        // =====================================
-        // ASSIGN USER ROLE
-        // =====================================
+        // ====================================================
+        // 7. ASSIGN ROLE
+        // ====================================================
         public async Task AssignRoleAsync(int userId, int userTypeId)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
@@ -220,9 +223,45 @@ namespace Estately.Services.Implementations
             await _unitOfWork.CompleteAsync();
         }
 
-        // =====================================
-        // ENTITY → VIEWMODEL
-        // =====================================
+        // ====================================================
+        // 8. USER COUNTER (STATS)
+        // ====================================================
+        public async Task<int> GetUserCounterAsync()
+        {
+            return await _unitOfWork.UserRepository.CounterAsync();
+        }
+
+        // ====================================================
+        // 9. GET MAX ID
+        // ====================================================
+        public int GetMaxIDAsync()
+        {
+            return _unitOfWork.UserRepository.GetMaxId();
+        }
+
+        // ====================================================
+        // 10. SEARCH USERS
+        // ====================================================
+        public async ValueTask<IEnumerable<TblUser>> SearchUserAsync(Expression<Func<TblUser, bool>> predicate)
+        {
+            return await _unitOfWork.UserRepository.Search(predicate);
+        }
+
+        public async Task<IEnumerable<LkpUserTypeViewModel>> GetAllUserTypesAsync()
+        {
+            var types = await _unitOfWork.UserTypeRepository.ReadAllAsync();
+
+            return types.Select(ut => new LkpUserTypeViewModel
+            {
+                UserTypeID = ut.UserTypeID,
+                UserTypeName = ut.UserTypeName,
+                Description = ut.Description
+            });
+        }
+
+        // ====================================================
+        // HELPER: ENTITY -> VIEWMODEL
+        // ====================================================
         private UserViewModel ConvertToViewModel(TblUser u)
         {
             return new UserViewModel
@@ -240,5 +279,4 @@ namespace Estately.Services.Implementations
             };
         }
     }
-
 }

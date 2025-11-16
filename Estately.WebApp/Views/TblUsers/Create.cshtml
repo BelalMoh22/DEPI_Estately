@@ -1,4 +1,4 @@
-﻿@model Estately.Core.Entities.TblUser
+﻿@* @model Estately.Core.Entities.TblUser
 
 @{
     ViewData["Title"] = "Create";
@@ -41,7 +41,61 @@
 
 <div>
     <a asp-action="Index">Back to List</a>
-</div>
+</div> *@
+
+@model Estately.Services.ViewModels.UserViewModel
+
+@{
+    ViewData["Title"] = "Create User";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<h1>Create User</h1>
+
+<form asp-action="Create" method="post" class="mt-4">
+
+    <div class="mb-3">
+        <label>Email</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Username</label>
+        <input asp-for="Username" class="form-control" />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Password</label>
+        <input asp-for="PasswordHash" class="form-control" type="password" />
+        <span asp-validation-for="PasswordHash" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>User Type</label>
+        <select asp-for="UserTypeID" class="form-control" asp-items="ViewBag.UserTypes"></select>
+    </div>
+
+    <div class="form-check mb-2">
+        <input asp-for="IsEmployee" class="form-check-input" />
+        <label class="form-check-label">Is Employee</label>
+    </div>
+
+    <div class="form-check mb-2">
+        <input asp-for="IsClient" class="form-check-input" />
+        <label class="form-check-label">Is Client</label>
+    </div>
+
+    <div class="form-check mb-2">
+        <input asp-for="IsDeveloper" class="form-check-input" />
+        <label class="form-check-label">Is Developer</label>
+    </div>
+
+    <button class="btn btn-success">Create</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</form>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
