@@ -75,7 +75,6 @@ namespace Estately.Services.Implementations
     public class ServiceUser : IServiceUser
     {
         private readonly IUnitOfWork _unitOfWork;
-
         public ServiceUser(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;

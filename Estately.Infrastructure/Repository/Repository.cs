@@ -83,12 +83,11 @@ namespace Estately.Infrastructure.Repository
     return (data, totalCount);
 }
 
-         */
-
+*/
         public async ValueTask<IEnumerable<TEntity>> Search(Expression<Func<TEntity, bool>> predicate)
         {
             return await _dbSet.Where(predicate).AsNoTracking().ToListAsync();
-        }
+        } 
 
         public async Task AddAsync(TEntity entity)
         {
