@@ -156,7 +156,7 @@ namespace Estately.WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var model = await _serviceUser.GetUserVMAsync(id);
+            var model = await _serviceUser.GetUserByIdAsync(id);
 
             if (model == null)
                 return NotFound();
@@ -183,7 +183,6 @@ namespace Estately.WebApp.Controllers
                 await LoadUserTypesDropdown();
                 return View(model);
             }
-
             await _serviceUser.CreateUserAsync(model);
             return RedirectToAction(nameof(Index));
         }
@@ -194,7 +193,7 @@ namespace Estately.WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var model = await _serviceUser.GetUserVMAsync(id);
+            var model = await _serviceUser.GetUserByIdAsync(id);
             if (model == null)
                 return NotFound();
 
@@ -213,7 +212,7 @@ namespace Estately.WebApp.Controllers
             }
 
             // check existence using the existing service method
-            var existing = await _serviceUser.GetUserVMAsync(model.UserID);
+            var existing = await _serviceUser.GetUserByIdAsync(model.UserID);
             if (existing == null)
                 return NotFound();
 

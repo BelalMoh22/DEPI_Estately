@@ -80,22 +80,22 @@ namespace Estately.Services.Implementations
         {
             _unitOfWork = unitOfWork;
         }
-
-        // ====================================================
         // 1. LIST USERS (SEARCH + PAGINATION)
-        // ====================================================
         public async Task<UserListViewModel> GetUsersPagedAsync(int page, int pageSize, string? search)
         {
             // Step 1: Load all users with UserType
             var users = await _unitOfWork.UserRepository.ReadAllIncluding("UserType");
             var query = users.AsQueryable();
 
-            // Step 2: Filtering
+            // Step 2: Filtering (case-insensitive search)
             if (!string.IsNullOrWhiteSpace(search))
             {
+                string searchLower = search.ToLower();
+
                 query = query.Where(u =>
-                    u.Email.Contains(search) ||
-                    u.Username.Contains(search));
+                    (u.Email ?? "").ToLower().Contains(searchLower) ||
+                    (u.Username ?? "").ToLower().Contains(searchLower)
+                );
             }
 
             // Step 3: Total count AFTER FILTER
@@ -129,7 +129,7 @@ namespace Estately.Services.Implementations
         // ====================================================
         // 2. GET USER BY ID
         // ====================================================
-        public async Task<UserViewModel?> GetUserVMAsync(int id)
+        public async Task<UserViewModel?> GetUserByIdAsync(int id)
         {
             var users = await _unitOfWork.UserRepository.ReadAllIncluding("UserType");
             var user = users.FirstOrDefault(x => x.UserID == id);
@@ -145,7 +145,7 @@ namespace Estately.Services.Implementations
             {
                 Email = model.Email,
                 Username = model.Username,
-                PasswordHash = model.PasswordHash ?? "Default@123",
+                PasswordHash = model.PasswordHash ?? "DefaultPasswordHash",
                 UserTypeID = model.UserTypeID,
                 IsEmployee = model.IsEmployee ?? false,
                 IsClient = model.IsClient ?? true,
@@ -158,9 +158,7 @@ namespace Estately.Services.Implementations
             await _unitOfWork.CompleteAsync();
         }
 
-        // ====================================================
         // 4. UPDATE USER
-        // ====================================================
         public async Task UpdateUserAsync(UserViewModel model)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(model.UserID);
@@ -172,10 +170,7 @@ namespace Estately.Services.Implementations
             user.IsEmployee = model.IsEmployee;
             user.IsClient = model.IsClient;
             user.IsDeveloper = model.IsDeveloper;
-            user.IsDeleted = model.IsDeleted;
-
-            if (!string.IsNullOrWhiteSpace(model.PasswordHash))
-                user.PasswordHash = model.PasswordHash;
+            user.IsDeleted = model.IsDeleted ?? false;
 
             await _unitOfWork.UserRepository.UpdateAsync(user);
             await _unitOfWork.CompleteAsync();
@@ -198,16 +193,16 @@ namespace Estately.Services.Implementations
         // ====================================================
         // 6. TOGGLE ACTIVE / INACTIVE
         // ====================================================
-        public async Task ToggleStatusAsync(int id)
-        {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
-            if (user == null) return;
+        //public async Task ToggleStatusAsync(int id)
+        //{
+        //    var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+        //    if (user == null) return;
 
-            user.IsDeleted = !user.IsDeleted;
+        //    user.IsActive = !user.IsActive;
 
-            await _unitOfWork.UserRepository.UpdateAsync(user);
-            await _unitOfWork.CompleteAsync();
-        }
+        //    await _unitOfWork.UserRepository.UpdateAsync(user);
+        //    await _unitOfWork.CompleteAsync();
+        //}
 
         // ====================================================
         // 7. ASSIGN ROLE

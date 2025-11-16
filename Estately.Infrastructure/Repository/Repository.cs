@@ -45,6 +45,45 @@ namespace Estately.Infrastructure.Repository
                 .Take(pageSize);
             return await pagedList.ToListAsync();
         }
+        /*
+         public async Task<(IEnumerable<TEntity> Data, int TotalCount)> 
+    ReadPagedAsync(
+        int page, 
+        int pageSize, 
+        Expression<Func<TEntity, bool>>? filter = null,
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+        params string[] includes)
+{
+    IQueryable<TEntity> query = _dbSet.AsQueryable();
+
+    // Apply Includes
+    foreach (var include in includes)
+    {
+        query = query.Include(include);
+    }
+
+    // Filter
+    if (filter != null)
+        query = query.Where(filter);
+
+    // Total count AFTER filter
+    int totalCount = await query.CountAsync();
+
+    // Sorting
+    if (orderBy != null)
+        query = orderBy(query);
+
+    // Pagination
+    var data = await query
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .AsNoTracking()
+        .ToListAsync();
+
+    return (data, totalCount);
+}
+
+         */
 
         public async ValueTask<IEnumerable<TEntity>> Search(Expression<Func<TEntity, bool>> predicate)
         {

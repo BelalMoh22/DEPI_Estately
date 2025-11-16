@@ -1,6 +1,6 @@
 @{
     ViewData["Title"] = "Employees Management";
-    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
     var employees = ViewBag.Employees as List<Estately.Services.ViewModels.EmployeeViewModel> ?? new();
     var departments = ViewBag.Departments as SelectList ?? new SelectList(new List<object>());
     var users = ViewBag.Users as SelectList ?? new SelectList(new List<object>());

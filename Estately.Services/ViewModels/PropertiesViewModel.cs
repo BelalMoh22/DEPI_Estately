@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Estately.Services.ViewModels
 {
-    public class PropertiesListViewModel
+    public class PropertiesViewModel
     {
         public int PropertyID { get; set; }
         public string Address { get; set; } = "";
@@ -19,4 +19,10 @@ namespace Estately.Services.ViewModels
 
         public string FirstImage { get; set; } = "default.jpg";
     }
+
+    public class PropertiesListViewModel : BaseViewModel
+    {
+        public List<PropertiesViewModel> Properties { get; set; } = new();
+    }
+
 }

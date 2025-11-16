@@ -1,4 +1,4 @@
-﻿@model Estately.Services.ViewModels.PagedPropertyViewModel
+﻿@model Estately.Services.ViewModels.PropertiesListViewModel
 
 @{
     ViewData["Title"] = "Properties | Estately";
@@ -138,7 +138,6 @@
         @if (Model.TotalPages > 1)
         {
             <div class="custom-pagination">
-
                 <!-- Previous -->
                 @if (Model.Page > 1)
                 {
@@ -173,9 +172,7 @@
                 {
                     <span class="page-btn disabled">Next</span>
                 }
-
             </div>
         }
-
     </div>
 </div>
