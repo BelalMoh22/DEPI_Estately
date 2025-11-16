@@ -88,9 +88,9 @@
             ZoneRepository = zoneRepo ?? throw new ArgumentNullException(nameof(zoneRepo));
         }
 
-        public int Complete()
+        public async Task<int> CompleteAsync()
         {
-            return _context.SaveChanges();
+            return await _context.SaveChangesAsync();
         }
 
         private bool _disposed = false;
