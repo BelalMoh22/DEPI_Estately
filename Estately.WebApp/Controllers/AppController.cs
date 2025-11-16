@@ -74,7 +74,7 @@ namespace Estately.WebApp.Controllers
                     Address = p.Address,
                     CityName = p.Zone?.City?.CityName ?? "",
                     ZoneName = p.Zone?.ZoneName ?? "",
-                    Price = p.Price,
+                    Price = (int)p.Price,
                     Beds = p.BedsNo,
                     Baths = p.BathsNo,
                     FirstImage = firstImage

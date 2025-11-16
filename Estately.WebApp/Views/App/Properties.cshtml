@@ -18,6 +18,46 @@
         height: 100%;
         object-fit: cover;
     }
+
+    .custom-pagination {
+        display: flex !important;
+        gap: 8px !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    .page-btn,
+    .page-btn.disabled {
+        display: flex !important; /* enable flex */
+        justify-content: center !important; /* horizontal center */
+        align-items: center !important; /* vertical center */
+        width: 40px !important; /* fixed box width */
+        height: 40px !important; /* fixed box height */
+        border-radius: 10px !important;
+        background: #e5e7eb !important;
+        color: #000 !important;
+        font-weight: 600 !important;
+        text-decoration: none !important;
+        transition: 0.2s !important;
+    }
+
+        .page-btn:hover {
+            background: #00204A !important;
+            color: white !important;
+        }
+
+        /* Active page matches hover */
+        .page-btn.active {
+            background: #00204A !important;
+            color: white !important;
+        }
+
+        /* Disabled button */
+        .page-btn.disabled {
+            background: #f5f5f5 !important;
+            color: #bbb !important;
+            cursor: not-allowed !important;
+            pointer-events: none !important;
 </style>
 
 <div class="hero page-inner overlay"
@@ -71,7 +111,7 @@
 
                             <div>
                                 <span class="d-block mb-2 text-black-50">@property.Address</span>
-                                <span class="city d-block mb-3 main-Text">@property.CityName</span>
+                                <span class="city d-block mb-3 main-Text">@property.CityName , @property.ZoneName</span>
 
                                 <div class="specs d-flex mb-4">
                                     <span class="d-block d-flex align-items-center me-3">
@@ -95,25 +135,47 @@
             }
         </div>
 
-        <!-- Pagination -->
         @if (Model.TotalPages > 1)
         {
-            <div class="row align-items-center py-5">
-                <div class="col-lg-3">Pagination (@Model.Page of @Model.TotalPages)</div>
-                <div class="col-lg-6 text-center">
-                    <div class="custom-pagination">
+            <div class="custom-pagination">
 
-                        @for (int i = 1; i <= Model.TotalPages; i++)
-                        {
-                            <a asp-action="Properties"
-                               asp-route-page="@i"
-                               asp-route-pageSize="@Model.PageSize"
-                               class="@(i == Model.Page ? "active" : "")">@i</a>
-                        }
+                <!-- Previous -->
+                @if (Model.Page > 1)
+                {
+                    <a asp-action="Properties"
+                       asp-route-page="@(Model.Page - 1)"
+                       asp-route-pageSize="@Model.PageSize"
+                       class="page-btn">Prev</a>
+                }
+                else
+                {
+                    <span class="page-btn disabled">Prev</span>
+                }
 
-                    </div>
-                </div>
+                <!-- Page Numbers -->
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <a asp-action="Properties"
+                       asp-route-page="@i"
+                       asp-route-pageSize="@Model.PageSize"
+                       class="page-btn @(i == Model.Page ? "active" : "")">@i</a>
+                }
+
+                <!-- Next -->
+                @if (Model.Page < Model.TotalPages)
+                {
+                    <a asp-action="Properties"
+                       asp-route-page="@(Model.Page + 1)"
+                       asp-route-pageSize="@Model.PageSize"
+                       class="page-btn">Next</a>
+                }
+                else
+                {
+                    <span class="page-btn disabled">Next</span>
+                }
+
             </div>
         }
+
     </div>
 </div>
