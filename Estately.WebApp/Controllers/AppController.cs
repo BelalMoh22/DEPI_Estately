@@ -83,9 +83,54 @@ namespace Estately.WebApp.Controllers
 
             return View(model);
         }
-        public IActionResult PropertySingle() 
+        [HttpGet]
+        public async Task<IActionResult> PropertySingle(int id) 
         {
-            return View();
+            // Get the property from the service (or repository)
+            var property = await _unitOfWork.PropertyRepository.GetByIdAsync(id);
+
+            string folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/properties");
+
+            var images = new List<string>();
+
+            for (int i = 1; i <= 3; i++)
+            {
+                string pattern = $"prop-{property.PropertyID}-{i}.*";
+
+                var image = Directory
+                    .EnumerateFiles(folder, pattern)
+                    .Select(Path.GetFileName)
+                    .FirstOrDefault();
+
+                images.Add(image);
+            }
+
+            var firstImage = images.ElementAtOrDefault(0);
+            var secondImage = images.ElementAtOrDefault(1);
+            var thirdImage = images.ElementAtOrDefault(2);
+
+            if (property == null)
+                return NotFound();
+
+            // Map Property → SinglePropertyViewModel
+            var Model = new SinglePropertyViewModel
+            {
+                PropertyID = property.PropertyID,
+                PropertyCode = property.PropertyCode,
+                PropertyType = property.PropertyType,
+                Address = property.Address,
+                CityName = property.Zone?.City?.CityName ?? "",
+                ZoneName = property.Zone?.ZoneName ?? "",
+                Price = property.Price,
+                Beds = property.BedsNo,
+                Baths = property.BathsNo,
+                Area = property.Area,
+                FirstImage = firstImage,
+                SecondImage = secondImage,
+                ThirdImage = thirdImage
+            };
+
+            return View(Model);
         }
         public IActionResult MyAccount() 
         {
