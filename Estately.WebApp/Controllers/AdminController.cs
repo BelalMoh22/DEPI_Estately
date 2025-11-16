@@ -1,6 +1,6 @@
 using Estately.Core.Entities;
 using Estately.Core.Interfaces;
-using Estately.WebApp.ViewModels;
+using Estately.Services.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -39,185 +39,216 @@ namespace Estately.WebApp.Controllers
 
         #region Users CRUD
 
-        [HttpGet]
-        public async Task<IActionResult> Users(int page = 1, int pageSize = 10, string? searchTerm = null)
+        //[HttpGet]
+        //public async Task<IActionResult> Users(int page = 1, int pageSize = 10, string? searchTerm = null)
+        //{
+
+        //    var allUsers = await _unitOfWork.UserRepository.ReadAllIncluding("UserType");
+        //    var query = allUsers.AsQueryable();
+
+        //    if (!string.IsNullOrEmpty(searchTerm))
+        //    {
+        //        query = query.Where(u => u.Email.Contains(searchTerm) || u.Username.Contains(searchTerm));
+        //    }
+
+        //    var totalCount = query.Count();
+        //    var users = query
+        //        .OrderByDescending(u => u.CreatedAt)
+        //        .Skip((page - 1) * pageSize)
+        //        .Take(pageSize)
+        //        .ToList();
+
+        //    var viewModel = new UserListViewModel
+        //    {
+        //        Users = users.Select(u => new UserViewModel
+        //        {
+        //            UserID = u.UserID,
+        //            UserTypeID = u.UserTypeID,
+        //            Email = u.Email,
+        //            Username = u.Username,
+        //            IsEmployee = u.IsEmployee,
+        //            IsClient = u.IsClient,
+        //            IsDeveloper = u.IsDeveloper,
+        //            CreatedAt = u.CreatedAt,
+        //            IsDeleted = u.IsDeleted,
+        //            UserTypeName = u.UserType?.UserTypeName
+        //        }).ToList(),
+        //        UserTypes = (await _unitOfWork.UserTypeRepository.ReadAllAsync())
+        //            .Select(ut => new LkpUserTypeViewModel
+        //            {
+        //                UserTypeID = ut.UserTypeID,
+        //                UserTypeName = ut.UserTypeName,
+        //                Description = ut.Description
+        //            }).ToList(),
+        //        Page = page,
+        //        PageSize = pageSize,
+        //        SearchTerm = searchTerm,
+        //        TotalCount = totalCount
+        //    };
+
+        //    return View(viewModel);
+        //}
+
+        //[HttpGet]
+        //public async Task<IActionResult> CreateUser()
+        //{
+        //    ViewBag.UserTypes = new SelectList(await _unitOfWork.UserTypeRepository.ReadAllAsync(), "UserTypeID", "UserTypeName");
+        //    return View(new UserViewModel());
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> CreateUser(UserViewModel model)
+        //{
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        var user = new TblUser
+        //        {
+        //            Email = model.Email,
+        //            Username = model.Username,
+        //            PasswordHash = model.PasswordHash ?? "DefaultPassword123",
+        //            UserTypeID = model.UserTypeID ?? 1,
+        //            IsEmployee = model.IsEmployee ?? false,
+        //            IsClient = model.IsClient ?? true,
+        //            IsDeveloper = model.IsDeveloper ?? false,
+        //            CreatedAt = DateTime.Now,
+        //            IsDeleted = false
+        //        };
+
+        //        _unitOfWork.UserRepository.AddAsync(user);
+        //        _unitOfWork.CompleteAsync();
+
+        //        return RedirectToAction("Users");
+        //    }
+
+        //    ViewBag.UserTypes = new SelectList(await _unitOfWork.UserTypeRepository.ReadAllAsync(), "UserTypeID", "UserTypeName");
+        //    return View(model);
+        //}
+
+        //[HttpGet]
+        //public async Task<IActionResult> EditUser(int id)
+        //{
+        //    var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+        //    if (user == null) return NotFound();
+
+        //    var model = new UserViewModel
+        //    {
+        //        UserID = user.UserID,
+        //        UserTypeID = user.UserTypeID,
+        //        Email = user.Email,
+        //        Username = user.Username,
+        //        IsEmployee = user.IsEmployee,
+        //        IsClient = user.IsClient,
+        //        IsDeveloper = user.IsDeveloper,
+        //        CreatedAt = user.CreatedAt,
+        //        IsDeleted = user.IsDeleted
+        //    };
+
+        //    ViewBag.UserTypes = new SelectList(await _unitOfWork.UserTypeRepository.ReadAllAsync(), "UserTypeID", "UserTypeName", user.UserTypeID);
+        //    return View(model);
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> EditUser(UserViewModel model)
+        //{
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        var user = await _unitOfWork.UserRepository.GetByIdAsync(model.UserID);
+        //        if (user == null) return NotFound();
+
+        //        user.Email = model.Email;
+        //        user.Username = model.Username;
+        //        user.UserTypeID = model.UserTypeID;
+        //        user.IsEmployee = model.IsEmployee;
+        //        user.IsClient = model.IsClient;
+        //        user.IsDeveloper = model.IsDeveloper;
+        //        user.IsDeleted = model.IsDeleted;
+
+        //        if (!string.IsNullOrEmpty(model.PasswordHash))
+        //        {
+        //            user.PasswordHash = model.PasswordHash;
+        //        }
+
+        //        _unitOfWork.UserRepository.UpdateAsync(user);
+        //        _unitOfWork.CompleteAsync();
+
+        //        return RedirectToAction("Users");
+        //    }
+
+        //    ViewBag.UserTypes = new SelectList(await _unitOfWork.UserTypeRepository.ReadAllAsync(), "UserTypeID", "UserTypeName", model.UserTypeID);
+        //    return View(model);
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> DeleteUser(int id)
+        //{
+        //    var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+        //    if (user != null)
+        //    {
+        //        user.IsDeleted = true;
+        //        _unitOfWork.UserRepository.UpdateAsync(user);
+        //        _unitOfWork.CompleteAsync();
+        //    }
+        //    return RedirectToAction("Users");
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> ToggleUserStatus(int id)
+        //{
+        //    var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+        //    if (user != null)
+        //    {
+        //        user.IsDeleted = !user.IsDeleted;
+        //        _unitOfWork.UserRepository.UpdateAsync(user);
+        //        _unitOfWork.CompleteAsync();
+        //    }
+        //    return RedirectToAction("Users");
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> AssignUserRole(int userId, int userTypeId)
+        //{
+        //    var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+        //    if (user != null)
+        //    {
+        //        user.UserTypeID = userTypeId;
+        //        _unitOfWork.UserRepository.UpdateAsync(user);
+        //        _unitOfWork.CompleteAsync();
+        //    }
+        //    return RedirectToAction("Users");
+        //}
+        #region Users
+        // Redirect admin to user list
+        public IActionResult Users()
         {
-
-            var allUsers = await _unitOfWork.UserRepository.ReadAllIncluding("UserType");
-            var query = allUsers.AsQueryable();
-
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                query = query.Where(u => u.Email.Contains(searchTerm) || u.Username.Contains(searchTerm));
-            }
-
-            var totalCount = query.Count();
-            var users = query
-                .OrderByDescending(u => u.CreatedAt)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-
-            var viewModel = new UserListViewModel
-            {
-                Users = users.Select(u => new UserViewModel
-                {
-                    UserID = u.UserID,
-                    UserTypeID = u.UserTypeID,
-                    Email = u.Email,
-                    Username = u.Username,
-                    IsEmployee = u.IsEmployee,
-                    IsClient = u.IsClient,
-                    IsDeveloper = u.IsDeveloper,
-                    CreatedAt = u.CreatedAt,
-                    IsDeleted = u.IsDeleted,
-                    UserTypeName = u.UserType?.UserTypeName
-                }).ToList(),
-                UserTypes = (await _unitOfWork.UserTypeRepository.ReadAllAsync())
-                    .Select(ut => new LkpUserTypeViewModel
-                    {
-                        UserTypeID = ut.UserTypeID,
-                        UserTypeName = ut.UserTypeName,
-                        Description = ut.Description
-                    }).ToList(),
-                Page = page,
-                PageSize = pageSize,
-                SearchTerm = searchTerm,
-                TotalCount = totalCount
-            };
-
-            return View(viewModel);
+            return RedirectToAction("Index", "TblUsers");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> CreateUser()
+        // Redirect admin to user create
+        public IActionResult CreateUser()
         {
-            ViewBag.UserTypes = new SelectList(await _unitOfWork.UserTypeRepository.ReadAllAsync(), "UserTypeID", "UserTypeName");
-            return View(new UserViewModel());
+            return RedirectToAction("Create", "TblUsers");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateUser(UserViewModel model)
+        // Redirect admin to user edit
+        public IActionResult EditUser(int id)
         {
-
-            if (ModelState.IsValid)
-            {
-                var user = new TblUser
-                {
-                    Email = model.Email,
-                    Username = model.Username,
-                    PasswordHash = model.PasswordHash ?? "DefaultPassword123",
-                    UserTypeID = model.UserTypeID ?? 1,
-                    IsEmployee = model.IsEmployee ?? false,
-                    IsClient = model.IsClient ?? true,
-                    IsDeveloper = model.IsDeveloper ?? false,
-                    CreatedAt = DateTime.Now,
-                    IsDeleted = false
-                };
-
-                _unitOfWork.UserRepository.AddAsync(user);
-                _unitOfWork.CompleteAsync();
-
-                return RedirectToAction("Users");
-            }
-
-            ViewBag.UserTypes = new SelectList(await _unitOfWork.UserTypeRepository.ReadAllAsync(), "UserTypeID", "UserTypeName");
-            return View(model);
+            return RedirectToAction("Edit", "TblUsers", new { id });
         }
 
-        [HttpGet]
-        public async Task<IActionResult> EditUser(int id)
+        // Redirect admin to user delete
+        public IActionResult DeleteUser(int id)
         {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
-            if (user == null) return NotFound();
-
-            var model = new UserViewModel
-            {
-                UserID = user.UserID,
-                UserTypeID = user.UserTypeID,
-                Email = user.Email,
-                Username = user.Username,
-                IsEmployee = user.IsEmployee,
-                IsClient = user.IsClient,
-                IsDeveloper = user.IsDeveloper,
-                CreatedAt = user.CreatedAt,
-                IsDeleted = user.IsDeleted
-            };
-
-            ViewBag.UserTypes = new SelectList(await _unitOfWork.UserTypeRepository.ReadAllAsync(), "UserTypeID", "UserTypeName", user.UserTypeID);
-            return View(model);
+            return RedirectToAction("Delete", "TblUsers", new { id });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> EditUser(UserViewModel model)
+        // Redirect admin to user details
+        public IActionResult UserDetails(int id)
         {
-
-            if (ModelState.IsValid)
-            {
-                var user = await _unitOfWork.UserRepository.GetByIdAsync(model.UserID);
-                if (user == null) return NotFound();
-
-                user.Email = model.Email;
-                user.Username = model.Username;
-                user.UserTypeID = model.UserTypeID;
-                user.IsEmployee = model.IsEmployee;
-                user.IsClient = model.IsClient;
-                user.IsDeveloper = model.IsDeveloper;
-                user.IsDeleted = model.IsDeleted;
-
-                if (!string.IsNullOrEmpty(model.PasswordHash))
-                {
-                    user.PasswordHash = model.PasswordHash;
-                }
-
-                _unitOfWork.UserRepository.UpdateAsync(user);
-                _unitOfWork.CompleteAsync();
-
-                return RedirectToAction("Users");
-            }
-
-            ViewBag.UserTypes = new SelectList(await _unitOfWork.UserTypeRepository.ReadAllAsync(), "UserTypeID", "UserTypeName", model.UserTypeID);
-            return View(model);
+            return RedirectToAction("Details", "TblUsers", new { id });
         }
-
-        [HttpPost]
-        public async Task<IActionResult> DeleteUser(int id)
-        {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
-            if (user != null)
-            {
-                user.IsDeleted = true;
-                _unitOfWork.UserRepository.UpdateAsync(user);
-                _unitOfWork.CompleteAsync();
-            }
-            return RedirectToAction("Users");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ToggleUserStatus(int id)
-        {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
-            if (user != null)
-            {
-                user.IsDeleted = !user.IsDeleted;
-                _unitOfWork.UserRepository.UpdateAsync(user);
-                _unitOfWork.CompleteAsync();
-            }
-            return RedirectToAction("Users");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AssignUserRole(int userId, int userTypeId)
-        {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
-            if (user != null)
-            {
-                user.UserTypeID = userTypeId;
-                _unitOfWork.UserRepository.UpdateAsync(user);
-                _unitOfWork.CompleteAsync();
-            }
-            return RedirectToAction("Users");
-        }
+        #endregion
 
         #endregion
 

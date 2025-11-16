@@ -20,7 +20,7 @@ namespace Estately.WebApp
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            //builder.Services.AddScoped<IServiceDepartment, ServiceDepartment>();
+            builder.Services.AddScoped<IServiceUser, ServiceUser>();
 
             // Add session support for admin authentication
             builder.Services.AddDistributedMemoryCache();

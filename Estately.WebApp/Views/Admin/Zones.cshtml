@@ -1,7 +1,7 @@
 @{
     ViewData["Title"] = "Zones Management";
     Layout = "~/Views/Admin/_AdminLayout.cshtml";
-    var zones = ViewBag.Zones as List<Estately.WebApp.ViewModels.ZoneViewModel> ?? new();
+    var zones = ViewBag.Zones as List<Estately.Services.ViewModels.ZoneViewModel> ?? new();
     var cities = ViewBag.Cities as SelectList ?? new SelectList(new List<object>());
     var page = (int)(ViewBag.Page ?? 1);
     var pageSize = (int)(ViewBag.PageSize ?? 10);

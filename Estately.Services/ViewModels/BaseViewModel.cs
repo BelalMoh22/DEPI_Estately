@@ -1,4 +1,4 @@
-namespace Estately.WebApp.ViewModels
+namespace Estately.Services.ViewModels
 {
     public class BaseViewModel
     {

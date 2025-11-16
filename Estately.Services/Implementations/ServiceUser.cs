@@ -1,80 +1,244 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using Estately.Core.Entities;
+using Estately.Core.Interfaces;
+using Estately.Services.Interfaces;
+using Estately.Services.ViewModels;
+using Microsoft.EntityFrameworkCore;
 namespace Estately.Services.Implementations
 {
+    //public class ServiceUser : IServiceUser
+    //{
+    //    private readonly IUnitOfWork _unitOfWork;
+    //    public ServiceUser(IUnitOfWork unitOfWork)
+    //    {
+    //        _unitOfWork = unitOfWork;
+    //    }
+
+    //    public async Task AddUserAsync(TblUser user)
+    //    {
+    //        await _unitOfWork.UserRepository.AddAsync(user);
+    //        await _unitOfWork.CompleteAsync();
+    //    }
+
+    //    public async Task DeleteUserAsync(int id)
+    //    {
+    //        var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+    //        if (user != null)
+    //        {
+    //            await _unitOfWork.UserRepository.DeleteAsync(id);
+    //            await _unitOfWork.CompleteAsync();
+    //        }
+    //    }
+
+    //    public async ValueTask<TblUser> GetUserByIDAsync(int? id)
+    //    {
+    //        var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+    //        if (user != null)
+    //        {
+    //            return user;
+    //        }
+    //        else
+    //        {
+    //            return null;
+    //        }
+    //    }
+
+    //    public async Task<int> GetUserCounterAsync()
+    //    {
+    //        return await _unitOfWork.UserRepository.CounterAsync();
+    //    }
+
+    //    public int GetMaxIDAsync()
+    //    {
+    //        return _unitOfWork.UserRepository.GetMaxId();
+    //    }
+
+    //    public async ValueTask<IEnumerable<TblUser>> PaginationUserAsync(int page = 1, int pageSize = 10)
+    //    {
+    //        var userslist = await _unitOfWork.UserRepository.ReadWithPagination(page, pageSize);
+    //        return userslist;
+    //    }
+
+    //    public async ValueTask<IEnumerable<TblUser>> SearchUserAsync(Expression<Func<TblUser, bool>> predicate)
+    //    {
+    //        var searchList = await _unitOfWork.UserRepository.Search(predicate);
+    //        return searchList;
+    //    }
+
+    //    public async Task UpdateUserAsync(TblUser user)
+    //    {
+    //        var oldUser = await _unitOfWork.UserRepository.GetByIdAsync(user.UserID);
+    //        if (oldUser != null)
+    //        {
+    //            oldUser.UserTypeID = user.UserTypeID;
+    //            await _unitOfWork.UserRepository.UpdateAsync(oldUser);
+    //            await _unitOfWork.CompleteAsync();
+    //        }
+    //    }
+    //}
     public class ServiceUser : IServiceUser
     {
         private readonly IUnitOfWork _unitOfWork;
+
         public ServiceUser(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public async Task AddUserAsync(TblUser user)
+        // =====================================
+        // PAGINATION + SEARCH + LIST VIEWMODEL
+        // =====================================
+        public async Task<UserListViewModel> GetUsersPagedAsync(int page, int pageSize, string? searchTerm)
         {
+            var allUsers = await _unitOfWork.UserRepository.ReadAllIncluding("UserType");
+            var query = allUsers.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                query = query.Where(u =>
+                    u.Email.Contains(searchTerm) ||
+                    u.Username.Contains(searchTerm));
+            }
+
+            int totalCount = query.Count();
+
+            var users = query
+                .OrderByDescending(u => u.CreatedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return new UserListViewModel
+            {
+                Users = users.Select(ConvertToViewModel).ToList(),
+                UserTypes = (await _unitOfWork.UserTypeRepository.ReadAllAsync())
+                    .Select(ut => new LkpUserTypeViewModel
+                    {
+                        UserTypeID = ut.UserTypeID,
+                        UserTypeName = ut.UserTypeName,
+                        Description = ut.Description
+                    }).ToList(),
+                Page = page,
+                PageSize = pageSize,
+                SearchTerm = searchTerm,
+                TotalCount = totalCount
+            };
+        }
+
+        // =====================================
+        // GET SINGLE USER AS VIEWMODEL
+        // =====================================
+        public async Task<UserViewModel?> GetUserVMAsync(int id)
+        {
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+            return user == null ? null : ConvertToViewModel(user);
+        }
+
+        // =====================================
+        // CREATE USER
+        // =====================================
+        public async Task CreateUserAsync(UserViewModel model)
+        {
+            var user = new TblUser
+            {
+                Email = model.Email,
+                Username = model.Username,
+                PasswordHash = model.PasswordHash ?? "Default@123",
+                UserTypeID = model.UserTypeID,
+                IsEmployee = model.IsEmployee ?? false,
+                IsClient = model.IsClient ?? true,
+                IsDeveloper = model.IsDeveloper ?? false,
+                CreatedAt = DateTime.Now,
+                IsDeleted = false
+            };
+
             await _unitOfWork.UserRepository.AddAsync(user);
             await _unitOfWork.CompleteAsync();
         }
 
+        // =====================================
+        // UPDATE USER
+        // =====================================
+        public async Task UpdateUserAsync(UserViewModel model)
+        {
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(model.UserID);
+            if (user == null) return;
+
+            user.Email = model.Email;
+            user.Username = model.Username;
+            user.UserTypeID = model.UserTypeID;
+            user.IsEmployee = model.IsEmployee;
+            user.IsClient = model.IsClient;
+            user.IsDeveloper = model.IsDeveloper;
+            user.IsDeleted = model.IsDeleted;
+
+            if (!string.IsNullOrWhiteSpace(model.PasswordHash))
+                user.PasswordHash = model.PasswordHash;
+
+            await _unitOfWork.UserRepository.UpdateAsync(user);
+            await _unitOfWork.CompleteAsync();
+        }
+
+        // =====================================
+        // SOFT DELETE USER
+        // =====================================
         public async Task DeleteUserAsync(int id)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
-            if (user != null)
-            {
-                await _unitOfWork.UserRepository.DeleteAsync(id);
-                await _unitOfWork.CompleteAsync();
-            }
+            if (user == null) return;
+
+            user.IsDeleted = true;
+
+            await _unitOfWork.UserRepository.UpdateAsync(user);
+            await _unitOfWork.CompleteAsync();
         }
 
-        public async ValueTask<TblUser> GetUserByIDAsync(int? id)
+        // =====================================
+        // TOGGLE STATUS (ACTIVE / DELETED)
+        // =====================================
+        public async Task ToggleStatusAsync(int id)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
-            if (user != null)
+            if (user == null) return;
+
+            user.IsDeleted = !user.IsDeleted;
+
+            await _unitOfWork.UserRepository.UpdateAsync(user);
+            await _unitOfWork.CompleteAsync();
+        }
+
+        // =====================================
+        // ASSIGN USER ROLE
+        // =====================================
+        public async Task AssignRoleAsync(int userId, int userTypeId)
+        {
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+            if (user == null) return;
+
+            user.UserTypeID = userTypeId;
+
+            await _unitOfWork.UserRepository.UpdateAsync(user);
+            await _unitOfWork.CompleteAsync();
+        }
+
+        // =====================================
+        // ENTITY → VIEWMODEL
+        // =====================================
+        private UserViewModel ConvertToViewModel(TblUser u)
+        {
+            return new UserViewModel
             {
-                return user;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public async Task<int> GetUserCounterAsync()
-        {
-            return await _unitOfWork.UserRepository.CounterAsync();
-        }
-
-        public int GetMaxIDAsync()
-        {
-            return _unitOfWork.UserRepository.GetMaxId();
-        }
-
-        public async ValueTask<IEnumerable<TblUser>> PaginationUserAsync(int page = 1, int pageSize = 10)
-        {
-            var userslist = await _unitOfWork.UserRepository.ReadWithPagination(page, pageSize);
-            return userslist;
-        }
-
-        public async ValueTask<IEnumerable<TblUser>> SearchUserAsync(Expression<Func<TblUser, bool>> predicate)
-        {
-            var searchList = await _unitOfWork.UserRepository.Search(predicate);
-            return searchList;
-        }
-
-        public async Task UpdateUserAsync(TblUser user)
-        {
-            var oldUser = await _unitOfWork.UserRepository.GetByIdAsync(user.UserID);
-            if (oldUser != null)
-            {
-                oldUser.UserTypeID = user.UserTypeID;
-                await _unitOfWork.UserRepository.UpdateAsync(oldUser);
-                await _unitOfWork.CompleteAsync();
-            }
+                UserID = u.UserID,
+                UserTypeID = u.UserTypeID,
+                Email = u.Email,
+                Username = u.Username,
+                IsEmployee = u.IsEmployee,
+                IsClient = u.IsClient,
+                IsDeveloper = u.IsDeveloper,
+                CreatedAt = u.CreatedAt,
+                IsDeleted = u.IsDeleted,
+                UserTypeName = u.UserType?.UserTypeName
+            };
         }
     }
+
 }
