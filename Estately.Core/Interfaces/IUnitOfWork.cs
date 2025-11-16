@@ -28,6 +28,6 @@
         IRepository<TblUser> UserRepository { get; }
         IRepository<LkpUserType> UserTypeRepository { get; }
         IRepository<TblZone> ZoneRepository { get; }
-        int Complete();
+        Task<int> CompleteAsync();
     }
 }

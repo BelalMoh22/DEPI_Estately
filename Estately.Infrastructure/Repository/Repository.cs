@@ -14,7 +14,7 @@ namespace Estately.Infrastructure.Repository
         }
 
         #region Methods
-        public async ValueTask<TEntity> GetByIdAsync(int id)
+        public async ValueTask<TEntity> GetByIdAsync(int? id)
         {
             return await _dbSet.FindAsync(id);
         }
@@ -51,22 +51,27 @@ namespace Estately.Infrastructure.Repository
             return await _dbSet.Where(predicate).AsNoTracking().ToListAsync();
         }
 
-        public void AddAsync(TEntity entity)
+        public async Task AddAsync(TEntity entity)
         {
-            _dbSet.AddAsync(entity);
+            await _dbSet.AddAsync(entity);
         }
-        public void UpdateAsync(TEntity entity)
+        public async Task UpdateAsync(TEntity entity)
         {
             _dbSet.Update(entity);
         }
 
-        public void DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var entity = _dbSet.Find(id);
             if (entity != null)
             {
                 _dbSet.Remove(entity);
             }
+        }
+
+        public async Task<int> CounterAsync()
+        {
+            return await _dbSet.CountAsync();
         }
 
         public int GetMaxId()

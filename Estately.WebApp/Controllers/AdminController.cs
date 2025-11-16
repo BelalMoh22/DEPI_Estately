@@ -116,7 +116,7 @@ namespace Estately.WebApp.Controllers
                 };
 
                 _unitOfWork.UserRepository.AddAsync(user);
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
 
                 return RedirectToAction("Users");
             }
@@ -171,7 +171,7 @@ namespace Estately.WebApp.Controllers
                 }
 
                 _unitOfWork.UserRepository.UpdateAsync(user);
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
 
                 return RedirectToAction("Users");
             }
@@ -188,7 +188,7 @@ namespace Estately.WebApp.Controllers
             {
                 user.IsDeleted = true;
                 _unitOfWork.UserRepository.UpdateAsync(user);
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
             }
             return RedirectToAction("Users");
         }
@@ -201,7 +201,7 @@ namespace Estately.WebApp.Controllers
             {
                 user.IsDeleted = !user.IsDeleted;
                 _unitOfWork.UserRepository.UpdateAsync(user);
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
             }
             return RedirectToAction("Users");
         }
@@ -214,7 +214,7 @@ namespace Estately.WebApp.Controllers
             {
                 user.UserTypeID = userTypeId;
                 _unitOfWork.UserRepository.UpdateAsync(user);
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
             }
             return RedirectToAction("Users");
         }
@@ -334,7 +334,7 @@ namespace Estately.WebApp.Controllers
                 };
 
                 _unitOfWork.PropertyRepository.AddAsync(property);
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
 
                 return RedirectToAction("Properties");
             }
@@ -419,7 +419,7 @@ namespace Estately.WebApp.Controllers
                 property.PropertyCode = model.PropertyCode;
 
                 _unitOfWork.PropertyRepository.UpdateAsync(property);
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
 
                 return RedirectToAction("Properties");
             }
@@ -440,7 +440,7 @@ namespace Estately.WebApp.Controllers
             {
                 property.IsDeleted = true;
                 _unitOfWork.PropertyRepository.UpdateAsync(property);
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
             }
             return RedirectToAction("Properties");
         }
@@ -488,7 +488,7 @@ namespace Estately.WebApp.Controllers
             if (ModelState.IsValid)
             {
                 _unitOfWork.CityRepository.AddAsync(new TblCity { CityName = model.CityName });
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
                 return RedirectToAction("Cities");
             }
             return View(model);
@@ -513,7 +513,7 @@ namespace Estately.WebApp.Controllers
                 {
                     city.CityName = model.CityName;
                     _unitOfWork.CityRepository.UpdateAsync(city);
-                    _unitOfWork.Complete();
+                    _unitOfWork.CompleteAsync();
                 }
             }
             return RedirectToAction("Cities");
@@ -523,7 +523,7 @@ namespace Estately.WebApp.Controllers
         public async Task<IActionResult> DeleteCity(int id)
         {
             _unitOfWork.CityRepository.DeleteAsync(id);
-            _unitOfWork.Complete();
+            _unitOfWork.CompleteAsync();
             return RedirectToAction("Cities");
         }
 
@@ -571,7 +571,7 @@ namespace Estately.WebApp.Controllers
             if (ModelState.IsValid)
             {
                 _unitOfWork.ZoneRepository.AddAsync(new TblZone { ZoneName = model.ZoneName, CityID = model.CityID });
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
                 return RedirectToAction("Zones");
             }
             ViewBag.Cities = new SelectList(await _unitOfWork.CityRepository.ReadAllAsync(), "CityID", "CityName");
@@ -599,7 +599,7 @@ namespace Estately.WebApp.Controllers
                     zone.ZoneName = model.ZoneName;
                     zone.CityID = model.CityID;
                     _unitOfWork.ZoneRepository.UpdateAsync(zone);
-                    _unitOfWork.Complete();
+                    _unitOfWork.CompleteAsync();
                 }
             }
             return RedirectToAction("Zones");
@@ -609,7 +609,7 @@ namespace Estately.WebApp.Controllers
         public async Task<IActionResult> DeleteZone(int id)
         {
             _unitOfWork.ZoneRepository.DeleteAsync(id);
-            _unitOfWork.Complete();
+            _unitOfWork.CompleteAsync();
             return RedirectToAction("Zones");
         }
 
@@ -664,7 +664,7 @@ namespace Estately.WebApp.Controllers
                     Phone = model.Phone,
                     IsDeleted = false
                 });
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
                 return RedirectToAction("Branches");
             }
             return View(model);
@@ -701,7 +701,7 @@ namespace Estately.WebApp.Controllers
                     branch.Phone = model.Phone;
                     branch.IsDeleted = model.IsDeleted;
                     _unitOfWork.BranchRepository.UpdateAsync(branch);
-                    _unitOfWork.Complete();
+                    _unitOfWork.CompleteAsync();
                 }
             }
             return RedirectToAction("Branches");
@@ -715,7 +715,7 @@ namespace Estately.WebApp.Controllers
             {
                 branch.IsDeleted = true;
                 _unitOfWork.BranchRepository.UpdateAsync(branch);
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
             }
             return RedirectToAction("Branches");
         }
@@ -767,7 +767,7 @@ namespace Estately.WebApp.Controllers
                     ManagerName = model.ManagerName,
                     Email = model.Email
                 });
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
                 return RedirectToAction("Departments");
             }
             return View(model);
@@ -800,7 +800,7 @@ namespace Estately.WebApp.Controllers
                     dept.ManagerName = model.ManagerName;
                     dept.Email = model.Email;
                     _unitOfWork.DepartmentRepository.UpdateAsync(dept);
-                    _unitOfWork.Complete();
+                    _unitOfWork.CompleteAsync();
                 }
             }
             return RedirectToAction("Departments");
@@ -810,7 +810,7 @@ namespace Estately.WebApp.Controllers
         public async Task<IActionResult> DeleteDepartment(int id)
         {
             _unitOfWork.DepartmentRepository.DeleteAsync(id);
-            _unitOfWork.Complete();
+            _unitOfWork.CompleteAsync();
             return RedirectToAction("Departments");
         }
 
@@ -866,7 +866,7 @@ namespace Estately.WebApp.Controllers
                     AppointmentDate = model.AppointmentDate,
                     Notes = model.Notes
                 });
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
             }
             return RedirectToAction("Appointments");
         }
@@ -885,7 +885,7 @@ namespace Estately.WebApp.Controllers
                     appointment.AppointmentDate = model.AppointmentDate;
                     appointment.Notes = model.Notes;
                     _unitOfWork.AppointmentRepository.UpdateAsync(appointment);
-                    _unitOfWork.Complete();
+                    _unitOfWork.CompleteAsync();
                 }
             }
             return RedirectToAction("Appointments");
@@ -895,7 +895,7 @@ namespace Estately.WebApp.Controllers
         public async Task<IActionResult> DeleteAppointment(int id)
         {
             _unitOfWork.AppointmentRepository.DeleteAsync(id);
-            _unitOfWork.Complete();
+            _unitOfWork.CompleteAsync();
             return RedirectToAction("Appointments");
         }
 
@@ -982,7 +982,7 @@ namespace Estately.WebApp.Controllers
                     HireDate = model.HireDate ?? DateTime.Now,
                     IsActive = true
                 });
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
                 return RedirectToAction("Employees");
             }
             ViewBag.BranchDepartments = new SelectList(await _unitOfWork.BranchDepartmentRepository.ReadAllIncluding("Branch", "Department"), "BranchDepartmentID", "BranchDepartmentID");
@@ -1046,7 +1046,7 @@ namespace Estately.WebApp.Controllers
                     employee.HireDate = model.HireDate;
                     employee.IsActive = model.IsActive;
                     _unitOfWork.EmployeeRepository.UpdateAsync(employee);
-                    _unitOfWork.Complete();
+                    _unitOfWork.CompleteAsync();
                 }
             }
             return RedirectToAction("Employees");
@@ -1060,7 +1060,7 @@ namespace Estately.WebApp.Controllers
             {
                 employee.IsActive = false;
                 _unitOfWork.EmployeeRepository.UpdateAsync(employee);
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
             }
             return RedirectToAction("Employees");
         }
@@ -1089,7 +1089,7 @@ namespace Estately.WebApp.Controllers
             if (ModelState.IsValid)
             {
                 _unitOfWork.PropertyTypeRepository.AddAsync(new LkpPropertyType { TypeName = model.TypeName });
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
                 return RedirectToAction("PropertyTypes");
             }
             return View(model);
@@ -1114,7 +1114,7 @@ namespace Estately.WebApp.Controllers
                 {
                     pt.TypeName = model.TypeName;
                     _unitOfWork.PropertyTypeRepository.UpdateAsync(pt);
-                    _unitOfWork.Complete();
+                    _unitOfWork.CompleteAsync();
                 }
             }
             return RedirectToAction("PropertyTypes");
@@ -1124,7 +1124,7 @@ namespace Estately.WebApp.Controllers
         public async Task<IActionResult> DeletePropertyType(int id)
         {
             _unitOfWork.PropertyTypeRepository.DeleteAsync(id);
-            _unitOfWork.Complete();
+            _unitOfWork.CompleteAsync();
             return RedirectToAction("PropertyTypes");
         }
 
@@ -1148,7 +1148,7 @@ namespace Estately.WebApp.Controllers
             if (ModelState.IsValid)
             {
                 _unitOfWork.PropertyStatusRepository.AddAsync(new LkpPropertyStatus { StatusName = model.StatusName, Description = model.Description });
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
                 return RedirectToAction("PropertyStatuses");
             }
             return View(model);
@@ -1174,7 +1174,7 @@ namespace Estately.WebApp.Controllers
                     ps.StatusName = model.StatusName;
                     ps.Description = model.Description;
                     _unitOfWork.PropertyStatusRepository.UpdateAsync(ps);
-                    _unitOfWork.Complete();
+                    _unitOfWork.CompleteAsync();
                 }
             }
             return RedirectToAction("PropertyStatuses");
@@ -1184,7 +1184,7 @@ namespace Estately.WebApp.Controllers
         public async Task<IActionResult> DeletePropertyStatus(int id)
         {
             _unitOfWork.PropertyStatusRepository.DeleteAsync(id);
-            _unitOfWork.Complete();
+            _unitOfWork.CompleteAsync();
             return RedirectToAction("PropertyStatuses");
         }
 
@@ -1208,7 +1208,7 @@ namespace Estately.WebApp.Controllers
             if (ModelState.IsValid)
             {
                 _unitOfWork.UserTypeRepository.AddAsync(new LkpUserType { UserTypeName = model.UserTypeName, Description = model.Description });
-                _unitOfWork.Complete();
+                _unitOfWork.CompleteAsync();
                 return RedirectToAction("UserTypes");
             }
             return View(model);
@@ -1234,7 +1234,7 @@ namespace Estately.WebApp.Controllers
                     ut.UserTypeName = model.UserTypeName;
                     ut.Description = model.Description;
                     _unitOfWork.UserTypeRepository.UpdateAsync(ut);
-                    _unitOfWork.Complete();
+                    _unitOfWork.CompleteAsync();
                 }
             }
             return RedirectToAction("UserTypes");
@@ -1244,7 +1244,7 @@ namespace Estately.WebApp.Controllers
         public async Task<IActionResult> DeleteUserType(int id)
         {
             _unitOfWork.UserTypeRepository.DeleteAsync(id);
-            _unitOfWork.Complete();
+            _unitOfWork.CompleteAsync();
             return RedirectToAction("UserTypes");
         }
 
