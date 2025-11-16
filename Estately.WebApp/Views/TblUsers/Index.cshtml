@@ -30,7 +30,7 @@
             <th>Email</th>
             <th>Username</th>
             <th>User Type</th>
-            @* <th>Status</th> *@
+
             <th>Created At</th>
             <th>Actions</th>
         </tr>
@@ -43,28 +43,10 @@
                 <td>@user.Email</td>
                 <td>@user.Username</td>
                 <td>@user.UserTypeName</td>
-
-                @* <td>
-                    @if (user.IsDeleted == true)
-                    {
-                        <span class="badge bg-danger">Inactive</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-success">Active</span>
-                    }
-                </td> *@
-
                 <td>@user.CreatedAt?.ToString("yyyy-MM-dd")</td>
-
                 <td>
-                    <a asp-action="Edit" asp-route-id="@user.UserID" class="btn btn-warning btn-sm">Edit</a>
-                    <a asp-action="Details" asp-route-id="@user.UserID" class="btn btn-info btn-sm">Details</a>
-
-                    <form asp-action="ToggleStatus" asp-route-id="@user.UserID"
-                          method="post" style="display:inline;">
-                        <button class="btn btn-secondary btn-sm">Toggle</button>
-                    </form>
+                    <a asp-action="Edit" asp-route-id="@user.UserID" class="btn btn-primary btn-sm">Edit</a>
+                    <a asp-action="Details" asp-route-id="@user.UserID" class="btn btn-warning text-white btn-sm">Details</a>
 
                     <form asp-action="Delete" asp-route-id="@user.UserID"
                           method="post" style="display:inline;"

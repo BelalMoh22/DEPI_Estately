@@ -141,7 +141,6 @@ namespace Estately.WebApp.Controllers
         {
             _serviceUser = serviceUser;
         }
-
         // =======================================================
         // INDEX (LIST + SEARCH + PAGINATION)
         // =======================================================
