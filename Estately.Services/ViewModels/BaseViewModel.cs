@@ -9,4 +9,3 @@ namespace Estately.Services.ViewModels
         public int TotalPages => (int)Math.Ceiling((double)TotalCount / PageSize);
     }
 }
-

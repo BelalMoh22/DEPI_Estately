@@ -7,7 +7,7 @@
         [Key]
         public int EmployeeID { get; set; }
 
-        public int UserID { get; set; }
+        public int? UserID { get; set; }
 
         public int? BranchDepartmentId { get; set; }
 

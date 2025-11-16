@@ -1,6 +1,8 @@
-@* @{
+@{
     ViewData["Title"] = ViewData["Title"] ?? "Admin Dashboard";
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
 }
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -126,40 +128,40 @@
     <div class="admin-sidebar">
         <div class="logo">Estately Admin</div>
         <nav class="nav flex-column">
-            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")" asp-action="Dashboard" asp-controller="Admin">
+            <a class="nav-link @(currentController == "Dashboard" ? "active" : "")" asp-action="Dashboard" asp-controller="Admin">
                 <i class="bi bi-speedometer2 me-2"></i> Dashboard
             </a>
-            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Users" ? "active" : "")" asp-action="Users" asp-controller="Admin">
+            <a class="nav-link @(currentController == "TblUsers" ? "active" : "")" asp-controller="TblUsers" asp-action="Index">
                 <i class="bi bi-people me-2"></i> Users
             </a>
-            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Properties" ? "active" : "")" asp-action="Properties" asp-controller="Admin">
+            <a class="nav-link @(currentController == "Properties" ? "active" : "")" asp-action="Properties" asp-controller="Admin">
                 <i class="bi bi-house-door me-2"></i> Properties
             </a>
-            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Appointments" ? "active" : "")" asp-action="Appointments" asp-controller="Admin">
+            <a class="nav-link @(currentController == "Appointments" ? "active" : "")" asp-action="Appointments" asp-controller="Admin">
                 <i class="bi bi-calendar-check me-2"></i> Appointments
             </a>
-            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Employees" ? "active" : "")" asp-action="Employees" asp-controller="Admin">
+            <a class="nav-link @(currentController == "Employees" ? "active" : "")" asp-action="Employees" asp-controller="Admin">
                 <i class="bi bi-briefcase me-2"></i> Employees
             </a>
-            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Branches" ? "active" : "")" asp-action="Branches" asp-controller="Admin">
+            <a class="nav-link @(currentController == "Branches" ? "active" : "")" asp-action="Branches" asp-controller="Admin">
                 <i class="bi bi-building me-2"></i> Branches
             </a>
-            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Departments" ? "active" : "")" asp-action="Departments" asp-controller="Admin">
+            <a class="nav-link @(currentController == "Departments" ? "active" : "")" asp-action="Departments" asp-controller="Admin">
                 <i class="bi bi-diagram-3 me-2"></i> Departments
             </a>
-            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Cities" ? "active" : "")" asp-action="Cities" asp-controller="Admin">
+            <a class="nav-link @(currentController == "Cities" ? "active" : "")" asp-action="Cities" asp-controller="Admin">
                 <i class="bi bi-geo-alt me-2"></i> Cities
             </a>
-            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Zones" ? "active" : "")" asp-action="Zones" asp-controller="Admin">
+            <a class="nav-link @(currentController == "Zones" ? "active" : "")" asp-action="Zones" asp-controller="Admin">
                 <i class="bi bi-pin-map me-2"></i> Zones
             </a>
-            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "PropertyTypes" ? "active" : "")" asp-action="PropertyTypes" asp-controller="Admin">
+            <a class="nav-link @(currentController == "PropertyTypes" ? "active" : "")" asp-action="PropertyTypes" asp-controller="Admin">
                 <i class="bi bi-tags me-2"></i> Property Types
             </a>
-            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "PropertyStatuses" ? "active" : "")" asp-action="PropertyStatuses" asp-controller="Admin">
+            <a class="nav-link @(currentController == "PropertyStatuses" ? "active" : "")" asp-action="PropertyStatuses" asp-controller="Admin">
                 <i class="bi bi-info-circle me-2"></i> Property Statuses
             </a>
-            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "UserTypes" ? "active" : "")" asp-action="UserTypes" asp-controller="Admin">
+            <a class="nav-link @(currentController == "UserTypes" ? "active" : "")" asp-action="UserTypes" asp-controller="Admin">
                 <i class="bi bi-person-badge me-2"></i> User Types
             </a>
         </nav>
@@ -177,19 +179,13 @@
 
         @RenderBody()
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
- *@
+@*=================================================================================================================================*@
 
-@{
-    ViewData["Title"] = ViewData["Title"] ?? "Admin Dashboard";
-    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
-}
-
-<!DOCTYPE html>
+@* <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -273,13 +269,12 @@
                asp-controller="Admin" asp-action="Dashboard">
                 <i class="bi bi-speedometer2 me-2"></i> Dashboard
             </a>
-
-            <a class="nav-link @(currentController == "TblUsers" ? "active" : "")"
-               asp-controller="TblUsers" asp-action="Index">
+            <a class="nav-link @(currentController == "TblUsers" ? "active" : "")" asp-controller="TblUsers" asp-action="Index">
                 <i class="bi bi-people me-2"></i> Users
             </a>
 
-            <a class="nav-link" asp-controller="Admin" asp-action="Properties">
+            <a class="nav-link @(currentController == "TblUsers" ? "active" : "")"
+            asp-controller="Admin" asp-action="Properties">
                 <i class="bi bi-house-door me-2"></i> Properties
             </a>
 
@@ -331,5 +326,5 @@
     @RenderSection("Scripts", required: false)
 
 </body>
-</html>
+</html> *@
 

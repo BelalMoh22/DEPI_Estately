@@ -1,6 +1,6 @@
 @{
     ViewData["Title"] = "Branches Management";
-    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
     var branches = ViewBag.Branches as List<Estately.Services.ViewModels.BranchViewModel> ?? new();
     var page = (int)(ViewBag.Page ?? 1);
     var pageSize = (int)(ViewBag.PageSize ?? 10);
