@@ -9,3 +9,4 @@ global using Estately.Infrastructure.Repository;
 global using Estately.Infrastructure.UnitOfWorks;
 global using Estately.Services.Interfaces;
 global using Estately.Services.Implementations;
+global using Estately.Services.ViewModels;

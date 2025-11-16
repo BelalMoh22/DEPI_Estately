@@ -15,12 +15,11 @@ namespace Estately.WebApp.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        #region Dashboard
-
-        [HttpGet]
+        // ============================================
+        // DASHBOARD
+        // ============================================
         public async Task<IActionResult> Dashboard()
         {
-
             var stats = new
             {
                 TotalUsers = (await _unitOfWork.UserRepository.ReadAllAsync()).Count(),
@@ -34,10 +33,36 @@ namespace Estately.WebApp.Controllers
             ViewBag.Stats = stats;
             return View();
         }
+        #region Users
+        // ============================================
+        // USER ROUTING
+        // ============================================
+        public IActionResult Users()
+        {
+            return RedirectToAction("Index", "TblUsers");
+        }
 
+        public IActionResult CreateUser()
+        {
+            return RedirectToAction("Create", "TblUsers");
+        }
+
+        public IActionResult EditUser(int id)
+        {
+            return RedirectToAction("Edit", "TblUsers", new { id });
+        }
+
+        public IActionResult DeleteUser(int id)
+        {
+            return RedirectToAction("Delete", "TblUsers", new { id });
+        }
+
+        public IActionResult UserDetails(int id)
+        {
+            return RedirectToAction("Details", "TblUsers", new { id });
+        }
         #endregion
 
-        #region Users CRUD
 
         //[HttpGet]
         //public async Task<IActionResult> Users(int page = 1, int pageSize = 10, string? searchTerm = null)
@@ -218,39 +243,6 @@ namespace Estately.WebApp.Controllers
         //    }
         //    return RedirectToAction("Users");
         //}
-        #region Users
-        // Redirect admin to user list
-        public IActionResult Users()
-        {
-            return RedirectToAction("Index", "TblUsers");
-        }
-
-        // Redirect admin to user create
-        public IActionResult CreateUser()
-        {
-            return RedirectToAction("Create", "TblUsers");
-        }
-
-        // Redirect admin to user edit
-        public IActionResult EditUser(int id)
-        {
-            return RedirectToAction("Edit", "TblUsers", new { id });
-        }
-
-        // Redirect admin to user delete
-        public IActionResult DeleteUser(int id)
-        {
-            return RedirectToAction("Delete", "TblUsers", new { id });
-        }
-
-        // Redirect admin to user details
-        public IActionResult UserDetails(int id)
-        {
-            return RedirectToAction("Details", "TblUsers", new { id });
-        }
-        #endregion
-
-        #endregion
 
         #region Properties CRUD
 

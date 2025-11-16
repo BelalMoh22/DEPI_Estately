@@ -1,4 +1,4 @@
-﻿@model Estately.Core.Entities.TblUser
+﻿@* @model Estately.Core.Entities.TblUser
 
 @{
     ViewData["Title"] = "Edit";
@@ -67,7 +67,55 @@
 
 <div>
     <a asp-action="Index">Back to List</a>
-</div>
+</div> *@
+
+@model Estately.Services.ViewModels.UserViewModel
+
+@{
+    ViewData["Title"] = "Edit User";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<h1>Edit User</h1>
+
+<form asp-action="Edit" method="post" class="mt-4">
+
+    <input type="hidden" asp-for="UserID" />
+
+    <div class="mb-3">
+        <label>Email</label>
+        <input asp-for="Email" class="form-control" disabled />
+    </div>
+
+    <div class="mb-3">
+        <label>Username</label>
+        <input asp-for="Username" class="form-control" disabled />
+    </div>
+    @*Check the Checkboxes With the UserTypeId*@
+    <div class="mb-3">
+        <label>User Type</label>
+        <select asp-for="UserTypeID" class="form-control" asp-items="ViewBag.UserTypes"></select>
+    </div>
+
+    <div class="form-check mb-2">
+        <input asp-for="IsEmployee" class="form-check-input" />
+        <label class="form-check-label">Is Employee</label>
+    </div>
+
+    <div class="form-check mb-2">
+        <input asp-for="IsClient" class="form-check-input" />
+        <label class="form-check-label">Is Client</label>
+    </div>
+
+    <div class="form-check mb-2">
+        <input asp-for="IsDeveloper" class="form-check-input" />
+        <label class="form-check-label">Is Developer</label>
+    </div>
+
+    <button class="btn btn-warning">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</form>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
