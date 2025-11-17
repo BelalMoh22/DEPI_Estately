@@ -180,87 +180,115 @@ namespace Estately.WebApp.Controllers
 
         #region Zones CRUD
 
-        [HttpGet]
-        public async Task<IActionResult> Zones(int page = 1, int pageSize = 10, string? searchTerm = null)
+        // ============================================
+        // USER ROUTING
+        // ============================================
+        public IActionResult Zones()
         {
-            var allZones = await _unitOfWork.ZoneRepository.ReadAllIncluding("City");
-            var query = allZones.AsQueryable();
-            if (!string.IsNullOrEmpty(searchTerm))
-                query = query.Where(z => z.ZoneName.Contains(searchTerm) || (z.City != null && z.City.CityName.Contains(searchTerm)));
-
-            var totalCount = query.Count();
-            var zones = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-
-            ViewBag.Zones = zones.Select(z => new ZoneViewModel
-            {
-                ZoneID = z.ZoneID,
-                ZoneName = z.ZoneName,
-                CityID = z.CityID,
-                CityName = z.City?.CityName
-            }).ToList();
-            ViewBag.Cities = new SelectList(await _unitOfWork.CityRepository.ReadAllAsync(), "CityID", "CityName");
-            ViewBag.Page = page;
-            ViewBag.PageSize = pageSize;
-            ViewBag.SearchTerm = searchTerm;
-            ViewBag.TotalCount = totalCount;
-            ViewBag.TotalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-            return View();
+            return RedirectToAction("Index", "TblZones");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> CreateZone()
+        public IActionResult CreateZone()
         {
-            ViewBag.Cities = new SelectList(await _unitOfWork.CityRepository.ReadAllAsync(), "CityID", "CityName");
-            return View(new ZoneViewModel());
+            return RedirectToAction("Create", "TblZones");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateZone(ZoneViewModel model)
+        public IActionResult EditZone(int id)
         {
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.ZoneRepository.AddAsync(new TblZone { ZoneName = model.ZoneName, CityID = model.CityID });
-                _unitOfWork.CompleteAsync();
-                return RedirectToAction("Zones");
-            }
-            ViewBag.Cities = new SelectList(await _unitOfWork.CityRepository.ReadAllAsync(), "CityID", "CityName");
-            return View(model);
+            return RedirectToAction("Edit", "TblZones", new { id });
         }
 
-        [HttpGet]
-        public async Task<IActionResult> EditZone(int id)
+        public IActionResult DeleteZone(int id)
         {
-            var zone = await _unitOfWork.ZoneRepository.GetByIdAsync(id);
-            if (zone == null) return NotFound();
-            var model = new ZoneViewModel { ZoneID = zone.ZoneID, ZoneName = zone.ZoneName, CityID = zone.CityID };
-            ViewBag.Cities = new SelectList(await _unitOfWork.CityRepository.ReadAllAsync(), "CityID", "CityName", zone.CityID);
-            return View(model);
+            return RedirectToAction("Delete", "TblZones", new { id });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> EditZone(ZoneViewModel model)
+        public IActionResult ZoneDetails(int id)
         {
-            if (ModelState.IsValid)
-            {
-                var zone = await _unitOfWork.ZoneRepository.GetByIdAsync(model.ZoneID);
-                if (zone != null)
-                {
-                    zone.ZoneName = model.ZoneName;
-                    zone.CityID = model.CityID;
-                    _unitOfWork.ZoneRepository.UpdateAsync(zone);
-                    _unitOfWork.CompleteAsync();
-                }
-            }
-            return RedirectToAction("Zones");
+            return RedirectToAction("Details", "TblZones", new { id });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> DeleteZone(int id)
-        {
-            _unitOfWork.ZoneRepository.DeleteAsync(id);
-            _unitOfWork.CompleteAsync();
-            return RedirectToAction("Zones");
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> Zones(int page = 1, int pageSize = 10, string? searchTerm = null)
+        //{
+        //    var allZones = await _unitOfWork.ZoneRepository.ReadAllIncluding("City");
+        //    var query = allZones.AsQueryable();
+        //    if (!string.IsNullOrEmpty(searchTerm))
+        //        query = query.Where(z => z.ZoneName.Contains(searchTerm) || (z.City != null && z.City.CityName.Contains(searchTerm)));
+
+        //    var totalCount = query.Count();
+        //    var zones = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+        //    ViewBag.Zones = zones.Select(z => new ZoneViewModel
+        //    {
+        //        ZoneID = z.ZoneID,
+        //        ZoneName = z.ZoneName,
+        //        CityID = z.CityID,
+        //        CityName = z.City?.CityName
+        //    }).ToList();
+        //    ViewBag.Cities = new SelectList(await _unitOfWork.CityRepository.ReadAllAsync(), "CityID", "CityName");
+        //    ViewBag.Page = page;
+        //    ViewBag.PageSize = pageSize;
+        //    ViewBag.SearchTerm = searchTerm;
+        //    ViewBag.TotalCount = totalCount;
+        //    ViewBag.TotalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        //    return View();
+        //}
+
+        //[HttpGet]
+        //public async Task<IActionResult> CreateZone()
+        //{
+        //    ViewBag.Cities = new SelectList(await _unitOfWork.CityRepository.ReadAllAsync(), "CityID", "CityName");
+        //    return View(new ZoneViewModel());
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> CreateZone(ZoneViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _unitOfWork.ZoneRepository.AddAsync(new TblZone { ZoneName = model.ZoneName, CityID = model.CityID });
+        //        _unitOfWork.CompleteAsync();
+        //        return RedirectToAction("Zones");
+        //    }
+        //    ViewBag.Cities = new SelectList(await _unitOfWork.CityRepository.ReadAllAsync(), "CityID", "CityName");
+        //    return View(model);
+        //}
+
+        //[HttpGet]
+        //public async Task<IActionResult> EditZone(int id)
+        //{
+        //    var zone = await _unitOfWork.ZoneRepository.GetByIdAsync(id);
+        //    if (zone == null) return NotFound();
+        //    var model = new ZoneViewModel { ZoneID = zone.ZoneID, ZoneName = zone.ZoneName, CityID = zone.CityID };
+        //    ViewBag.Cities = new SelectList(await _unitOfWork.CityRepository.ReadAllAsync(), "CityID", "CityName", zone.CityID);
+        //    return View(model);
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> EditZone(ZoneViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var zone = await _unitOfWork.ZoneRepository.GetByIdAsync(model.ZoneID);
+        //        if (zone != null)
+        //        {
+        //            zone.ZoneName = model.ZoneName;
+        //            zone.CityID = model.CityID;
+        //            _unitOfWork.ZoneRepository.UpdateAsync(zone);
+        //            _unitOfWork.CompleteAsync();
+        //        }
+        //    }
+        //    return RedirectToAction("Zones");
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> DeleteZone(int id)
+        //{
+        //    _unitOfWork.ZoneRepository.DeleteAsync(id);
+        //    _unitOfWork.CompleteAsync();
+        //    return RedirectToAction("Zones");
+        //}
 
         #endregion
 
