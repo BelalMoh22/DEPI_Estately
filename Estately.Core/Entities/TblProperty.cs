@@ -44,7 +44,7 @@
         public DateTime? ListingDate { get; set; } = DateTime.Now;
 
         [Column(TypeName = "decimal(10, 2)")]
-        public decimal? ExpectedRentPrice { get; set; }
+        public decimal? ExpectedRentPrice { get; set; } = 0m; // here where if the user didn't enter anything, it will be 0
 
         public bool? IsDeleted { get; set; } = false;
 
