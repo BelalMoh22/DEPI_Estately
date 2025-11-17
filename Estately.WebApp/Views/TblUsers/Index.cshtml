@@ -1,7 +1,7 @@
 ﻿@model Estately.Services.ViewModels.UserListViewModel
 
 @{
-    ViewData["Title"] = "Users";
+    ViewData["Title"] = "Users Management";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -20,7 +20,6 @@
         color: white !important;
         transition: 0.3s ease !important;
     }
-
     .btn-edit:hover {
             background-color: #003A87 !important; /* slightly darker navy */
     }
@@ -57,7 +56,6 @@
         align-items: center !important;
         margin: 20px 0 !important;
     }
-
     .page-btn,
     .page-btn.disabled {
         padding: 10px 16px !important;
@@ -75,24 +73,24 @@
         transition: 0.3s ease !important;
     }
 
-        .page-btn:hover {
-            background: #00204A !important;
-            color: white !important;
-        }
+    .page-btn:hover {
+        background: #00204A !important;
+        color: white !important;
+    }
 
-        /* Active page matches hover */
-        .page-btn.active {
-            background: #00204A !important;
-            color: white !important;
-        }
+    /* Active page matches hover */
+    .page-btn.active {
+        background: #00204A !important;
+        color: white !important;
+    }
 
-        /* Disabled button */
-        .page-btn.disabled {
-            background: #f5f5f5 !important;
-            color: #bbb !important;
-            cursor: not-allowed !important;
-            pointer-events: none !important;
-        }
+    /* Disabled button */
+    .page-btn.disabled {
+        background: #f5f5f5 !important;
+        color: #bbb !important;
+        cursor: not-allowed !important;
+        pointer-events: none !important;
+    }
 
     /* RESPONSIVE */
     @@media (max-width: 576px) {
@@ -103,7 +101,7 @@
         }
     }
 </style>
-<h1 class="mb-4">Users</h1>
+<h4 class="mb-4">Users</h4>
 
 <div class="row mb-3">
     <div class="col-md-8">
