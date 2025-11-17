@@ -84,54 +84,50 @@ namespace Estately.WebApp.Controllers
             return View(model);
         }
         [HttpGet]
-        public async Task<IActionResult> PropertySingle(int id) 
+        public async Task<IActionResult> PropertySingle(int id)
         {
-            // Get the property from the service (or repository)
-            var property = await _unitOfWork.PropertyRepository.GetByIdAsync(id);
-
-            string folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/properties");
-
-            var images = new List<string>();
-
-            for (int i = 1; i <= 3; i++)
-            {
-                string pattern = $"prop-{property.PropertyID}-{i}.*";
-
-                var image = Directory
-                    .EnumerateFiles(folder, pattern)
-                    .Select(Path.GetFileName)
-                    .FirstOrDefault();
-
-                images.Add(image);
-            }
-
-            var firstImage = images.ElementAtOrDefault(0);
-            var secondImage = images.ElementAtOrDefault(1);
-            var thirdImage = images.ElementAtOrDefault(2);
+            var property = await _unitOfWork.PropertyRepository
+                .GetByIdIncludingAsync(
+                    id,
+                    "TblPropertyImages",
+                    "Zone",
+                    "Zone.City",
+                    "PropertyType",
+                    "Status"
+                );
 
             if (property == null)
                 return NotFound();
 
-            // Map Property → SinglePropertyViewModel
-            var Model = new SinglePropertyViewModel
+            var model = new SinglePropertyViewModel
             {
                 PropertyID = property.PropertyID,
                 PropertyCode = property.PropertyCode,
-                PropertyType = property.PropertyType,
+                Description = property.Description ?? "",
                 Address = property.Address,
+                PropertyTypeName = property.PropertyType?.TypeName ?? "",
+                PropertyStatusName = property.Status?.StatusName ?? "",
                 CityName = property.Zone?.City?.CityName ?? "",
                 ZoneName = property.Zone?.ZoneName ?? "",
-                Price = property.Price,
+                Price = (int) property.Price,
                 Beds = property.BedsNo,
                 Baths = property.BathsNo,
+                FloorsNo = property.FloorsNo,
                 Area = property.Area,
-                FirstImage = firstImage,
-                SecondImage = secondImage,
-                ThirdImage = thirdImage
+                ExpectedRent = (int?)property.ExpectedRentPrice ?? 0,
+                Latitude = property.Latitude,
+                Longitude = property.Longitude,
+
+                Images = property.TblPropertyImages
+                    .Where(i => i.IsDeleted == false)
+                    .OrderBy(i => i.ImageID)
+                    .Select(i => i.ImagePath)
+                    .ToList()
             };
 
-            return View(Model);
+            return View(model);
         }
+
         public IActionResult MyAccount() 
         {
             return View();

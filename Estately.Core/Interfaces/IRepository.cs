@@ -8,6 +8,7 @@
         ValueTask<IEnumerable<TEntity>> ReadAllIncluding(params string[] includes);
         ValueTask<IEnumerable<TEntity>> ReadWithPagination(int page, int pageSize);
         ValueTask<IEnumerable<TEntity>> Search(Expression<Func<TEntity, bool>> predicate);
+        ValueTask<TEntity?> GetByIdIncludingAsync(int id, params string[] includes);
         Task UpdateAsync(TEntity entity);
         Task DeleteAsync(int id);
         Task<int> CounterAsync();

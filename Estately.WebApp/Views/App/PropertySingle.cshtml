@@ -5,8 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<!-- HERO SECTION -->
 <div class="hero page-inner overlay"
-     style="background-image: url('@Url.Content("~/images/properties/" + Model.FirstImage)')">
+     style="background-image: url('@Url.Content("~/images/Properties/" +(Model.Images.FirstOrDefault()))')">
     <div class="container">
         <div class="row justify-content-center align-items-center">
             <div class="col-lg-9 text-center mt-5">
@@ -14,16 +15,13 @@
                     @Model.Address
                 </h1>
 
-                <nav aria-label="breadcrumb"
-                     data-aos="fade-up"
-                     data-aos-delay="200">
+                <nav aria-label="breadcrumb" data-aos="fade-up" data-aos-delay="200">
                     <ol class="breadcrumb text-center justify-content-center">
                         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="App">Home</a></li>
                         <li class="breadcrumb-item">
                             <a asp-action="Properties" asp-controller="App">Properties</a>
                         </li>
-                        <li class="breadcrumb-item active text-white-50"
-                            aria-current="page">
+                        <li class="breadcrumb-item active text-white-50" aria-current="page">
                             @Model.Address
                         </li>
                     </ol>
@@ -33,63 +31,112 @@
     </div>
 </div>
 
+
+<!-- PROPERTY SECTION -->
 <div id="section2" class="section">
     <div class="container">
         <div class="row justify-content-between">
+
+            <!-- LEFT SIDE: IMAGE SLIDER -->
             <div class="col-lg-7">
                 <div class="img-property-slide-wrap">
                     <div class="img-property-slide">
-                        <img src="~/images/properties/@Model.FirstImage" alt="Image" class="img-fluid" />
-                        <img src="~/images/properties/@Model.SecondImage" alt="Image" class="img-fluid" />
-                        <img src="~/images/properties/@Model.ThirdImage" alt="Image" class="img-fluid" />
+                        @foreach (var img in Model.Images)
+                        {
+                            <img src="~/images/Properties/@(img)" alt="Image" class="img-fluid"/>
+                        }
                     </div>
                 </div>
             </div>
+
+            <!-- RIGHT SIDE: DETAILS -->
             <div class="col-lg-4">
                 <h2 class="heading header-Text">@Model.Address</h2>
+
                 <p class="text-black-50">
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ratione
-                    laborum quo quos omnis sed magnam id, ducimus saepe, debitis error
-                    earum, iste dicta odio est sint dolorem magni animi tenetur.
+                    @Model.Description
+                    <br />
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corrupti, dignissimos minus ipsa reprehenderit rerum culpa rem nulla laudantium ex accusamus perferendis. Amet saepe cupiditate architecto expedita nam porro iste ipsa.
                 </p>
-                <div class="p-4 rounded shadow-sm" style="background:#fff; border:1px solid #e5e5e5;">
+
+                <div class="p-4 rounded shadow-sm"
+                     style="background:#fff; border:1px solid #e5e5e5;">
 
                     <!-- Header Row -->
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h3 class="header-Text m-0">@Model.PropertyType</h3>
+                        <h3 class="header-Text m-0">@Model.PropertyTypeName</h3>
                         <span style="font-size: 22px; font-weight: 600;">@Model.Area m²</span>
                     </div>
+
                     <hr />
-                    <!-- Info Rows -->
+
+                    <!-- FULL PROPERTY INFO -->
                     <div class="property-info">
+
                         <div class="d-flex justify-content-between py-2" style="background:#f8f9fa;">
                             <span class="fw-bold">Reference No.</span>
                             <span>@Model.PropertyCode</span>
                         </div>
+
+                        <div class="d-flex justify-content-between py-2">
+                            <span class="fw-bold">Type</span>
+                            <span>@Model.PropertyTypeName</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between py-2" style="background:#f8f9fa;">
+                            <span class="fw-bold">Status</span>
+                            <span>@Model.PropertyStatusName</span>
+                        </div>
+
                         <div class="d-flex justify-content-between py-2">
                             <span class="fw-bold">Bedrooms</span>
                             <span>@Model.Beds</span>
                         </div>
+
                         <div class="d-flex justify-content-between py-2" style="background:#f8f9fa;">
                             <span class="fw-bold">Bathrooms</span>
                             <span>@Model.Baths</span>
                         </div>
+
+                        <div class="d-flex justify-content-between py-2">
+                            <span class="fw-bold">Floors</span>
+                            <span>@Model.FloorsNo</span>
+                        </div>
+
                         <div class="d-flex justify-content-between py-2" style="background:#f8f9fa;">
                             <span class="fw-bold">Zone</span>
                             <span>@Model.ZoneName</span>
                         </div>
+
                         <div class="d-flex justify-content-between py-2">
                             <span class="fw-bold">City</span>
                             <span>@Model.CityName</span>
                         </div>
+
                         <div class="d-flex justify-content-between py-2" style="background:#f8f9fa;">
+                            <span class="fw-bold">Latitude</span>
+                            <span>@Model.Latitude</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between py-2">
+                            <span class="fw-bold">Longitude</span>
+                            <span>@Model.Longitude</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between py-2" style="background:#f8f9fa;">
+                            <span class="fw-bold">Expected Rent</span>
+                            <span>@Model.ExpectedRent EGP</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between py-2">
                             <span class="fw-bold">Price</span>
                             <span>@Model.Price EGP</span>
                         </div>
+
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
-

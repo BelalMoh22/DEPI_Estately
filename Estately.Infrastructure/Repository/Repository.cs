@@ -35,6 +35,27 @@ namespace Estately.Infrastructure.Repository
             return await query.AsNoTracking().ToListAsync();
         }
 
+        public async ValueTask<TEntity?> GetByIdIncludingAsync(int id, params string[] includes)
+        {
+            IQueryable<TEntity> query = _dbSet.AsQueryable();
+
+            foreach (var include in includes)
+                query = query.Include(include);
+
+            // Detect primary key name automatically
+            var keyName = _context.Model
+                .FindEntityType(typeof(TEntity))
+                .FindPrimaryKey()
+                .Properties
+                .Select(x => x.Name)
+                .First();
+
+            return await query.FirstOrDefaultAsync(
+                x => EF.Property<int>(x, keyName) == id
+            );
+        }
+
+
         public async ValueTask<IEnumerable<TEntity>> ReadWithPagination(int page, int pageSize)
         {
             if (page < 1) page = 1;

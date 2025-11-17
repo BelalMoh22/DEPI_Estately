@@ -33,10 +33,10 @@ namespace Estately.Services.ViewModels
         public bool? IsDeveloper { get; set; }
 
         [Display(Name = "Created At")]
-        public DateTime? CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
 
         [Display(Name = "Is Deleted")]
-        public bool? IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; } = false;
 
         [Display(Name = "User Type")]
         public string? UserTypeName { get; set; }
@@ -48,4 +48,3 @@ namespace Estately.Services.ViewModels
         public List<LkpUserTypeViewModel> UserTypes { get; set; } = new();
     }
 }
-

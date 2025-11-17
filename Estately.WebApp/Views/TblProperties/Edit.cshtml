@@ -1,0 +1,121 @@
+﻿@model Estately.Services.ViewModels.PropertyViewModel
+
+@{
+    ViewData["Title"] = "Edit Property";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .btn-save {
+        background-color: #00204A !important;
+        color: white !important;
+    }
+
+        .btn-save:hover {
+            background-color: #003A87 !important;
+        }
+</style>
+
+<h1>Edit Property</h1>
+
+<form asp-action="Edit" method="post">
+
+    <input type="hidden" asp-for="PropertyID" />
+
+    <div class="mb-3">
+        <label>Property Code</label>
+        <input asp-for="PropertyCode" class="form-control" disabled />
+    </div>
+
+    <div class="mb-3">
+        <label>Address</label>
+        <input asp-for="Address" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Area (m²)</label>
+        <input asp-for="Area" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Price</label>
+        <input asp-for="Price" class="form-control" />
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <label>Beds No.</label>
+            <input asp-for="BedsNo" class="form-control" />
+        </div>
+
+        <div class="col-md-4">
+            <label>Baths No.</label>
+            <input asp-for="BathsNo" class="form-control" />
+        </div>
+
+        <div class="col-md-4">
+            <label>Floors No.</label>
+            <input asp-for="FloorsNo" class="form-control" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Year Built</label>
+        <input asp-for="YearBuilt" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Expected Rent Price</label>
+        <input asp-for="ExpectedRentPrice" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Latitude</label>
+        <input asp-for="Latitude" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Longitude</label>
+        <input asp-for="Longitude" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Description</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <!-- Lookups -->
+
+    <div class="mb-3">
+        <label>Property Type</label>
+        <select asp-for="PropertyTypeID" class="form-control" asp-items="ViewBag.PropertyTypes"></select>
+    </div>
+
+    <div class="mb-3">
+        <label>Status</label>
+        <select asp-for="StatusId" class="form-control" asp-items="ViewBag.Statuses"></select>
+    </div>
+
+    <div class="mb-3">
+        <label>Developer</label>
+        <select asp-for="DeveloperProfileID" class="form-control" asp-items="ViewBag.Developers"></select>
+    </div>
+
+    <div class="mb-3">
+        <label>Zone</label>
+        <select asp-for="ZoneID" class="form-control" asp-items="ViewBag.Zones"></select>
+    </div>
+
+    <div class="mb-3">
+        <label>Agent</label>
+        <select asp-for="AgentId" class="form-control" asp-items="ViewBag.Agents"></select>
+    </div>
+
+    <div class="form-check">
+        <input asp-for="IsFurnished" class="form-check-input" />
+        <label class="form-check-label">Is Furnished</label>
+    </div>
+
+    <button class="btn btn-save mt-3">Save</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Back</a>
+</form>

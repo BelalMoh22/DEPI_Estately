@@ -1,0 +1,30 @@
+﻿@model Estately.Services.ViewModels.PropertyViewModel
+
+@{
+    ViewData["Title"] = "Delete Property";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h4 class="text-danger">Delete Property</h4>
+
+<div class="alert alert-danger">
+    <strong>Are you sure you want to delete this property?</strong>
+</div>
+
+<table class="table table-bordered">
+    <tr><th>Property Code</th><td>@Model.PropertyCode</td></tr>
+    <tr><th>Address</th><td>@Model.Address</td></tr>
+    <tr><th>Price</th><td>@Model.Price</td></tr>
+    <tr><th>Type</th><td>@Model.PropertyTypeName</td></tr>
+    <tr><th>Area</th><td>@Model.Area</td></tr>
+    <tr><th>Bedrooms</th><td>@Model.BathsNo</td></tr>
+    <tr><th>Bathrooms</th><td>@Model.BathsNo</td></tr>
+    <tr><th>Furnished</th><td>@(Model.IsFurnished == true ? "Yes" : "No")</td></tr>
+    <tr><th>Description</th><td>@Model.Description</td></tr>
+</table>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="PropertyID" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</form>
