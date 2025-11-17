@@ -161,7 +161,8 @@
             <a class="nav-link @(currentController == "PropertyStatuses" ? "active" : "")" asp-action="PropertyStatuses" asp-controller="Admin">
                 <i class="bi bi-info-circle me-2"></i> Property Statuses
             </a>
-            <a class="nav-link @(currentController == "UserTypes" ? "active" : "")" asp-action="UserTypes" asp-controller="Admin">
+            <a class="nav-link @(currentController == "LkpUserTypes" ? "active" : "")"
+               asp-controller="LkpUserTypes" asp-action="Index">
                 <i class="bi bi-person-badge me-2"></i> User Types
             </a>
         </nav>
