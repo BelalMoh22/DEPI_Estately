@@ -8,9 +8,7 @@
         }
 
         public AppDBContext(DbContextOptions<AppDBContext> options)
-            : base(options)
-        {
-        }
+            : base(options) {}
         public virtual DbSet<LkpAppointmentStatus> LkpAppointmentStatuses { get; set; }
         public virtual DbSet<LkpDocumentType> LkpDocumentTypes { get; set; }
         public virtual DbSet<LkpPropertyHistoryType> LkpPropertyHistoryTypes { get; set; }

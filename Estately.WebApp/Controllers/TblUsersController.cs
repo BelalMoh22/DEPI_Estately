@@ -163,9 +163,7 @@ namespace Estately.WebApp.Controllers
             return View(model);
         }
 
-        // =======================================================
         // CREATE
-        // =======================================================
         [HttpGet]
         public async Task<IActionResult> Create()
         {
