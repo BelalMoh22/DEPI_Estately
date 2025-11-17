@@ -1,0 +1,37 @@
+﻿@model Estately.Services.ViewModels.PropertyViewModel
+
+@{
+    ViewData["Title"] = "Property Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3>Property Details</h3>
+
+<table class="table table-bordered">
+
+    <tr><th>Property Code</th><td>@Model.PropertyCode</td></tr>
+    <tr><th>Address</th><td>@Model.Address</td></tr>
+    <tr><th>Area</th><td>@Model.Area m²</td></tr>
+    <tr><th>Price</th><td>@Model.Price</td></tr>
+    <tr><th>Beds</th><td>@Model.BedsNo</td></tr>
+    <tr><th>Baths</th><td>@Model.BathsNo</td></tr>
+    <tr><th>Floors</th><td>@Model.FloorsNo</td></tr>
+    <tr><th>Year Built</th><td>@Model.YearBuilt</td></tr>
+
+    <tr><th>Property Type</th><td>@Model.PropertyTypeName</td></tr>
+    <tr><th>Status</th><td>@Model.StatusName</td></tr>
+    <tr><th>Developer</th><td>@Model.DeveloperName</td></tr>
+    <tr><th>Zone</th><td>@Model.ZoneName</td></tr>
+    <tr><th>Agent</th><td>@Model.AgentName</td></tr>
+
+    <tr><th>Description</th><td>@Model.Description</td></tr>
+
+    <tr>
+        <th>Is Furnished</th>
+        @(Model.IsFurnished == true ? "Yes" : "No")
+    </tr>
+
+</table>
+
+<a asp-action="Edit" asp-route-id="@Model.PropertyID" class="btn btn-warning">Edit</a>
+<a asp-action="Index" class="btn btn-secondary">Back</a>

@@ -5,21 +5,119 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+<style>
+    .btn-create {
+        background-color: #28A745 !important;
+        color: white !important;
+        transition: 0.3s ease !important;
+    }
+
+    .btn-create:hover {
+        background-color: #218838 !important; /* darker green */
+    }
+    .btn-edit{
+        background-color: #00204A !important;
+        color: white !important;
+        transition: 0.3s ease !important;
+    }
+
+    .btn-edit:hover {
+            background-color: #003A87 !important; /* slightly darker navy */
+    }
+    .btn-details{
+        background-color: #6C757D;
+        color : white;
+        transition: 0.3s ease !important;
+    }
+
+    .btn-details:hover {
+        background-color: #5a6268 !important; /* darker gray */
+        color: white;
+    }
+    .btn-delete {
+        background-color: #dc3545 !important;
+        color: white !important;
+        transition: 0.3s ease !important;
+    }
+
+    .btn-delete:hover {
+        background-color: #c82333 !important; /* darker red */
+    }
+    .custom-pagination-container {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important; /* Center the pagination */
+    }
+
+    .custom-pagination {
+        display: flex !important;
+        flex-wrap: wrap !important; /* Make responsive on small screens */
+        gap: 8px !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 20px 0 !important;
+    }
+
+    .page-btn,
+    .page-btn.disabled {
+        padding: 10px 16px !important;
+        border: 1px solid #00204A !important;
+        border-radius: 6px !important;
+        text-decoration: none !important;
+        color: #00204A !important;
+        background: white !important;
+        font-weight: 500 !important;
+        min-width: 45px !important;
+        text-align: center !important; /* Text centered inside box */
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        transition: 0.3s ease !important;
+    }
+
+        .page-btn:hover {
+            background: #00204A !important;
+            color: white !important;
+        }
+
+        /* Active page matches hover */
+        .page-btn.active {
+            background: #00204A !important;
+            color: white !important;
+        }
+
+        /* Disabled button */
+        .page-btn.disabled {
+            background: #f5f5f5 !important;
+            color: #bbb !important;
+            cursor: not-allowed !important;
+            pointer-events: none !important;
+        }
+
+    /* RESPONSIVE */
+    @@media (max-width: 576px) {
+        .page-btn {
+            padding: 8px 12px;
+            font-size: 14px;
+            min-width: 38px;
+        }
+    }
+</style>
 <h1 class="mb-4">Users</h1>
 
 <div class="row mb-3">
-    <div class="col-md-6">
+    <div class="col-md-8">
         <form method="get">
             <div class="input-group">
                 <input type="text" name="search" class="form-control"
                        placeholder="Search..." value="@Model.SearchTerm" />
-                <button class="btn btn-primary">Search</button>
+                <button class="btn btn-admin">Search</button>
             </div>
         </form>
     </div>
 
-    <div class="col-md-6 text-end">
-        <a asp-action="Create" class="btn btn-success">Create New</a>
+    <div class="col-md-4 text-end">
+        <a asp-action="Create" class="btn btn-create">Create New</a>
     </div>
 </div>
 
@@ -45,13 +143,13 @@
                 <td>@user.UserTypeName</td>
                 <td>@user.CreatedAt?.ToString("yyyy-MM-dd")</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@user.UserID" class="btn btn-primary btn-sm">Edit</a>
-                    <a asp-action="Details" asp-route-id="@user.UserID" class="btn btn-warning text-white btn-sm">Details</a>
+                    <a asp-action="Edit" asp-route-id="@user.UserID" class="btn btn-edit btn-sm">Edit</a>
+                    <a asp-action="Details" asp-route-id="@user.UserID" class="btn btn-details btn-sm">Details</a>
 
                     <form asp-action="Delete" asp-route-id="@user.UserID"
                           method="post" style="display:inline;"
                           onsubmit="return confirm('Are you sure?')">
-                        <button class="btn btn-danger btn-sm">Delete</button>
+                        <button class="btn btn-delete btn-sm">Delete</button>
                     </form>
                 </td>
             </tr>
@@ -61,19 +159,49 @@
 
 @if (Model.TotalPages > 1)
 {
-    <nav>
-        <ul class="pagination justify-content-center">
-            @for (int i = 1; i <= Model.TotalPages; i++)
-            {
-                <li class="page-item @(Model.Page == i ? "active" : "")">
-                    <a class="page-link"
+    <div class="row">
+        <div class="custom-pagination-container">
+            <div class="custom-pagination">
+
+                <!-- Prev -->
+                @if (Model.Page > 1)
+                {
+                    <a asp-action="Index"
+                       asp-route-page="@(Model.Page - 1)"
+                       asp-route-pageSize="@Model.PageSize"
+                       asp-route-search="@Model.SearchTerm"
+                       class="page-btn">Prev</a>
+                }
+                else
+                {
+                    <span class="page-btn disabled">Prev</span>
+                }
+
+                <!-- Page numbers -->
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <a asp-action="Index"
                        asp-route-page="@i"
                        asp-route-pageSize="@Model.PageSize"
-                       asp-route-search="@Model.SearchTerm">
-                        @i
-                    </a>
-                </li>
-            }
-        </ul>
-    </nav>
+                       asp-route-search="@Model.SearchTerm"
+                       class="page-btn @(i == Model.Page ? "active" : "")">@i</a>
+                }
+
+                <!-- Next -->
+                @if (Model.Page < Model.TotalPages)
+                {
+                    <a asp-action="Index"
+                       asp-route-page="@(Model.Page + 1)"
+                       asp-route-pageSize="@Model.PageSize"
+                       asp-route-search="@Model.SearchTerm"
+                       class="page-btn">Next</a>
+                }
+                else
+                {
+                    <span class="page-btn disabled">Next</span>
+                }
+
+            </div>
+        </div>
+    </div>
 }

@@ -34,5 +34,4 @@ namespace Estately.Services.ViewModels
         public virtual TblCity? City { get; set; }
         public virtual TblZone? Zone { get; set; }
     }
-
 }
