@@ -17,7 +17,7 @@
         }
 </style>
 
-<h1>Create Property</h1>
+<h4>Create Property</h4>
 
 <form asp-action="Create" method="post" class="mt-4">
 
@@ -112,8 +112,14 @@
         <label class="form-check-label">Is Furnished</label>
     </div>
 
-    <button class="btn btn-create">Create</button>
-    <a asp-action="Index" class="btn btn-secondary">Back</a>
+    <div class="mt-4">
+        <button type="submit" class="btn btn-create">
+            <i class="bi bi-check-circle me-2"></i>Create
+        </button>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left-circle me-2"></i>Back to List
+        </a>
+    </div>
 </form>
 
 @section Scripts {

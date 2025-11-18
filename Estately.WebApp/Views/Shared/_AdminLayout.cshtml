@@ -120,6 +120,97 @@
                 margin-left: 0;
             }
         }
+
+        .btn-edit {
+            background-color: #00204A !important;
+            color: white !important;
+            transition: 0.3s ease !important;
+        }
+
+            .btn-edit:hover {
+                background-color: #003A87 !important; /* slightly darker navy */
+            }
+
+        .btn-details {
+            background-color: #6C757D;
+            color: white;
+            transition: 0.3s ease !important;
+        }
+
+            .btn-details:hover {
+                background-color: #5a6268 !important; /* darker gray */
+                color: white;
+            }
+
+        .btn-delete {
+            background-color: #dc3545 !important;
+            color: white !important;
+            transition: 0.3s ease !important;
+        }
+
+            .btn-delete:hover {
+                background-color: #c82333 !important; /* darker red */
+            }
+
+        .custom-pagination-container {
+            width: 100% !important;
+            display: flex !important;
+            justify-content: center !important; /* Center the pagination */
+        }
+
+        .custom-pagination {
+            display: flex !important;
+            flex-wrap: wrap !important; /* Make responsive on small screens */
+            gap: 8px !important;
+            justify-content: center !important;
+            align-items: center !important;
+            margin: 20px 0 !important;
+        }
+
+        .page-btn,
+        .page-btn.disabled {
+            padding: 10px 16px !important;
+            border: 1px solid #00204A !important;
+            border-radius: 6px !important;
+            text-decoration: none !important;
+            color: #00204A !important;
+            background: white !important;
+            font-weight: 500 !important;
+            min-width: 45px !important;
+            text-align: center !important; /* Text centered inside box */
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            transition: 0.3s ease !important;
+        }
+
+            .page-btn:hover {
+                background: #00204A !important;
+                color: white !important;
+            }
+
+            /* Active page matches hover */
+            .page-btn.active {
+                background: #00204A !important;
+                color: white !important;
+            }
+
+            /* Disabled button */
+            .page-btn.disabled {
+                background: #f5f5f5 !important;
+                color: #bbb !important;
+                cursor: not-allowed !important;
+                pointer-events: none !important;
+            }
+
+        /* RESPONSIVE */
+        @@media (max-width: 576px) {
+            .page-btn {
+                padding: 8px 12px;
+                font-size: 14px;
+                min-width: 38px;
+            }
+        }
     </style>
 
     <title>@ViewData["Title"] - Admin Dashboard</title>
@@ -149,8 +240,9 @@
             <a class="nav-link @(currentController == "TblDepartments" ? "active" : "")" asp-controller="TblDepartments" asp-action="Index">
                 <i class="bi bi-diagram-3 me-2"></i> Departments
             </a>
-            <a class="nav-link @(currentController == "Cities" ? "active" : "")" asp-action="Cities" asp-controller="Admin">
-                <i class="bi bi-geo-alt me-2"></i> Cities
+            <a class="nav-link @(currentController == "TblCities" ? "active" : "")"
+               asp-controller="TblCities" asp-action="Index">
+                <i class="bi bi-building me-2"></i> Cities
             </a>
             <a class="nav-link @(currentController == "TblZones" ? "active" : "")" asp-controller="TblZones" asp-action="Index">
                 <i class="bi bi-pin-map me-2"></i> Zones
@@ -184,148 +276,3 @@
     @RenderSection("Scripts", required: false)
 </body>
 </html>
-@*=================================================================================================================================*@
-
-@* <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <link rel="shortcut icon" href="~/favicon.png" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
-
-    <link rel="stylesheet" href="~/fonts/icomoon/style.css" />
-    <link rel="stylesheet" href="~/fonts/flaticon/font/flaticon.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
-    <link rel="stylesheet" href="~/css/all.css" />
-    <link rel="stylesheet" href="~/css/style.css" />
-
-    <style>
-        .admin-sidebar {
-            min-height: 100vh;
-            width: 250px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background: linear-gradient(135deg, #00204a, #003d7a);
-            padding: 0;
-            color: #fff;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.15);
-        }
-
-            .admin-sidebar .logo {
-                padding: 20px;
-                font-size: 22px;
-                font-weight: 700;
-                border-bottom: 1px solid rgba(255,255,255,0.15);
-            }
-
-            .admin-sidebar .nav-link {
-                color: rgba(255,255,255,0.8);
-                padding: 12px 20px;
-                transition: 0.3s;
-            }
-
-                .admin-sidebar .nav-link:hover,
-                .admin-sidebar .nav-link.active {
-                    background: rgba(255,255,255,0.2);
-                    color: #fff;
-                    padding-left: 25px;
-                }
-
-        .admin-content {
-            margin-left: 250px;
-            padding: 20px;
-            min-height: 100vh;
-            background: #f4f7fb;
-        }
-
-        .admin-header {
-            background: #fff;
-            padding: 15px 30px;
-            margin: -20px -20px 20px -20px;
-            box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-    </style>
-
-    <title>@ViewData["Title"] - Admin</title>
-</head>
-
-<body>
-
-    <div class="admin-sidebar">
-        <div class="logo text-white">Estately Admin</div>
-
-        <nav class="nav flex-column">
-
-            <a class="nav-link @(currentController == "Admin" ? "active" : "")"
-               asp-controller="Admin" asp-action="Dashboard">
-                <i class="bi bi-speedometer2 me-2"></i> Dashboard
-            </a>
-            <a class="nav-link @(currentController == "TblUsers" ? "active" : "")" asp-controller="TblUsers" asp-action="Index">
-                <i class="bi bi-people me-2"></i> Users
-            </a>
-
-            <a class="nav-link @(currentController == "TblUsers" ? "active" : "")"
-            asp-controller="Admin" asp-action="Properties">
-                <i class="bi bi-house-door me-2"></i> Properties
-            </a>
-
-            <a class="nav-link" asp-controller="Admin" asp-action="Appointments">
-                <i class="bi bi-calendar-check me-2"></i> Appointments
-            </a>
-
-            <a class="nav-link" asp-controller="Admin" asp-action="Employees">
-                <i class="bi bi-briefcase me-2"></i> Employees
-            </a>
-
-            <a class="nav-link" asp-controller="Admin" asp-action="Branches">
-                <i class="bi bi-building me-2"></i> Branches
-            </a>
-
-            <a class="nav-link" asp-controller="Admin" asp-action="Departments">
-                <i class="bi bi-diagram-3 me-2"></i> Departments
-            </a>
-
-            <a class="nav-link" asp-controller="Admin" asp-action="Cities">
-                <i class="bi bi-geo-alt me-2"></i> Cities
-            </a>
-
-            <a class="nav-link" asp-controller="Admin" asp-action="Zones">
-                <i class="bi bi-pin-map me-2"></i> Zones
-            </a>
-
-            <a class="nav-link" asp-controller="Admin" asp-action="UserTypes">
-                <i class="bi bi-person-badge me-2"></i> User Types
-            </a>
-
-        </nav>
-    </div>
-
-    <div class="admin-content">
-        <div class="admin-header">
-            <h4>@ViewData["Title"]</h4>
-
-            <a asp-controller="App" asp-action="Index" class="btn btn-sm btn-outline-dark">
-                <i class="bi bi-house me-1"></i> View Site
-            </a>
-        </div>
-
-        @RenderBody()
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    @RenderSection("Scripts", required: false)
-
-</body>
-</html> *@
-

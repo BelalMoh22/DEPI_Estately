@@ -14,14 +14,9 @@ namespace Estately.WebApp.Controllers
         {
             _userTypeService = userTypeService;
         }
-
         // GET: LkpUserTypes
         public async Task<IActionResult> Index(int page = 1, int pageSize = 10, string? search = null)
         {
-            // TEMPORARY DEBUGGING
-            System.Diagnostics.Debug.WriteLine("=== NEW CONTROLLER CODE IS RUNNING ===");
-            Console.WriteLine("=== NEW CONTROLLER CODE IS RUNNING ===");
-
             try
             {
                 var model = await _userTypeService.GetUserTypesPagedAsync(page, pageSize, search);

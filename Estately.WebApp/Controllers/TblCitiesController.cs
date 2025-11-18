@@ -1,29 +1,35 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Estately.Services.Interfaces;
+using Estately.Services.ViewModels;
+
 namespace Estately.WebApp.Controllers
 {
-    public class TblUsersController : Controller
+    public class TblCitiesController : Controller
     {
-        private readonly IServiceUser _serviceUser;
+        private readonly IServiceCity _serviceCity;
 
-        public TblUsersController(IServiceUser serviceUser)
+        public TblCitiesController(IServiceCity serviceCity)
         {
-            _serviceUser = serviceUser;
+            _serviceCity = serviceCity;
         }
+
         // =======================================================
         // INDEX (LIST + SEARCH + PAGINATION)
         // =======================================================
         public async Task<IActionResult> Index(int page = 1, int pageSize = 10, string? search = null)
         {
-            var model = await _serviceUser.GetUsersPagedAsync(page, pageSize, search);
+            var model = await _serviceCity.GetCitiesPagedAsync(page, pageSize, search);
             return View(model);
         }
+
         // =======================================================
-        // DETAILS (VIEW USER INFO)
+        // DETAILS (VIEW CITY INFO)
         // =======================================================
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var model = await _serviceUser.GetUserByIdAsync(id);
+            var model = await _serviceCity.GetCityByIdAsync(id);
 
             if (model == null)
                 return NotFound();
@@ -31,24 +37,26 @@ namespace Estately.WebApp.Controllers
             return View(model);
         }
 
+        // =======================================================
         // CREATE
+        // =======================================================
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            await LoadUserTypesDropdown();
-            return View(new UserViewModel());
+            await LoadZonesDropdown();
+            return View(new CityViewModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(UserViewModel model)
+        public async Task<IActionResult> Create(CityViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                await LoadUserTypesDropdown();
+                await LoadZonesDropdown();
                 return View(model);
             }
-            await _serviceUser.CreateUserAsync(model);
+            await _serviceCity.CreateCityAsync(model);
             return RedirectToAction(nameof(Index));
         }
 
@@ -58,30 +66,30 @@ namespace Estately.WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var model = await _serviceUser.GetUserByIdAsync(id);
+            var model = await _serviceCity.GetCityByIdAsync(id);
             if (model == null)
                 return NotFound();
 
-            await LoadUserTypesDropdown();
+            await LoadZonesDropdown();
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(UserViewModel model)
+        public async Task<IActionResult> Edit(CityViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                await LoadUserTypesDropdown();
+                await LoadZonesDropdown();
                 return View(model);
             }
 
             // check existence using the existing service method
-            var existing = await _serviceUser.GetUserByIdAsync(model.UserID);
+            var existing = await _serviceCity.GetCityByIdAsync(model.CityID);
             if (existing == null)
                 return NotFound();
 
-            await _serviceUser.UpdateUserAsync(model);
+            await _serviceCity.UpdateCityAsync(model);
             return RedirectToAction(nameof(Index));
         }
 
@@ -90,55 +98,43 @@ namespace Estately.WebApp.Controllers
         // =======================================================
         public async Task<IActionResult> Delete(int id)
         {
-            var user = await _serviceUser.GetUserByIdAsync(id);
+            var city = await _serviceCity.GetCityByIdAsync(id);
 
-            if (user == null)
+            if (city == null)
                 return NotFound();
 
-            return View(user);
+            return View(city);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _serviceUser.DeleteUserAsync(id);
+            await _serviceCity.DeleteCityAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
         // =======================================================
-        // TOGGLE ACTIVE / INACTIVE
-        // =======================================================
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> ToggleStatus(int id)
-        //{
-        //    await _serviceUser.ToggleStatusAsync(id);
-        //    return RedirectToAction(nameof(Index));
-        //}
-
-        // =======================================================
-        // ASSIGN ROLE
+        // ASSIGN ZONE
         // =======================================================
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AssignRole(int userId, int userTypeId)
+        public async Task<IActionResult> AssignZone(int cityId, int zoneId)
         {
-            await _serviceUser.AssignRoleAsync(userId, userTypeId);
-            return RedirectToAction("Edit", new { id = userId });
+            await _serviceCity.AssignZoneAsync(cityId, zoneId);
+            return RedirectToAction("Edit", new { id = cityId });
         }
-
         // =======================================================
-        // PRIVATE HELPER: LOAD DROPDOWN FOR USER TYPES
+        // PRIVATE HELPER: LOAD DROPDOWN FOR ZONES
         // =======================================================
-        private async Task LoadUserTypesDropdown()
+        private async Task LoadZonesDropdown()
         {
-            var userTypes = await _serviceUser.GetAllUserTypesAsync();
+            var zones = await _serviceCity.GetAllZonesAsync();
 
-            ViewBag.UserTypes = new SelectList(
-                userTypes,
-                "UserTypeID",
-                "UserTypeName"
+            ViewBag.Zones = new SelectList(
+                zones,
+                "ZoneID",
+                "ZoneName"
             );
         }
     }

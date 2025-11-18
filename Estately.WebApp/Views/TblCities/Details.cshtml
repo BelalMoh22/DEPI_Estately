@@ -1,23 +1,22 @@
-﻿@model Estately.Services.ViewModels.UserViewModel
+﻿@model Estately.Services.ViewModels.CityViewModel
 
 @{
-    ViewData["Title"] = "User Details";
+    ViewData["Title"] = "City Details";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h4>User Details</h4>
+<h4>City Details</h4>
 
 <div class="details-table p-4">
     <table class="table table-bordered mb-0">
-        <tr><th>User ID</th><td>@Model.UserID</td></tr>
-        <tr><th>Email</th><td>@Model.Email</td></tr>
-        <tr><th>Username</th><td>@Model.Username</td></tr>
-        <tr><th>User Type</th><td>@Model.UserTypeName</td></tr>
+        <tr><th>City ID</th><td>@Model.CityID</td></tr>
+        <tr><th>City Name</th><td>@Model.CityName</td></tr>
+        <tr><th>Zone Count</th><td>@Model.ZoneCount</td></tr>
         <tr><th>Created At</th><td>@Model.CreatedAt?.ToString("yyyy-MM-dd")</td></tr>
     </table>
 
     <div class="mt-4">
-        <a asp-action="Edit" asp-route-id="@Model.UserID" class="btn btn-admin">
+        <a asp-action="Edit" asp-route-id="@Model.CityID" class="btn btn-admin">
             <i class="bi bi-pencil me-1"></i>Edit
         </a>
         <a asp-action="Index" class="btn btn-secondary ms-2">

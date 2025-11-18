@@ -1,32 +1,26 @@
-﻿@model Estately.Services.ViewModels.ZonesViewModel
+﻿@model Estately.Services.ViewModels.CityViewModel
 
 @{
-    ViewData["Title"] = "Edit Zone";
+    ViewData["Title"] = "Edit City";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h4>Edit Zone</h4>
+<h4>Edit City</h4>
 
 <form asp-action="Edit" method="post" class="mt-4">
 
-    <input type="hidden" asp-for="ZoneId" />
+    <input type="hidden" asp-for="CityID" />
 
     <div class="mb-3">
-        <label class="form-label">City</label>
-        <select asp-for="CityId" class="form-control" asp-items="ViewBag.City"></select>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Zone Name</label>
-        <input asp-for="ZoneName" class="form-control" />
-        <span asp-validation-for="ZoneName" class="text-danger"></span>
+        <label class="form-label">City Name</label>
+        <input asp-for="CityName" class="form-control" />
+        <span asp-validation-for="CityName" class="text-danger"></span>
     </div>
 
     <div class="mt-4">
         <button class="btn btn-admin">
             <i class="bi bi-save me-2"></i>Save Changes
         </button>
-
         <a asp-action="Index" class="btn btn-secondary">
             <i class="bi bi-arrow-left-circle me-2"></i>Back to List
         </a>

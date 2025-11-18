@@ -55,7 +55,6 @@ namespace Estately.Infrastructure.Repository
             );
         }
 
-
         public async ValueTask<IEnumerable<TEntity>> ReadWithPagination(int page, int pageSize)
         {
             if (page < 1) page = 1;
@@ -103,7 +102,6 @@ namespace Estately.Infrastructure.Repository
 
     return (data, totalCount);
 }
-
 */
         public async ValueTask<IEnumerable<TEntity>> Search(Expression<Func<TEntity, bool>> predicate)
         {
