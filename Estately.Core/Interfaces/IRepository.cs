@@ -13,5 +13,6 @@
         Task DeleteAsync(int id);
         Task<int> CounterAsync();
         int GetMaxId();
+        IQueryable<TEntity> Query();
     }
 }

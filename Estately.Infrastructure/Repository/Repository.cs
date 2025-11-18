@@ -141,6 +141,11 @@ namespace Estately.Infrastructure.Repository
 
             return maxId;
         }
+
+        public IQueryable<TEntity> Query()
+        {
+            return _context.Set<TEntity>().AsQueryable();
+        }
     } 
     #endregion
 }
