@@ -88,9 +88,19 @@ namespace Estately.WebApp.Controllers
         // =======================================================
         // DELETE (SOFT DELETE)
         // =======================================================
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
+        {
+            var user = await _serviceUser.GetUserByIdAsync(id);
+
+            if (user == null)
+                return NotFound();
+
+            return View(user);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _serviceUser.DeleteUserAsync(id);
             return RedirectToAction(nameof(Index));
