@@ -115,17 +115,6 @@ namespace Estately.WebApp.Controllers
         }
 
         // =======================================================
-        // TOGGLE ACTIVE / INACTIVE
-        // =======================================================
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> ToggleStatus(int id)
-        //{
-        //    await _serviceCity.ToggleStatusAsync(id);
-        //    return RedirectToAction(nameof(Index));
-        //}
-
-        // =======================================================
         // ASSIGN ZONE
         // =======================================================
         [HttpPost]
@@ -135,7 +124,6 @@ namespace Estately.WebApp.Controllers
             await _serviceCity.AssignZoneAsync(cityId, zoneId);
             return RedirectToAction("Edit", new { id = cityId });
         }
-
         // =======================================================
         // PRIVATE HELPER: LOAD DROPDOWN FOR ZONES
         // =======================================================
