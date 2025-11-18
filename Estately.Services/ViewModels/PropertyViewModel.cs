@@ -62,14 +62,17 @@ namespace Estately.Services.ViewModels
         [Display(Name = "Year Built")]
         public int YearBuilt { get; set; }
 
+        [Range(0, int.MaxValue)]
         [Required(ErrorMessage = "Floors Number is required")]
         [Display(Name = "Floors Number")]
         public int FloorsNo { get; set; }
 
+        [Range(0, int.MaxValue)]
         [Required(ErrorMessage = "Beds Number is required")]
         [Display(Name = "Beds Number")]
         public int BedsNo { get; set; }
 
+        [Range(0, int.MaxValue)]
         [Required(ErrorMessage = "Baths Number is required")]
         [Display(Name = "Baths Number")]
         public int BathsNo { get; set; }
