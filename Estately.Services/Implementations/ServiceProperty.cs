@@ -138,10 +138,10 @@ namespace Estately.Services.Implementations
             return list.Select(t => new LkpPropertyTypeViewModel { PropertyTypeID = t.PropertyTypeID, TypeName = t.TypeName });
         }
 
-        public async Task<IEnumerable<LkpPropertyStatusViewModel>> GetAllStatusesAsync()
+        public async Task<IEnumerable<PropertyStatusViewModel>> GetAllStatusesAsync()
         {
             var list = await _unitOfWork.PropertyStatusRepository.ReadAllAsync();
-            return list.Select(s => new LkpPropertyStatusViewModel { StatusID = s.StatusID, StatusName = s.StatusName });
+            return list.Select(s => new PropertyStatusViewModel { StatusID = s.StatusID, StatusName = s.StatusName });
         }
 
         public async Task<IEnumerable<DeveloperProfileViewModel>> GetAllDevelopersAsync()

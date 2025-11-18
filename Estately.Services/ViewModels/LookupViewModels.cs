@@ -11,20 +11,6 @@ namespace Estately.Services.ViewModels
         [Display(Name = "Type Name")]
         public string TypeName { get; set; } = string.Empty;
     }
-
-    public class LkpPropertyStatusViewModel
-    {
-        public int StatusID { get; set; }
-
-        [Required(ErrorMessage = "Status Name is required")]
-        [StringLength(255)]
-        [Display(Name = "Status Name")]
-        public string StatusName { get; set; } = string.Empty;
-
-        [StringLength(255)]
-        public string? Description { get; set; }
-    }
-
     public class LkpAppointmentStatusViewModel
     {
         public int StatusId { get; set; }
