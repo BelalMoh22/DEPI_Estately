@@ -1,0 +1,42 @@
+﻿@model Estately.Services.ViewModels.PropertyStatusViewModel
+
+@{
+    ViewData["Title"] = "Property Status Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="table-container">
+    <h3 class="mb-3">
+        <i class="bi bi-info-circle me-2"></i> Property Status Details
+    </h3>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>Status ID</th>
+            <td>@Model.StatusID</td>
+        </tr>
+
+        <tr>
+            <th>Status Name</th>
+            <td>@Model.StatusName</td>
+        </tr>
+
+        <tr>
+            <th>Description</th>
+            <td>@Model.Description</td>
+        </tr>
+
+        <tr>
+            <th>Properties Count</th>
+            <td>@(Model.PropertiesCount ?? 0)</td>
+        </tr>
+    </table>
+
+    <a asp-action="Edit" asp-route-id="@Model.StatusID" class="btn btn-warning">
+        <i class="bi bi-pencil-square me-1"></i> Edit
+    </a>
+
+    <a asp-action="Index" class="btn btn-secondary ms-2">
+        <i class="bi bi-arrow-left-circle me-1"></i> Back to List
+    </a>
+</div>
