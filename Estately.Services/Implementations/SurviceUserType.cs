@@ -111,11 +111,9 @@ namespace Estately.Services.Implementations
                 throw new InvalidOperationException(
                     $"Cannot delete user type. There are {usersWithThisType.Count()} users associated with this type.");
             }
-
             await _unitOfWork.UserTypeRepository.DeleteAsync(id);
             await _unitOfWork.CompleteAsync();
         }
-
         // ====================================================
         // 6. USER TYPE COUNTER (STATS)
         // ====================================================
@@ -123,7 +121,6 @@ namespace Estately.Services.Implementations
         {
             return await _unitOfWork.UserTypeRepository.CounterAsync();
         }
-
         // ====================================================
         // 7. GET MAX ID
         // ====================================================
@@ -131,7 +128,6 @@ namespace Estately.Services.Implementations
         {
             return _unitOfWork.UserTypeRepository.GetMaxId();
         }
-
         // ====================================================
         // 8. SEARCH USER TYPES
         // ====================================================
@@ -142,7 +138,6 @@ namespace Estately.Services.Implementations
             var viewModels = allUserTypes.Select(ConvertToViewModel);
             return viewModels.Where(predicate.Compile());
         }
-
         // ====================================================
         // 9. GET ALL USER TYPES (for dropdowns, etc.)
         // ====================================================
@@ -151,7 +146,6 @@ namespace Estately.Services.Implementations
             var userTypes = await _unitOfWork.UserTypeRepository.ReadAllAsync();
             return userTypes.Select(ConvertToViewModel);
         }
-
         // ====================================================
         // 10. CHECK IF USER TYPE NAME IS UNIQUE
         // ====================================================
@@ -167,7 +161,6 @@ namespace Estately.Services.Implementations
 
             return !existing.Any();
         }
-
         // ====================================================
         // HELPER: ENTITY -> VIEWMODEL
         // ====================================================

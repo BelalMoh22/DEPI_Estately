@@ -21,16 +21,16 @@
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    .details-table th {
-        background-color: #f8f9fa;
-        width: 200px;
-        font-weight: 600;
-    }
+        .details-table th {
+            background-color: #f8f9fa;
+            width: 200px;
+            font-weight: 600;
+        }
 </style>
 
 <h4>Department Details</h4>
 
-<div class="details-table">
+<div class="details-table p-4">
     <table class="table table-bordered mb-0">
         <tbody>
             <tr>
@@ -55,13 +55,12 @@
             </tr>
         </tbody>
     </table>
-</div>
-
-<div class="mt-4">
-    <a asp-action="Edit" asp-route-id="@Model.DepartmentID" class="btn btn-warning">
-        <i class="bi bi-pencil me-2"></i>Edit
-    </a>
-    <a asp-action="Index" class="btn btn-secondary">
-        <i class="bi bi-arrow-left me-2"></i>Back to List
-    </a>
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model.DepartmentID" class="btn btn-warning">
+            <i class="bi bi-pencil me-1"></i>Edit
+        </a>
+        <a asp-action="Index" class="btn btn-secondary ms-2">
+            <i class="bi bi-arrow-left-circle me-1"></i>Back to List
+        </a>
+    </div>
 </div>
