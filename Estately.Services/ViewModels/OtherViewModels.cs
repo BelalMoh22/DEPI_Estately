@@ -2,15 +2,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Estately.Services.ViewModels
 {
-    public class CityViewModel
-    {
-        public int CityID { get; set; }
+    //public class CityViewModel
+    //{
+    //    public int CityID { get; set; }
 
-        [Required(ErrorMessage = "City Name is required")]
-        [StringLength(255)]
-        [Display(Name = "City Name")]
-        public string CityName { get; set; } = string.Empty;
-    }
+    //    [Required(ErrorMessage = "City Name is required")]
+    //    [StringLength(255)]
+    //    [Display(Name = "City Name")]
+    //    public string CityName { get; set; } = string.Empty;
+    //}
 
     public class ZoneViewModel
     {
