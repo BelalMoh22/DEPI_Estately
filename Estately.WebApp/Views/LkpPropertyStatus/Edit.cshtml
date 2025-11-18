@@ -1,0 +1,46 @@
+﻿@model Estately.Services.ViewModels.PropertyStatusViewModel
+
+@{
+    ViewData["Title"] = "Edit Property Status";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .btn-save {
+        background-color: #00204A !important;
+        color: white !important;
+        transition: 0.3s ease !important;
+    }
+
+        .btn-save:hover {
+            background-color: #003A87 !important;
+        }
+</style>
+
+<h1>Edit Property Status</h1>
+
+<form asp-action="Edit" method="post" class="mt-4">
+
+    <input type="hidden" asp-for="StatusID" />
+
+    <div class="mb-3">
+        <label class="form-label">Status Name</label>
+        <input asp-for="StatusName" class="form-control" />
+        <span asp-validation-for="StatusName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Description</label>
+        <input asp-for="Description" class="form-control" />
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-save">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

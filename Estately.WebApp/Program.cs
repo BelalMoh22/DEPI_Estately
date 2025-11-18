@@ -22,6 +22,14 @@ namespace Estately.WebApp
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddScoped<IServiceUser, ServiceUser>();
 
+
+
+            //builder.Services.AddScoped<IServiceProperty, ServiceProperty>();
+            //builder.Services.AddScoped<IServiceZone, ServiceZone>();
+            //// Add this line to register your service
+            //builder.Services.AddScoped<IServiceUserType, ServiceUserType>();
+            builder.Services.AddScoped<IServicePropertyStatus, ServicePropertyStatus>();
+
             // Add session support for admin authentication
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>

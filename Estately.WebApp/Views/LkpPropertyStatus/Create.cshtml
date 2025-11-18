@@ -1,0 +1,52 @@
+﻿@model Estately.Services.ViewModels.PropertyStatusViewModel
+
+@{
+    ViewData["Title"] = "Create Property Status";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .btn-create {
+        background-color: #00204A !important;
+        color: white !important;
+        transition: 0.3s ease !important;
+    }
+
+        .btn-create:hover {
+            background-color: #003A87 !important;
+        }
+</style>
+
+<h1>Create Property Status</h1>
+
+<form asp-action="Create" method="post" class="mt-4">
+
+    <div class="mb-3">
+        <label>Status Name</label>
+        <input asp-for="StatusName" class="form-control" />
+        <span asp-validation-for="StatusName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Description</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    @* لو محتاج تضيف properties count من الادمن *@
+    @* <div class="mb-3">
+        <label>Properties Count</label>
+        <input asp-for="PropertiesCount" class="form-control" />
+        <span asp-validation-for="PropertiesCount" class="text-danger"></span>
+    </div> *@
+
+    <button class="btn btn-create">Create</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
