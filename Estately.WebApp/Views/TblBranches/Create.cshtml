@@ -1,0 +1,78 @@
+﻿@model Estately.Services.ViewModels.BranchesViewModel
+
+@{
+    ViewData["Title"] = "Create Branch";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .btn-create {
+        background-color: #00204A !important;
+        color: white !important;
+        transition: 0.3s ease !important;
+    }
+
+        .btn-create:hover {
+            background-color: #003A87 !important;
+        }
+</style>
+
+<div class="table-container">
+    <h4>Create Branch</h4>
+
+    <form asp-action="Create" method="post" class="mt-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <!-- Branch Name -->
+        <div class="mb-3">
+            <label asp-for="BranchName" class="form-label">
+                Branch Name <span class="text-danger">*</span>
+            </label>
+            <input asp-for="BranchName" class="form-control" />
+            <span asp-validation-for="BranchName" class="text-danger"></span>
+        </div>
+
+        <!-- Manager Name Dropdown -->
+        <div class="mb-3">
+            <label asp-for="ManagerName" class="form-label">Manager Name</label>
+            <div class="form-group">
+                <select asp-for="ManagerName" class="form-control"
+                        asp-items="ViewBag.Managers">
+                    <option value="">-- Select Manager --</option>
+                </select>
+            </div>
+            <span asp-validation-for="ManagerName" class="text-danger"></span>
+        </div>
+
+        <!-- Address -->
+        <div class="mb-3">
+            <label asp-for="Address" class="form-label">Address</label>
+            <input asp-for="Address" class="form-control" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+
+        <!-- Phone -->
+        <div class="mb-3">
+            <label asp-for="Phone" class="form-label">Phone</label>
+            <input asp-for="Phone" class="form-control" />
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+
+        <!-- Buttons -->
+        <div class="mt-4">
+            <button type="submit" class="btn btn-create">
+                <i class="bi bi-check-circle me-2"></i>Create
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle me-2"></i>Back to List
+            </a>
+        </div>
+    </form>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
