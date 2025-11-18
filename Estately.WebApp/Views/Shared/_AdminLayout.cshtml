@@ -240,8 +240,9 @@
             <a class="nav-link @(currentController == "TblDepartments" ? "active" : "")" asp-controller="TblDepartments" asp-action="Index">
                 <i class="bi bi-diagram-3 me-2"></i> Departments
             </a>
-            <a class="nav-link @(currentController == "Cities" ? "active" : "")" asp-action="Cities" asp-controller="Admin">
-                <i class="bi bi-geo-alt me-2"></i> Cities
+            <a class="nav-link @(currentController == "TblCities" ? "active" : "")"
+               asp-controller="TblCities" asp-action="Index">
+                <i class="bi bi-building me-2"></i> Cities
             </a>
             <a class="nav-link @(currentController == "TblZones" ? "active" : "")" asp-controller="TblZones" asp-action="Index">
                 <i class="bi bi-pin-map me-2"></i> Zones

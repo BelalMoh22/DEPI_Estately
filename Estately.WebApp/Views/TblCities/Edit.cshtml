@@ -1,0 +1,40 @@
+﻿@model Estately.Services.ViewModels.CityViewModel
+
+@{
+    ViewData["Title"] = "Edit City";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h4>Edit City</h4>
+
+<form asp-action="Edit" method="post" class="mt-4">
+
+    <input type="hidden" asp-for="CityID" />
+
+    <div class="mb-3">
+        <label class="form-label">City Name</label>
+        <input asp-for="CityName" class="form-control" />
+        <span asp-validation-for="CityName" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-2">
+        <input asp-for="IsDeleted" class="form-check-input" />
+        <label class="form-check-label">Is Deleted</label>
+    </div>
+
+    <div class="mt-4">
+        <button class="btn btn-admin">
+            <i class="bi bi-save me-2"></i>Save Changes
+        </button>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left-circle me-2"></i>Back to List
+        </a>
+    </div>
+
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

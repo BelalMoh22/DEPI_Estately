@@ -25,6 +25,8 @@ namespace Estately.WebApp
             builder.Services.AddScoped<IServiceZone, ServiceZone>();
             builder.Services.AddScoped<IServiceUserType, ServiceUserType>();
             builder.Services.AddScoped<IServiceDepartment, ServiceDepartment>();
+            // Add this if not already there
+            builder.Services.AddScoped<IServiceCity, ServiceCity>();
 
             // Add session support for admin authentication
             builder.Services.AddDistributedMemoryCache();
