@@ -5,18 +5,7 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<style>
-    .btn-save {
-        background-color: #00204A !important;
-        color: white !important;
-    }
-
-        .btn-save:hover {
-            background-color: #003A87 !important;
-        }
-</style>
-
-<h1>Edit Property</h1>
+<h4>Edit Property</h4>
 
 <form asp-action="Edit" method="post">
 
@@ -116,6 +105,12 @@
         <label class="form-check-label">Is Furnished</label>
     </div>
 
-    <button class="btn btn-save mt-3">Save</button>
-    <a asp-action="Index" class="btn btn-secondary mt-3">Back</a>
+    <div class="mt-4">
+        <button class="btn btn-admin">
+            <i class="bi bi-save me-2"></i>Save Changes
+        </button>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left-circle me-2"></i>Back to List
+        </a>
+    </div>
 </form>

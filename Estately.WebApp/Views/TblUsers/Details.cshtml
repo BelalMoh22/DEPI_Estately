@@ -1,118 +1,27 @@
-﻿@* @model Estately.Core.Entities.TblUser
+﻿@model Estately.Services.ViewModels.UserViewModel
 
-@{
-    ViewData["Title"] = "Details";
-}
-
-<h1>Details</h1>
-
-<div>
-    <h4>TblUser</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Username)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Username)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PasswordHash)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PasswordHash)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsEmployee)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsEmployee)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsClient)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsClient)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsDeveloper)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsDeveloper)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsDeleted)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsDeleted)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserType.UserTypeName)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.UserID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div> *@
-
-@model Estately.Services.ViewModels.UserViewModel
 @{
     ViewData["Title"] = "User Details";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="table-container">
-    <h3 class="mb-3">
-        <i class="bi bi-person-badge me-2"></i> User Details
-    </h3>
+<h4>User Details</h4>
 
-    <table class="table table-bordered">
+<div class="details-table p-4">
+    <table class="table table-bordered mb-0">
         <tr><th>User ID</th><td>@Model.UserID</td></tr>
         <tr><th>Email</th><td>@Model.Email</td></tr>
         <tr><th>Username</th><td>@Model.Username</td></tr>
         <tr><th>User Type</th><td>@Model.UserTypeName</td></tr>
-
-        <tr>
-            <th>Status</th>
-            <td>
-                @if (Model.IsDeleted == true)
-                {
-                    <span class="badge bg-danger">Inactive</span>
-                }
-                else
-                {
-                    <span class="badge bg-success">Active</span>
-                }
-            </td>
-        </tr>
-
         <tr><th>Created At</th><td>@Model.CreatedAt?.ToString("yyyy-MM-dd")</td></tr>
-        <tr><th>Is Client</th><td>@(Model.IsClient == true ? "Yes" : "No")</td></tr>
-        <tr><th>Is Employee</th><td>@(Model.IsEmployee == true ? "Yes" : "No")</td></tr>
-        <tr><th>Is Developer</th><td>@(Model.IsDeveloper == true ? "Yes" : "No")</td></tr>
     </table>
 
-    <a asp-action="Edit" asp-route-id="@Model.UserID" class="btn btn-warning">
-        <i class="bi bi-pencil-square me-1"></i> Edit
-    </a>
-
-    <a asp-action="Index" class="btn btn-secondary ms-2">
-        <i class="bi bi-arrow-left-circle me-1"></i> Back to List
-    </a>
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model.UserID" class="btn btn-admin">
+            <i class="bi bi-pencil me-1"></i>Edit
+        </a>
+        <a asp-action="Index" class="btn btn-secondary ms-2">
+            <i class="bi bi-arrow-left-circle me-1"></i>Back to List
+        </a>
+    </div>
 </div>

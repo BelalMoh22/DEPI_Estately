@@ -20,11 +20,10 @@ namespace Estately.Services.Implementations
         // ====================================================
         public async Task<UserTypeListViewModel> GetUserTypesPagedAsync(int page, int pageSize, string? search)
         {
-            // Step 1: Load all user types
-            var userTypes = await _unitOfWork.UserTypeRepository.ReadAllAsync();
-            var query = userTypes.AsQueryable();
+            // Use EF IQueryable instead of loading everything
+            var query = _unitOfWork.UserTypeRepository.Query();
 
-            // Step 2: Filtering (case-insensitive search)
+            // Search
             if (!string.IsNullOrWhiteSpace(search))
             {
                 string searchLower = search.ToLower();
@@ -35,17 +34,17 @@ namespace Estately.Services.Implementations
                 );
             }
 
-            // Step 3: Total count AFTER FILTER
-            int totalCount = query.Count();
+            // Count (AFTER filter)
+            int totalCount = await query.CountAsync();
 
-            // Step 4: Pagination
-            var pagedUserTypes = query
+            // Pagination
+            var pagedUserTypes = await query
                 .OrderBy(ut => ut.UserTypeID)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .ToList();
+                .ToListAsync();
 
-            // Step 5: Build ViewModel
+            // Build ViewModel
             return new UserTypeListViewModel
             {
                 UserTypes = pagedUserTypes.Select(ConvertToViewModel).ToList(),
