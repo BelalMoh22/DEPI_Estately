@@ -1,0 +1,85 @@
+﻿@model Estately.Services.ViewModels.BranchesViewModel
+
+@{
+    ViewData["Title"] = "Edit Branch";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .btn-save {
+        background-color: #00204A !important;
+        color: white !important;
+        transition: 0.3s ease !important;
+    }
+
+        .btn-save:hover {
+            background-color: #003A87 !important;
+        }
+</style>
+
+<div class="table-container">
+    <h4>Edit Branch</h4>
+
+    <form asp-action="Edit" method="post" class="mt-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <input type="hidden" asp-for="BranchID" />
+
+        <div class="mb-3">
+            <label asp-for="BranchID" class="form-label">Branch ID</label>
+            <input asp-for="BranchID" class="form-control" disabled />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="BranchName" class="form-label">Branch Name <span class="text-danger">*</span></label>
+            <input asp-for="BranchName" class="form-control" />
+            <span asp-validation-for="BranchName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ManagerName" class="form-label">Manager Name</label>
+
+            <select asp-for="ManagerName" class="form-control" asp-items="ViewBag.Managers">
+                <option value="">-- Select Manager --</option>
+            </select>
+
+            <span asp-validation-for="ManagerName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Address" class="form-label">Address</label>
+            <input asp-for="Address" class="form-control" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Phone" class="form-label">Phone</label>
+            <input asp-for="Phone" class="form-control" />
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="IsDeleted" class="form-label">Status</label>
+            <select asp-for="IsDeleted" class="form-control">
+                <option value="false">Active</option>
+                <option value="true">Deleted</option>
+            </select>
+            <span asp-validation-for="IsDeleted" class="text-danger"></span>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-save">
+                <i class="bi bi-save me-2"></i>Save Changes
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle me-2"></i>Back to List
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
