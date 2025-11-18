@@ -124,9 +124,9 @@ namespace Estately.WebApp.Controllers
             ViewBag.PropertyTypes = new SelectList(await _service.GetAllPropertyTypesAsync(), "PropertyTypeID", "TypeName");
             ViewBag.Statuses = new SelectList(await _service.GetAllStatusesAsync(), "StatusID", "StatusName");
             ViewBag.Developers = new SelectList(await _service.GetAllDevelopersAsync(), "DeveloperProfileID", "DeveloperName");
-            ViewBag.Zones = new SelectList(await _service.GetAllZonesAsync(), "ZoneID", "ZoneName");
+            ViewBag.Zones = new SelectList(await _service.GetAllZonesAsync(), "ZoneId", "ZoneName");
 
-            var agents = await _service.GetAgentsAsync();
+            var agents = await _service.GetAgentsAsync(); 
             ViewBag.Agents = agents
                 .Select(a => new SelectListItem
                 {
