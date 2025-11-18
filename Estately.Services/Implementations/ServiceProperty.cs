@@ -150,10 +150,10 @@ namespace Estately.Services.Implementations
             return list.Select(d => new DeveloperProfileViewModel { DeveloperProfileID = d.DeveloperProfileID, DeveloperName = d.DeveloperName });
         }
 
-        public async Task<IEnumerable<ZoneViewModel>> GetAllZonesAsync()
+        public async Task<IEnumerable<ZonesViewModel>> GetAllZonesAsync()
         {
             var list = await _unitOfWork.ZoneRepository.ReadAllAsync();
-            return list.Select(z => new ZoneViewModel { ZoneID = z.ZoneID, ZoneName = z.ZoneName });
+            return list.Select(z => new ZonesViewModel { ZoneId = z.ZoneID, ZoneName = z.ZoneName });
         }
 
         public async Task<IEnumerable<TblEmployee>> GetAgentsAsync()

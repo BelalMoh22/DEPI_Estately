@@ -112,7 +112,7 @@ public class PropertyListViewModel : BaseViewModel
         public List<LkpPropertyTypeViewModel> PropertyTypes { get; set; } = new();
         public List<LkpPropertyStatusViewModel> PropertyStatuses { get; set; } = new();
         public List<DeveloperProfileViewModel> DeveloperProfiles { get; set; } = new();
-        public List<ZoneViewModel> Zones { get; set; } = new();
+        public List<ZonesViewModel> Zones { get; set; } = new();
     }
 }
 

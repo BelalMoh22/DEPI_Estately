@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Estately.Services.ViewModels
 {
-    public class BranchesViewModel
+    public class BranchViewModel
     {
         public int BranchID { get; set; }
         public string BranchName { get; set; } = string.Empty;
@@ -18,8 +18,8 @@ namespace Estately.Services.ViewModels
         public virtual TblJobTitle? JobTitle { get; set; }
     }
 
-    public class BranchesListViewModel : BaseViewModel
+    public class BranchListViewModel : BaseViewModel
     {
-        public List<BranchesViewModel> Branches { get; set; } = new();
+        public List<BranchViewModel> Branches { get; set; } = new();
     }
 }

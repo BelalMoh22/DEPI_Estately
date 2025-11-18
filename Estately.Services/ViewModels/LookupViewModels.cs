@@ -2,19 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Estately.Services.ViewModels
 {
-    public class LkpUserTypeViewModel
-    {
-        public int UserTypeID { get; set; }
-
-        [Required(ErrorMessage = "User Type Name is required")]
-        [StringLength(255)]
-        [Display(Name = "User Type Name")]
-        public string UserTypeName { get; set; } = string.Empty;
-
-        [StringLength(500)]
-        public string? Description { get; set; }
-    }
-
     public class LkpPropertyTypeViewModel
     {
         public int PropertyTypeID { get; set; }

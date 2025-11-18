@@ -24,6 +24,6 @@ namespace Estately.Services.ViewModels
     public class CityListViewModel : BaseViewModel
     {
         public List<CityViewModel> Cities { get; set; } = new();
-        public List<ZoneViewModel> Zones { get; set; } = new();
+        public List<ZonesViewModel> Zones { get; set; } = new();
     }
 }

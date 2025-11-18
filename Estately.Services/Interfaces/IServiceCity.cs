@@ -17,6 +17,6 @@ namespace Estately.Services.Interfaces
         Task<int> GetCityCounterAsync();
         int GetMaxIDAsync();
         ValueTask<IEnumerable<TblCity>> SearchCityAsync(Expression<Func<TblCity, bool>> predicate);
-        Task<IEnumerable<ZoneViewModel>> GetAllZonesAsync();
+        Task<IEnumerable<ZonesViewModel>> GetAllZonesAsync();
     }
 }

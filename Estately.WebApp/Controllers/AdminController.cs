@@ -41,188 +41,6 @@ namespace Estately.WebApp.Controllers
 
         #endregion
 
-        #region Cities CRUD
-
-        [HttpGet]
-        public async Task<IActionResult> Cities(int page = 1, int pageSize = 10, string? searchTerm = null)
-        {
-            var allCities = await _unitOfWork.CityRepository.ReadAllAsync();
-            var query = allCities.AsQueryable();
-            if (!string.IsNullOrEmpty(searchTerm))
-                query = query.Where(c => c.CityName.Contains(searchTerm));
-
-            var totalCount = query.Count();
-            var cities = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-
-            ViewBag.Cities = cities.Select(c => new CityViewModel { CityID = c.CityID, CityName = c.CityName }).ToList();
-            ViewBag.Page = page;
-            ViewBag.PageSize = pageSize;
-            ViewBag.SearchTerm = searchTerm;
-            ViewBag.TotalCount = totalCount;
-            ViewBag.TotalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult CreateCity()
-        {
-            return View(new CityViewModel());
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateCity(CityViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.CityRepository.AddAsync(new TblCity { CityName = model.CityName });
-                _unitOfWork.CompleteAsync();
-                return RedirectToAction("Cities");
-            }
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> EditCity(int id)
-        {
-            var city = await _unitOfWork.CityRepository.GetByIdAsync(id);
-            if (city == null) return NotFound();
-            var model = new CityViewModel { CityID = city.CityID, CityName = city.CityName };
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> EditCity(CityViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var city = await _unitOfWork.CityRepository.GetByIdAsync(model.CityID);
-                if (city != null)
-                {
-                    city.CityName = model.CityName;
-                    _unitOfWork.CityRepository.UpdateAsync(city);
-                    _unitOfWork.CompleteAsync();
-                }
-            }
-            return RedirectToAction("Cities");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> DeleteCity(int id)
-        {
-            _unitOfWork.CityRepository.DeleteAsync(id);
-            _unitOfWork.CompleteAsync();
-            return RedirectToAction("Cities");
-        }
-
-        #endregion
-
-        #region Branches CRUD
-
-        [HttpGet]
-        public async Task<IActionResult> Branches(int page = 1, int pageSize = 10, string? searchTerm = null)
-        {
-            var allBranches = await _unitOfWork.BranchRepository.ReadAllAsync();
-            var query = allBranches.AsQueryable();
-            if (!string.IsNullOrEmpty(searchTerm))
-                query = query.Where(b => b.BranchName.Contains(searchTerm) || b.Address.Contains(searchTerm));
-
-            var totalCount = query.Count();
-            var branches = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-
-            ViewBag.Branches = branches.Select(b => new BranchViewModel
-            {
-                BranchID = b.BranchID,
-                BranchName = b.BranchName,
-                ManagerName = b.ManagerName,
-                Address = b.Address,
-                Phone = b.Phone,
-                IsDeleted = b.IsDeleted
-            }).ToList();
-            ViewBag.Page = page;
-            ViewBag.PageSize = pageSize;
-            ViewBag.SearchTerm = searchTerm;
-            ViewBag.TotalCount = totalCount;
-            ViewBag.TotalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult CreateBranch()
-        {
-            return View(new BranchViewModel());
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateBranch(BranchViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.BranchRepository.AddAsync(new TblBranch
-                {
-                    BranchName = model.BranchName,
-                    ManagerName = model.ManagerName,
-                    Address = model.Address,
-                    Phone = model.Phone,
-                    IsDeleted = false
-                });
-                _unitOfWork.CompleteAsync();
-                return RedirectToAction("Branches");
-            }
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> EditBranch(int id)
-        {
-            var branch = await _unitOfWork.BranchRepository.GetByIdAsync(id);
-            if (branch == null) return NotFound();
-            var model = new BranchViewModel
-            {
-                BranchID = branch.BranchID,
-                BranchName = branch.BranchName,
-                ManagerName = branch.ManagerName,
-                Address = branch.Address,
-                Phone = branch.Phone,
-                IsDeleted = branch.IsDeleted
-            };
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> EditBranch(BranchViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var branch = await _unitOfWork.BranchRepository.GetByIdAsync(model.BranchID);
-                if (branch != null)
-                {
-                    branch.BranchName = model.BranchName;
-                    branch.ManagerName = model.ManagerName;
-                    branch.Address = model.Address;
-                    branch.Phone = model.Phone;
-                    branch.IsDeleted = model.IsDeleted;
-                    _unitOfWork.BranchRepository.UpdateAsync(branch);
-                    _unitOfWork.CompleteAsync();
-                }
-            }
-            return RedirectToAction("Branches");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> DeleteBranch(int id)
-        {
-            var branch = await _unitOfWork.BranchRepository.GetByIdAsync(id);
-            if (branch != null)
-            {
-                branch.IsDeleted = true;
-                _unitOfWork.BranchRepository.UpdateAsync(branch);
-                _unitOfWork.CompleteAsync();
-            }
-            return RedirectToAction("Branches");
-        }
-
-        #endregion
-
         #region Appointments CRUD
 
         [HttpGet]
@@ -599,18 +417,18 @@ namespace Estately.WebApp.Controllers
         public async Task<IActionResult> UserTypes()
         {
             ViewBag.UserTypes = (await _unitOfWork.UserTypeRepository.ReadAllAsync())
-                .Select(ut => new LkpUserTypeViewModel { UserTypeID = ut.UserTypeID, UserTypeName = ut.UserTypeName, Description = ut.Description }).ToList();
+                .Select(ut => new UserTypeViewModel { UserTypeID = ut.UserTypeID, UserTypeName = ut.UserTypeName, Description = ut.Description }).ToList();
             return View();
         }
 
         [HttpGet]
         public IActionResult CreateUserType()
         {
-            return View(new LkpUserTypeViewModel());
+            return View(new UserTypeViewModel());
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUserType(LkpUserTypeViewModel model)
+        public async Task<IActionResult> CreateUserType(UserTypeViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -626,12 +444,12 @@ namespace Estately.WebApp.Controllers
         {
             var ut = await _unitOfWork.UserTypeRepository.GetByIdAsync(id);
             if (ut == null) return NotFound();
-            var model = new LkpUserTypeViewModel { UserTypeID = ut.UserTypeID, UserTypeName = ut.UserTypeName, Description = ut.Description };
+            var model = new UserTypeViewModel { UserTypeID = ut.UserTypeID, UserTypeName = ut.UserTypeName, Description = ut.Description };
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditUserType(LkpUserTypeViewModel model)
+        public async Task<IActionResult> EditUserType(UserTypeViewModel model)
         {
             if (ModelState.IsValid)
             {

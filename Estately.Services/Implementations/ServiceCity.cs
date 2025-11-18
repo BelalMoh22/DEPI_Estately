@@ -36,9 +36,9 @@ namespace Estately.Services.Implementations
             {
                 Cities = pagedCities.Select(ConvertToViewModel).ToList(),
                 Zones = (await _unitOfWork.ZoneRepository.ReadAllAsync())
-                    .Select(z => new ZoneViewModel
+                    .Select(z => new ZonesViewModel
                     {
-                        ZoneID = z.ZoneID,
+                        ZoneId = z.ZoneID,
                         ZoneName = z.ZoneName,
                     }).ToList(),
                 Page = page,
@@ -114,15 +114,15 @@ namespace Estately.Services.Implementations
             return await _unitOfWork.CityRepository.Search(predicate);
         }
 
-        public async Task<IEnumerable<ZoneViewModel>> GetAllZonesAsync()
+        public async Task<IEnumerable<ZonesViewModel>> GetAllZonesAsync()
         {
             var zones = await _unitOfWork.ZoneRepository.ReadAllAsync();
-            return zones.Select(z => new ZoneViewModel
+            return zones.Select(z => new ZonesViewModel
             {
-                ZoneID = z.ZoneID,
+                ZoneId = z.ZoneID,
                 ZoneName = z.ZoneName,
-                CityID = z.CityID,
-                CityName = z.City?.CityName // Assuming you have navigation property
+                CityId = z.CityID,
+                City = z.City?.CityName // Assuming you have navigation property
             });
         }
 

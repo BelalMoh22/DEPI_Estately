@@ -43,7 +43,7 @@ namespace Estately.WebApp.Controllers
         // ===============================
         public async Task<IActionResult> Create()
         {
-            var model = new BranchesViewModel();
+            var model = new BranchViewModel();
 
             var managers = await _serviceBranch.GetAllManagersAsync();
 
@@ -63,7 +63,7 @@ namespace Estately.WebApp.Controllers
         // ===============================
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(BranchesViewModel model)
+        public async Task<IActionResult> Create(BranchViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -101,7 +101,7 @@ namespace Estately.WebApp.Controllers
         // ===============================
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, BranchesViewModel model)
+        public async Task<IActionResult> Edit(int id, BranchViewModel model)
         {
             if (id != model.BranchID)
                 return BadRequest();

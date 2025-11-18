@@ -18,6 +18,7 @@ namespace Estately.Services.Interfaces
         //int GetMaxIDAsync();
         //ValueTask<IEnumerable<TblUser>> SearchZoneAsync(Expression<Func<TblUser, bool>> predicate);
 
+        Task<ZonesListViewModel> GetAllZonesAsync();
         Task<ZonesListViewModel> GetZonePagedAsync(int page, int pageSize, string? search);
         Task<ZonesViewModel?> GetZoneByIdAsync(int? id);
         Task CreateZoneAsync(ZonesViewModel model);

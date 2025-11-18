@@ -45,6 +45,6 @@ namespace Estately.Services.ViewModels
     public class UserListViewModel : BaseViewModel
     {
         public List<UserViewModel> Users { get; set; } = new();
-        public List<LkpUserTypeViewModel> UserTypes { get; set; } = new();
+        public List<UserTypeViewModel> UserTypes { get; set; } = new();
     }
 }

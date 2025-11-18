@@ -23,7 +23,7 @@ namespace Estately.Services.Implementations
         // ================================
         // 1) Get Branch by ID
         // ================================
-        public async Task<BranchesViewModel?> GetBranchByIdAsync(int? id)
+        public async Task<BranchViewModel> GetBranchByIdAsync(int? id)
         {
             var branches = await _unitOfWork.BranchRepository.ReadAllAsync();
             var branch = branches.FirstOrDefault(x => x.BranchID == id);
@@ -34,7 +34,7 @@ namespace Estately.Services.Implementations
         // ================================
         // 2) Get paged Branches (with search)
         // ================================
-        public async Task<BranchesListViewModel> GetBranchPagedAsync(int page, int pageSize, string? search)
+        public async Task<BranchListViewModel> GetBranchPagedAsync(int page, int pageSize, string? search)
         {
             var branches = await _unitOfWork.BranchRepository.ReadAllAsync();
 
@@ -60,7 +60,7 @@ namespace Estately.Services.Implementations
                 .Take(pageSize)
                 .ToList();
 
-            return new BranchesListViewModel
+            return new BranchListViewModel
             {
                 Branches = pagedBranches.Select(ConvertToViewModel).ToList(),
                 Page = page,
@@ -73,7 +73,7 @@ namespace Estately.Services.Implementations
         // ================================
         // 3) Create Branch
         // ================================
-        public async Task CreateBranchAsync(BranchesViewModel model)
+        public async Task CreateBranchAsync(BranchViewModel model)
         {
             var branch = new TblBranch
             {
@@ -91,7 +91,7 @@ namespace Estately.Services.Implementations
         // ================================
         // 4) Update Branch
         // ================================
-        public async Task UpdateBranchAsync(BranchesViewModel model)
+        public async Task UpdateBranchAsync(BranchViewModel model)
         {
             var branch = await _unitOfWork.BranchRepository.GetByIdAsync(model.BranchID);
             if (branch == null)
@@ -169,9 +169,9 @@ namespace Estately.Services.Implementations
         // ================================
         // 10) Mapper
         // ================================
-        private BranchesViewModel ConvertToViewModel(TblBranch b)
+        private BranchViewModel ConvertToViewModel(TblBranch b)
         {
-            return new BranchesViewModel
+            return new BranchViewModel
             {
                 BranchID = b.BranchID,
                 BranchName = b.BranchName,

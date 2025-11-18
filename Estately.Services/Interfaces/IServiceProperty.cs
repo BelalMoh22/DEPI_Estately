@@ -27,7 +27,7 @@ namespace Estately.Services.Interfaces
         Task<IEnumerable<LkpPropertyTypeViewModel>> GetAllPropertyTypesAsync();
         Task<IEnumerable<LkpPropertyStatusViewModel>> GetAllStatusesAsync();
         Task<IEnumerable<DeveloperProfileViewModel>> GetAllDevelopersAsync();
-        Task<IEnumerable<ZoneViewModel>> GetAllZonesAsync();
+        Task<IEnumerable<ZonesViewModel>> GetAllZonesAsync();
 
         // Agents lookup
         Task<IEnumerable<TblEmployee>> GetAgentsAsync();

@@ -9,10 +9,10 @@ namespace Estately.Services.Interfaces
 {
     public interface IServiceBranch
     {
-        Task<BranchesListViewModel> GetBranchPagedAsync(int page, int pageSize, string? search);
-        Task<BranchesViewModel?> GetBranchByIdAsync(int? id);
-        Task CreateBranchAsync(BranchesViewModel model);
-        Task UpdateBranchAsync(BranchesViewModel model);
+        Task<BranchListViewModel> GetBranchPagedAsync(int page, int pageSize, string? search);
+        Task<BranchViewModel?> GetBranchByIdAsync(int? id);
+        Task CreateBranchAsync(BranchViewModel model);
+        Task UpdateBranchAsync(BranchViewModel model);
         Task DeleteBranchAsync(int id);
         Task<int> GetBranchCounterAsync();
         Task<IEnumerable<TblEmployee>> GetAllManagersAsync();

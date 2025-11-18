@@ -2,65 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Estately.Services.ViewModels
 {
-    public class ZoneViewModel
-    {
-        public int ZoneID { get; set; }
-
-        [Required(ErrorMessage = "City is required")]
-        [Display(Name = "City")]
-        public int CityID { get; set; }
-
-        [Required(ErrorMessage = "Zone Name is required")]
-        [StringLength(255)]
-        [Display(Name = "Zone Name")]
-        public string ZoneName { get; set; } = string.Empty;
-
-        [Display(Name = "City Name")]
-        public string? CityName { get; set; }
-    }
-
-    public class BranchViewModel
-    {
-        public int BranchID { get; set; }
-
-        [Required(ErrorMessage = "Branch Name is required")]
-        [StringLength(255)]
-        [Display(Name = "Branch Name")]
-        public string BranchName { get; set; } = string.Empty;
-
-        [StringLength(10)]
-        [Display(Name = "Manager Name")]
-        public string? ManagerName { get; set; }
-
-        [Required(ErrorMessage = "Address is required")]
-        [StringLength(255)]
-        public string Address { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "Phone is required")]
-        [StringLength(255)]
-        public string Phone { get; set; } = string.Empty;
-
-        [Display(Name = "Is Deleted")]
-        public bool? IsDeleted { get; set; }
-    }
-
-    public class DepartmentViewModel
-    {
-        public int DepartmentID { get; set; }
-
-        [Required(ErrorMessage = "Department Name is required")]
-        [StringLength(255)]
-        [Display(Name = "Department Name")]
-        public string DepartmentName { get; set; } = string.Empty;
-
-        [StringLength(100)]
-        [Display(Name = "Manager Name")]
-        public string? ManagerName { get; set; }
-
-        [StringLength(255)]
-        [EmailAddress]
-        public string? Email { get; set; }
-    }
 
     public class EmployeeViewModel
     {

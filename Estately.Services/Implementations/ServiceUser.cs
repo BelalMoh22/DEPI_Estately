@@ -42,11 +42,10 @@ namespace Estately.Services.Implementations
             {
                 Users = pagedUsers.Select(ConvertToViewModel).ToList(),
                 UserTypes = (await _unitOfWork.UserTypeRepository.ReadAllAsync())
-                    .Select(ut => new LkpUserTypeViewModel
+                    .Select(ut => new UserTypeViewModel
                     {
                         UserTypeID = ut.UserTypeID,
                         UserTypeName = ut.UserTypeName,
-                        Description = ut.Description
                     }).ToList(),
                 Page = page,
                 PageSize = pageSize,
@@ -171,15 +170,14 @@ namespace Estately.Services.Implementations
             return await _unitOfWork.UserRepository.Search(predicate);
         }
 
-        public async Task<IEnumerable<LkpUserTypeViewModel>> GetAllUserTypesAsync()
+        public async Task<IEnumerable<UserTypeViewModel>> GetAllUserTypesAsync()
         {
             var types = await _unitOfWork.UserTypeRepository.ReadAllAsync();
 
-            return types.Select(ut => new LkpUserTypeViewModel
+            return types.Select(ut => new UserTypeViewModel
             {
                 UserTypeID = ut.UserTypeID,
-                UserTypeName = ut.UserTypeName,
-                Description = ut.Description
+                UserTypeName = ut.UserTypeName
             });
         }
 
@@ -203,4 +201,4 @@ namespace Estately.Services.Implementations
             };
         }
     }
-}
+} 

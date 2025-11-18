@@ -20,6 +20,6 @@ namespace Estately.Services.Interfaces
         Task<int> GetUserCounterAsync();
         int GetMaxIDAsync();
         ValueTask<IEnumerable<TblUser>> SearchUserAsync(Expression<Func<TblUser, bool>> predicate);
-        Task<IEnumerable<LkpUserTypeViewModel>> GetAllUserTypesAsync();
+        Task<IEnumerable<UserTypeViewModel>> GetAllUserTypesAsync();
     }
 }

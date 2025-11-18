@@ -15,6 +15,23 @@ namespace Estately.Services.Implementations
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<ZonesListViewModel> GetAllZonesAsync()
+        {
+            var zones = await _unitOfWork.ZoneRepository.ReadAllIncluding("City");
+            var zoneList = zones
+                .Where(z => z.IsDeleted == false)
+                .Select(ConvertToViewModel)
+                .ToList();
+            return new ZonesListViewModel
+            {
+                Zones = zoneList,
+                Page = 1,
+                PageSize = zoneList.Count,
+                SearchTerm = null,
+                TotalCount = zoneList.Count
+            };
+        }
+
         // 1. LIST ZONES (SEARCH + PAGINATION)
         public async Task<ZonesListViewModel> GetZonePagedAsync(int page, int pageSize, string? searchTerm)
         {
