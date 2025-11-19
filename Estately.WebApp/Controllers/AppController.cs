@@ -46,7 +46,7 @@ namespace Estately.WebApp.Controllers
                 .Take(pageSize)
                 .ToList();
 
-            var model = new PropertiesListViewModel
+            var model = new PropertyListViewModel
             {
                 Page = page,
                 PageSize = pageSize,
@@ -68,15 +68,15 @@ namespace Estately.WebApp.Controllers
                 if (firstImage == null)
                     firstImage = "default.jpg";
 
-                model.Properties.Add(new PropertiesViewModel
+                model.Properties.Add(new PropertyViewModel
                 {
                     PropertyID = p.PropertyID,
                     Address = p.Address,
                     CityName = p.Zone?.City?.CityName ?? "",
                     ZoneName = p.Zone?.ZoneName ?? "",
                     Price = (int)p.Price,
-                    Beds = p.BedsNo,
-                    Baths = p.BathsNo,
+                    BedsNo = p.BedsNo,
+                    BathsNo = p.BathsNo,
                     FirstImage = firstImage
                 });
             }

@@ -30,7 +30,7 @@ namespace Estately.Services.ViewModels
         [StringLength(255)]
         [Display(Name = "Last Name")]
         public string LastName { get; set; } = string.Empty;
-
+        public string FullName { get; set; } = string.Empty;
         [Required(ErrorMessage = "Gender is required")]
         [StringLength(50)]
         public string Gender { get; set; } = string.Empty;
@@ -175,25 +175,25 @@ namespace Estately.Services.ViewModels
         [Display(Name = "Employee Name")]
         public string? EmployeeName { get; set; }
     }
-    public class PropertyImageViewModel
-    {
-        public int ImageID { get; set; }
+    //public class PropertyImageViewModel
+    //{
+    //    public int ImageID { get; set; }
 
-        [Required(ErrorMessage = "Property is required")]
-        [Display(Name = "Property")]
-        public int PropertyID { get; set; }
+    //    [Required(ErrorMessage = "Property is required")]
+    //    [Display(Name = "Property")]
+    //    public int PropertyID { get; set; }
 
-        [Required(ErrorMessage = "Image Path is required")]
-        [StringLength(255)]
-        [Display(Name = "Image Path")]
-        public string ImagePath { get; set; } = string.Empty;
+    //    [Required(ErrorMessage = "Image Path is required")]
+    //    [StringLength(255)]
+    //    [Display(Name = "Image Path")]
+    //    public string ImagePath { get; set; } = string.Empty;
 
-        [Display(Name = "Uploaded Date")]
-        public DateTime UploadedDate { get; set; } = DateTime.Now;
+    //    [Display(Name = "Uploaded Date")]
+    //    public DateTime UploadedDate { get; set; } = DateTime.Now;
 
-        [Display(Name = "Property Title")]
-        public string? PropertyTitle { get; set; }
-    }
+    //    [Display(Name = "Property Title")]
+    //    public string? PropertyTitle { get; set; }
+    //}
 
     public class PropertyDocumentViewModel
     {
@@ -231,17 +231,17 @@ namespace Estately.Services.ViewModels
         public string? Username { get; set; }
     }
 
-    public class PropertyFeatureViewModel
-    {
-        public int FeatureID { get; set; }
+    //public class PropertyFeatureViewModel
+    //{
+    //    public int FeatureID { get; set; }
 
-        [Required(ErrorMessage = "Feature Name is required")]
-        [StringLength(255)]
-        [Display(Name = "Feature Name")]
-        public string FeatureName { get; set; } = string.Empty;
+    //    [Required(ErrorMessage = "Feature Name is required")]
+    //    [StringLength(255)]
+    //    [Display(Name = "Feature Name")]
+    //    public string FeatureName { get; set; } = string.Empty;
 
-        public string? Description { get; set; }
-    }
+    //    public string? Description { get; set; }
+    //}
 
     public class FavoriteViewModel
     {
