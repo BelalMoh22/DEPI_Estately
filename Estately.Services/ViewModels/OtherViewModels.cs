@@ -141,7 +141,7 @@ namespace Estately.Services.ViewModels
         public string? Username { get; set; }
     }
 
-    public class AppointmentViewModel
+    public class AppointmentsViewModel
     {
         public int AppointmentID { get; set; }
 
@@ -175,7 +175,6 @@ namespace Estately.Services.ViewModels
         [Display(Name = "Employee Name")]
         public string? EmployeeName { get; set; }
     }
-
     public class PropertyImageViewModel
     {
         public int ImageID { get; set; }

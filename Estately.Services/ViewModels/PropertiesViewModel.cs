@@ -24,5 +24,4 @@ namespace Estately.Services.ViewModels
     {
         public List<PropertiesViewModel> Properties { get; set; } = new();
     }
-
 }
