@@ -176,7 +176,7 @@
         // BUILD VIEWMODEL (NO VIEWBAG)
         // ---------------------------------------------------------------
         private async Task<PropertyViewModel> BuildPropertyViewModelAsync(PropertyViewModel vm)
-        { 
+        {
             vm.AllFeatures = await _service.GetAllFeaturesAsync();
             vm.PropertyTypes = await _service.GetAllPropertyTypesAsync();
             vm.Statuses = await _service.GetAllStatusesAsync();

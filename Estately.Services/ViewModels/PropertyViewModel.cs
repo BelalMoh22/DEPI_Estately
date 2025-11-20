@@ -113,7 +113,7 @@ namespace Estately.Services.ViewModels
         public DateTime? UploadedDate { get; set; }
         public bool? IsDeleted { get; set; }
     }
-    
+
     // -----------------------
     // Features (NEW)
     // -----------------------
