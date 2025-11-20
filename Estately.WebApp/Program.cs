@@ -26,6 +26,7 @@ namespace Estately.WebApp
             builder.Services.AddScoped<IServiceUserType, ServiceUserType>();
             builder.Services.AddScoped<IServiceDepartment, ServiceDepartment>();
             builder.Services.AddScoped<IServiceBranch, ServiceBranch>();
+            builder.Services.AddScoped<IServicePropertyType, ServicePropertyType>();
 
             // Add this if not already there
             builder.Services.AddScoped<IServiceCity, ServiceCity>();
