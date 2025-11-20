@@ -120,10 +120,10 @@ namespace Estately.Services.ViewModels
         [Display(Name = "User")]
         public int UserID { get; set; }
 
-        [Required(ErrorMessage = "Developer Name is required")]
+        [Required(ErrorMessage = "Developer Title is required")]
         [StringLength(255)]
-        [Display(Name = "Developer Name")]
-        public string DeveloperName { get; set; } = string.Empty;
+        [Display(Name = "Developer Title")]
+        public string DeveloperTitle { get; set; } = string.Empty;
 
         [StringLength(255)]
         [Display(Name = "Website URL")]

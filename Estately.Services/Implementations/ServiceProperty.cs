@@ -1,4 +1,8 @@
-﻿using System.Linq.Expressions;
+﻿// ---------------------------------------------------------
+// SERVICE PROPERTY  (UPDATED)
+// ---------------------------------------------------------
+using System.Linq.Expressions;
+
 namespace Estately.Services.Implementations
 {
     public class ServiceProperty : IServiceProperty
@@ -9,13 +13,12 @@ namespace Estately.Services.Implementations
         {
             _unitOfWork = unitOfWork;
         }
-
-        // ---------------------------------------------------------
-        // 1. Paging with Search + Images + Features
-        // ---------------------------------------------------------
+        // ----------------------------------------------------
+        // PAGED LIST
+        // ----------------------------------------------------
         public async Task<PropertyListViewModel> GetPropertiesPagedAsync(int page, int pageSize, string? search)
         {
-            var properties = await _unitOfWork.PropertyRepository.ReadAllIncluding(
+            var props = await _unitOfWork.PropertyRepository.ReadAllIncluding(
                 "DeveloperProfile",
                 "PropertyType",
                 "Status",
@@ -24,41 +27,39 @@ namespace Estately.Services.Implementations
                 "TblPropertyFeaturesMappings"
             );
 
-            var query = properties.Where(p => p.IsDeleted == false).AsQueryable();
+            var query = props.Where(p => p.IsDeleted == false).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search))
             {
-                string s = search.ToLower();
-
+                search = search.ToLower();
                 query = query.Where(p =>
-                    (p.Address ?? "").ToLower().Contains(s) ||
-                    (p.PropertyCode ?? "").ToLower().Contains(s) ||
-                    (p.DeveloperProfile!.DeveloperTitle ?? "").ToLower().Contains(s)
+                    (p.Address ?? "").ToLower().Contains(search) ||
+                    (p.PropertyCode ?? "").ToLower().Contains(search) ||
+                    (p.DeveloperProfile!.DeveloperTitle ?? "").ToLower().Contains(search)
                 );
             }
 
-            int totalCount = query.Count();
+            int total = query.Count();
 
-            var paged = query
-                .OrderBy(p => p.PropertyID)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+            var paged = query.OrderBy(p => p.PropertyID)
+                             .Skip((page - 1) * pageSize)
+                             .Take(pageSize)
+                             .ToList();
 
             return new PropertyListViewModel
             {
                 Properties = paged.Select(ConvertToViewModel).ToList(),
                 Page = page,
                 PageSize = pageSize,
+                TotalCount = total,
                 SearchTerm = search,
-                TotalCount = totalCount,
                 Features = await GetAllFeaturesAsync()
             };
         }
 
-        // ---------------------------------------------------------
-        // 2. Get By ID
-        // ---------------------------------------------------------
+        // ----------------------------------------------------
+        // GET BY ID
+        // ----------------------------------------------------
         public async Task<PropertyViewModel?> GetPropertyByIdAsync(int id)
         {
             var props = await _unitOfWork.PropertyRepository.ReadAllIncluding(
@@ -81,25 +82,24 @@ namespace Estately.Services.Implementations
             return vm;
         }
 
-        // ---------------------------------------------------------
-        // 3. CREATE Property
-        // ---------------------------------------------------------
+        // ----------------------------------------------------
+        // CREATE
+        // ----------------------------------------------------
         public async Task CreatePropertyAsync(PropertyViewModel model)
         {
             var entity = ConvertToEntity(model);
-            entity.PropertyCode = ""; // temporarily empty
+            entity.PropertyCode = ""; // set later after insert
 
             await _unitOfWork.PropertyRepository.AddAsync(entity);
             await _unitOfWork.CompleteAsync();
 
-            // Create property code
+            // Generate property code => PROP-ZONENAME-ID
             var zone = await _unitOfWork.ZoneRepository.GetByIdAsync(entity.ZoneID);
-
-            // Remove spaces from ZoneName (optional)
             string zoneName = zone?.ZoneName?.Replace(" ", "") ?? "Unknown";
 
             entity.PropertyCode = $"PROP-{zoneName}-{entity.PropertyID:D4}";
-            // ------------------ IMAGES ------------------
+
+            // Save images
             if (model.Images != null)
             {
                 foreach (var img in model.Images)
@@ -114,16 +114,16 @@ namespace Estately.Services.Implementations
                 }
             }
 
-            // ------------------ FEATURES ------------------
+            // Save features
             if (model.SelectedFeatures != null)
             {
-                foreach (var featureId in model.SelectedFeatures)
+                foreach (var fid in model.SelectedFeatures)
                 {
                     await _unitOfWork.PropertyFeaturesMappingRepository.AddAsync(
                         new TblPropertyFeaturesMapping
                         {
                             PropertyID = entity.PropertyID,
-                            FeatureID = featureId
+                            FeatureID = fid
                         });
                 }
             }
@@ -131,31 +131,39 @@ namespace Estately.Services.Implementations
             await _unitOfWork.CompleteAsync();
         }
 
-        // ---------------------------------------------------------
-        // 4. UPDATE Property
-        // ---------------------------------------------------------
+        // ----------------------------------------------------
+        // UPDATE
+        // ----------------------------------------------------
         public async Task UpdatePropertyAsync(PropertyViewModel model)
         {
             var entity = await _unitOfWork.PropertyRepository.GetByIdAsync(model.PropertyID);
             if (entity == null) return;
 
-            string savedPropertyCode = entity.PropertyCode;
-
-            entity = ConvertToEntity(model);
-            entity.PropertyCode = savedPropertyCode;
+            // Update scalar fields on the already-tracked entity to avoid EF tracking conflicts
+            entity.Address = model.Address;
+            entity.Area = model.Area;
+            entity.Price = model.Price;
+            entity.BedsNo = model.BedsNo;
+            entity.BathsNo = model.BathsNo;
+            entity.FloorsNo = model.FloorsNo;
+            entity.Latitude = model.Latitude;
+            entity.Longitude = model.Longitude;
+            entity.Description = model.Description;
+            entity.AgentId = model.AgentId;
+            entity.PropertyTypeID = model.PropertyTypeID;
+            entity.DeveloperProfileID = model.DeveloperProfileID;
+            entity.ZoneID = model.ZoneID;
+            entity.StatusId = model.StatusId;
+            entity.ExpectedRentPrice = model.ExpectedRentPrice;
+            entity.IsFurnished = model.IsFurnished;
+            entity.YearBuilt = model.YearBuilt;
+            entity.ListingDate = model.ListingDate;
+            entity.IsDeleted = model.IsDeleted ?? entity.IsDeleted;
 
             await _unitOfWork.PropertyRepository.UpdateAsync(entity);
-
-            // ------------------ IMAGES ------------------
-            var allImages = await _unitOfWork.PropertyImageRepository.ReadAllAsync();
-            var oldImages = allImages.Where(i => i.PropertyID == model.PropertyID);
-
-            foreach (var img in oldImages)
-            {
-                img.IsDeleted = true;
-                await _unitOfWork.PropertyImageRepository.UpdateAsync(img);
-            }
-
+            
+            // Add new images (existing ones are only removed when the user clicks X,
+            // which is handled in the controller via DeleteImageFromDiskAndDb)
             if (model.Images != null)
             {
                 foreach (var img in model.Images)
@@ -170,33 +178,32 @@ namespace Estately.Services.Implementations
                 }
             }
 
-            // Get existing feature mappings
-            var oldMappings = await _unitOfWork.PropertyFeaturesMappingRepository.ReadAllAsync();
-            var oldList = oldMappings.Where(f => f.PropertyID == model.PropertyID);
+            // Replace feature mappings
+            var maps = await _unitOfWork.PropertyFeaturesMappingRepository.ReadAllAsync();
+            var oldMaps = maps.Where(f => f.PropertyID == model.PropertyID);
 
-            // Remove all old mappings
-            foreach (var map in oldList)
+            foreach (var m in oldMaps)
             {
                 await _unitOfWork.PropertyFeaturesMappingRepository
-                    .DeletePropertyFeatureMappingAsync(map.PropertyID, map.FeatureID);
+                    .DeletePropertyFeatureMappingAsync(m.PropertyID, m.FeatureID);
             }
 
-            // Add new mappings
-            foreach (int featureId in model.SelectedFeatures)
+            foreach (var fid in model.SelectedFeatures)
             {
                 await _unitOfWork.PropertyFeaturesMappingRepository.AddAsync(
                     new TblPropertyFeaturesMapping
                     {
                         PropertyID = model.PropertyID,
-                        FeatureID = featureId
+                        FeatureID = fid
                     });
             }
+
             await _unitOfWork.CompleteAsync();
         }
 
-        // ---------------------------------------------------------
-        // 5. Soft Delete
-        // ---------------------------------------------------------
+        // ----------------------------------------------------
+        // DELETE
+        // ----------------------------------------------------
         public async Task DeletePropertyAsync(int id)
         {
             var entity = await _unitOfWork.PropertyRepository.GetByIdAsync(id);
@@ -205,24 +212,25 @@ namespace Estately.Services.Implementations
             entity.IsDeleted = true;
 
             await _unitOfWork.PropertyRepository.UpdateAsync(entity);
+
+            // Also remove associated images from TblPropertyImage
+            var allImages = await _unitOfWork.PropertyImageRepository.ReadAllAsync();
+            var imagesForProperty = allImages.Where(i => i.PropertyID == id).ToList();
+
+            foreach (var img in imagesForProperty)
+            {
+                await _unitOfWork.PropertyImageRepository.DeleteAsync(img.ImageID);
+            }
+
             await _unitOfWork.CompleteAsync();
         }
 
-        // ---------------------------------------------------------
-        // 6. Search Helper
-        // ---------------------------------------------------------
-        public async ValueTask<IEnumerable<TblProperty>> SearchPropertyAsync(Expression<Func<TblProperty, bool>> predicate)
-        {
-            return await _unitOfWork.PropertyRepository.Search(predicate);
-        }
-
-        // ---------------------------------------------------------
-        // 7. Features List
-        // ---------------------------------------------------------
+        // ----------------------------------------------------
+        // LOOKUPS
+        // ----------------------------------------------------
         public async Task<List<PropertyFeatureViewModel>> GetAllFeaturesAsync()
         {
             var list = await _unitOfWork.PropertyFeatureRepository.ReadAllAsync();
-
             return list.Select(f => new PropertyFeatureViewModel
             {
                 FeatureID = f.FeatureID,
@@ -230,9 +238,6 @@ namespace Estately.Services.Implementations
             }).ToList();
         }
 
-        // ---------------------------------------------------------
-        // 8. Lookups
-        // ---------------------------------------------------------
         public async Task<IEnumerable<LkpPropertyTypeViewModel>> GetAllPropertyTypesAsync()
         {
             var list = await _unitOfWork.PropertyTypeRepository.ReadAllAsync();
@@ -259,7 +264,7 @@ namespace Estately.Services.Implementations
             return list.Select(d => new DeveloperProfileViewModel
             {
                 DeveloperProfileID = d.DeveloperProfileID,
-                DeveloperName = d.DeveloperName
+                DeveloperTitle = d.DeveloperTitle
             });
         }
 
@@ -272,18 +277,10 @@ namespace Estately.Services.Implementations
                 ZoneName = z.ZoneName
             });
         }
-        // ---------------------------------------------------------
-        // Helpers
-        // ---------------------------------------------------------
-        public int GetMaxID() =>
-            _unitOfWork.PropertyRepository.GetMaxId();
 
-        public async Task<int> GetPropertyCounterAsync() =>
-            (await _unitOfWork.PropertyRepository.ReadAllAsync()).Count();
-
-        // ---------------------------------------------------------
-        // Mapping Helpers
-        // ---------------------------------------------------------
+        // ----------------------------------------------------
+        // MAPPING HELPERS
+        // ----------------------------------------------------
         private PropertyViewModel ConvertToViewModel(TblProperty p)
         {
             return new PropertyViewModel
@@ -312,12 +309,12 @@ namespace Estately.Services.Implementations
 
                 DeveloperTitle = p.DeveloperProfile?.DeveloperTitle,
                 PropertyTypeName = p.PropertyType?.TypeName,
-                StatusName = p.Status?.StatusName,
-                ZoneName = p.Zone?.ZoneName,
+                StatusName = p.Status.StatusName ?? "Available",
+                ZoneName = p.Zone.ZoneName,
                 AgentName = $"{p.Agent?.FirstName} {p.Agent?.LastName}",
 
-                Images = p.TblPropertyImages
-                    ?.Where(i => i.IsDeleted == false)
+                Images = p.TblPropertyImages?
+                    .Where(i => i.IsDeleted == false)
                     .Select(i => new PropertyImageViewModel
                     {
                         ImageID = i.ImageID,
@@ -326,8 +323,8 @@ namespace Estately.Services.Implementations
                         IsDeleted = i.IsDeleted
                     }).ToList() ?? new(),
 
-                SelectedFeatures = p.TblPropertyFeaturesMappings
-                    ?.Select(f => f.FeatureID)
+                SelectedFeatures = p.TblPropertyFeaturesMappings?
+                    .Select(f => f.FeatureID)
                     .ToList() ?? new List<int>()
             };
         }
@@ -357,6 +354,28 @@ namespace Estately.Services.Implementations
                 ListingDate = vm.ListingDate,
                 IsDeleted = vm.IsDeleted ?? false
             };
+        }
+
+        // ----------------------------------------------------
+        // REQUIRED INTERFACE METHODS (ADDED)
+        // ----------------------------------------------------
+
+        public async ValueTask<IEnumerable<TblProperty>> SearchPropertyAsync(Expression<Func<TblProperty, bool>> predicate)
+        {
+            var list = await _unitOfWork.PropertyRepository.ReadAllAsync();
+            return list.Where(predicate.Compile());
+        }
+
+        public async Task<int> GetMaxIDAsync()
+        {
+            var list = await _unitOfWork.PropertyRepository.ReadAllAsync();
+            return list.Any() ? list.Max(p => p.PropertyID) : 0;
+        }
+
+        public async Task<int> GetPropertyCounterAsync()
+        {
+            var list = await _unitOfWork.PropertyRepository.ReadAllAsync();
+            return list.Count(p => p.IsDeleted == false);
         }
     }
 }

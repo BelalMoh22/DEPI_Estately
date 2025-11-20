@@ -120,6 +120,13 @@
             </div>
 
             <div class="mb-3">
+                <label class="form-label">Developer</label>
+                <select asp-for="DeveloperProfileID" class="form-control" asp-items="@(new SelectList(Model.Developers, "DeveloperProfileID", "DeveloperTitle"))">
+                    <option value="">-- Select --</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
                 <label class="form-label">Features</label>
                 <div>
                     @foreach (var f in Model.AllFeatures)
@@ -175,7 +182,7 @@
                 }
             </div>
 
-            <input type="hidden" name="ImagesToDelete" id="ImagesToDeleteField" />
+            <div id="ImagesToDeleteContainer"></div>
 
             <div id="newPreviews" class="image-preview-grid mb-3"></div>
 
@@ -198,9 +205,9 @@
 
     <script>
         (function () {
-            // existing images removal: mark IDs to ImagesToDelete hidden input and remove DOM
+            // existing images removal: collect IDs so backend can delete them
             const imagesToDelete = new Set();
-            const imagesField = document.getElementById('ImagesToDeleteField');
+            const deleteContainer = document.getElementById('ImagesToDeleteContainer');
 
             document.querySelectorAll('.existing-remove').forEach(btn => {
                 btn.addEventListener('click', function () {
@@ -215,7 +222,16 @@
             });
 
             function updateField() {
-                imagesField.value = Array.from(imagesToDelete).join(',');
+                // clear previous hidden inputs
+                deleteContainer.innerHTML = '';
+                // create one hidden input per image id => binds to List<int> ImagesToDelete
+                imagesToDelete.forEach(id => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'ImagesToDelete';
+                    input.value = id;
+                    deleteContainer.appendChild(input);
+                });
             }
 
             // New files preview logic (similar to Create)

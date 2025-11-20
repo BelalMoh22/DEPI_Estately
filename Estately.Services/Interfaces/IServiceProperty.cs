@@ -50,7 +50,7 @@ namespace Estately.Services.Interfaces
         // ---------------------------------------------------------
         // 10. Helper Methods
         // ---------------------------------------------------------
-        int GetMaxID();
+        Task<int> GetMaxIDAsync();
         Task<int> GetPropertyCounterAsync();
     }
 }
