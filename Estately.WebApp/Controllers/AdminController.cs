@@ -54,7 +54,7 @@ namespace Estately.WebApp.Controllers
             var totalCount = query.Count();
             var appointments = query.OrderByDescending(a => a.AppointmentDate).Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
-            ViewBag.Appointments = appointments.Select(a => new AppointmentViewModel
+            ViewBag.Appointments = appointments.Select(a => new AppointmentsViewModel
             {
                 AppointmentID = a.AppointmentID,
                 StatusID = a.StatusID,
@@ -79,7 +79,7 @@ namespace Estately.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAppointment(AppointmentViewModel model)
+        public async Task<IActionResult> CreateAppointment(AppointmentsViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -97,7 +97,7 @@ namespace Estately.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditAppointment(AppointmentViewModel model)
+        public async Task<IActionResult> EditAppointment(AppointmentsViewModel model)
         {
             if (ModelState.IsValid)
             {

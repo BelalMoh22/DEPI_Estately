@@ -1,0 +1,39 @@
+﻿@model Estately.Services.ViewModels.PropertyTypeViewModel
+
+@{
+    ViewData["Title"] = "Edit Property Type";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h4>Edit Property Type</h4>
+
+<form asp-action="Edit" method="post" class="mt-4">
+    <input type="hidden" asp-for="PropertyTypeID" />
+
+    <div class="mb-3">
+        <label class="form-label">Type Name <span class="text-danger">*</span></label>
+        <input asp-for="TypeName" class="form-control" />
+        <span asp-validation-for="TypeName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mt-4">
+        <button class="btn btn-admin">
+            <i class="bi bi-save me-2"></i>Save Changes
+        </button>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left-circle me-2"></i>Back to List
+        </a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

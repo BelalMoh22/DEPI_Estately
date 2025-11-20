@@ -168,6 +168,7 @@
             justify-content: center !important; /* Center the pagination */
         }
 
+
         .custom-pagination {
             display: flex !important;
             flex-wrap: wrap !important; /* Make responsive on small screens */
@@ -213,6 +214,17 @@
                 pointer-events: none !important;
             }
 
+        .actions-cell .action-buttons {
+            display: flex !important;
+            gap: 6px !important;
+            align-items: center !important;
+        }
+
+        .actions-cell form {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
         /* RESPONSIVE */
         @@media (max-width: 576px) {
             .page-btn {
@@ -257,7 +269,8 @@
             <a class="nav-link @(currentController == "TblZones" ? "active" : "")" asp-controller="TblZones" asp-action="Index">
                 <i class="bi bi-pin-map me-2"></i> Zones
             </a>
-            <a class="nav-link @(currentController == "PropertyTypes" ? "active" : "")" asp-action="PropertyTypes" asp-controller="Admin">
+            <a class="nav-link @(currentController == "LkpPropertyTypes" ? "active" : "")"
+               asp-controller="LkpPropertyTypes" asp-action="Index">
                 <i class="bi bi-tags me-2"></i> Property Types
             </a>
             <a class="nav-link @(currentController == "LkpPropertyStatus" ? "active" : "")" asp-action="Index" asp-controller="LkpPropertyStatus">

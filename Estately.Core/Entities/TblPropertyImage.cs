@@ -1,6 +1,5 @@
 ﻿namespace Estately.Core.Entities
 {
-
     [Index("PropertyID", Name = "IX_TblPropertyImages_PropertyID")]
     public partial class TblPropertyImage
     {
