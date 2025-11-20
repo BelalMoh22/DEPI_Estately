@@ -64,28 +64,6 @@ namespace Estately.Services.Implementations
             return user == null ? null : ConvertToViewModel(user);
         }
 
-        // ====================================================
-        // 3. CREATE USER
-        // ====================================================
-        public async Task CreateUserAsync(UserViewModel model)
-        {
-            var user = new TblUser
-            {
-                Email = model.Email,
-                Username = model.Username,
-                PasswordHash = model.PasswordHash ?? "DefaultPasswordHash",
-                UserTypeID = model.UserTypeID,
-                IsEmployee = model.IsEmployee ?? false,
-                IsClient = model.IsClient ?? true,
-                IsDeveloper = model.IsDeveloper ?? false,
-                CreatedAt = DateTime.Now,
-                IsDeleted = false
-            };
-
-            await _unitOfWork.UserRepository.AddAsync(user);
-            await _unitOfWork.CompleteAsync();
-        }
-
         // 4. UPDATE USER
         public async Task UpdateUserAsync(UserViewModel model)
         {
