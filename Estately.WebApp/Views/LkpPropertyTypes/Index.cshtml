@@ -6,18 +6,16 @@
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4>Property Types</h4>
+    <h4>PropertyTypes</h4>
     <a asp-action="Create" class="btn btn-admin">
-        <i class="bi bi-plus-circle me-2"></i>Add New Property Type
+        <i class="bi bi-plus-circle me-2"></i>Add New PropertyType
     </a>
 </div>
 
 <form method="get" class="mb-4">
     <div class="row">
         <div class="col-md-10">
-            <input type="text" name="search" class="form-control"
-                   placeholder="Search property types by name or description..."
-                   value="@Model.SearchTerm" />
+            <input type="text" name="search" class="form-control" placeholder="Search by PropertyType..." value="@Model.SearchTerm" />
         </div>
         <div class="col-md-2">
             <button type="submit" class="btn btn-admin w-100">Search</button>
