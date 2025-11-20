@@ -29,6 +29,7 @@
                 <th>ID</th>
                 <th>Full Name</th>
                 <th>Job Title</th>
+                <th>Branch</th>
                 <th>Department</th>
                 <th>Phone</th>
                 <th>Email</th>
@@ -43,18 +44,20 @@
                     <td>@e.EmployeeID</td>
                     <td>@e.FullName</td>
                     <td>@e.JobTitleName</td>
-                    <td>@e.BranchName - @e.DepartmentName</td>
+                    <td>@e.BranchName</td>
+                    <td>@e.DepartmentName</td>
                     <td>@e.Phone</td>
                     <td>@e.Email</td>
 
                     <td>
-                        <a asp-action="Edit" asp-route-id="@e.EmployeeID" class="btn btn-edit btn-sm">Edit</a>
-                        <a asp-action="Details" asp-route-id="@e.EmployeeID" class="btn btn-details btn-sm">Details</a>
+                        <div class="d-flex align-items-center gap-2">
+                            <a asp-action="Edit" asp-route-id="@e.EmployeeID" class="btn btn-edit btn-sm">Edit</a>
+                            <a asp-action="Details" asp-route-id="@e.EmployeeID" class="btn btn-details btn-sm">Details</a>
 
-                        <form asp-action="Delete" asp-route-id="@e.EmployeeID"
-                              method="get" style="display:inline;">
-                            <button class="btn btn-delete btn-sm">Delete</button>
-                        </form>
+                            <form asp-action="Delete" asp-route-id="@e.EmployeeID" method="get" class="m-0 p-0 d-inline">
+                                <button class="btn btn-delete btn-sm">Delete</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             }
