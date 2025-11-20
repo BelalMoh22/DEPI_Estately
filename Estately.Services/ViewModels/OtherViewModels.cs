@@ -293,25 +293,6 @@ namespace Estately.Services.ViewModels
         public string? ClientName { get; set; }
     }
 
-    public class BranchDepartmentViewModel
-    {
-        public int BranchDepartmentID { get; set; }
-
-        [Required(ErrorMessage = "Branch is required")]
-        [Display(Name = "Branch")]
-        public int BranchID { get; set; }
-
-        [Required(ErrorMessage = "Department is required")]
-        [Display(Name = "Department")]
-        public int DepartmentID { get; set; }
-
-        [Display(Name = "Branch Name")]
-        public string? BranchName { get; set; }
-
-        [Display(Name = "Department Name")]
-        public string? DepartmentName { get; set; }
-    }
-
     public class PropertyHistoryViewModel
     {
         public int HistoryID { get; set; }

@@ -1,0 +1,38 @@
+﻿@model Estately.Services.ViewModels.EmployeesViewModel
+
+@{
+    ViewData["Title"] = "Employee Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="table-container">
+    <h4>Employee Details</h4>
+
+    <div class="details-table p-4">
+
+        <table class="table table-bordered mb-0">
+            <tr><th>ID</th><td>@Model.EmployeeID</td></tr>
+            <tr><th>Full Name</th><td>@Model.FullName</td></tr>
+            <tr><th>Email</th><td>@Model.Email</td></tr>
+            <tr><th>Phone</th><td>@Model.Phone</td></tr>
+            <tr><th>Gender</th><td>@Model.Gender</td></tr>
+            <tr><th>Age</th><td>@Model.Age</td></tr>
+            <tr><th>Job Title</th><td>@Model.JobTitleName</td></tr>
+            <tr><th>Branch</th><td>@Model.BranchName</td></tr>
+            <tr><th>Department</th><td>@Model.DepartmentName</td></tr>
+            <tr><th>Salary</th><td>@Model.Salary</td></tr>
+            <tr><th>Hire Date</th><td>@Model.HireDate?.ToString("yyyy-MM-dd")</td></tr>
+        </table>
+
+        <div class="mt-4">
+            <a asp-action="Edit" asp-route-id="@Model.EmployeeID" class="btn btn-admin">
+                <i class="bi bi-pencil me-1"></i>Edit
+            </a>
+            <a asp-action="Index" class="btn btn-secondary ms-2">
+                <i class="bi bi-arrow-left-circle me-1"></i>Back to List
+            </a>
+        </div>
+
+    </div>
+
+</div>
