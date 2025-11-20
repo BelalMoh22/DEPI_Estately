@@ -7,7 +7,7 @@
 
 <!-- HERO SECTION -->
 <div class="hero page-inner overlay"
-     style="background-image: url('@Url.Content("~/images/Properties/" +(Model.Images.FirstOrDefault()))')">
+     style="background-image: url('@Url.Content("~/" + (Model.Images.FirstOrDefault() ?? "Images/Properties/default.jpg"))')">
     <div class="container">
         <div class="row justify-content-center align-items-center">
             <div class="col-lg-9 text-center mt-5">
@@ -43,7 +43,7 @@
                     <div class="img-property-slide">
                         @foreach (var img in Model.Images)
                         {
-                            <img src="~/images/Properties/@(img)" alt="Image" class="img-fluid"/>
+                            <img src="@Url.Content("~/" + img)" alt="Image" class="img-fluid" />
                         }
                     </div>
                 </div>

@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col-md-10">
             <input type="text" name="search" class="form-control"
-                   placeholder="Search property..."
+                   placeholder="Search by address, code, developer..."
                    value="@Model.SearchTerm" />
         </div>
         <div class="col-md-2">
@@ -25,44 +25,44 @@
     </div>
 </form>
 
-<div class="table-container p-3">
-    <table class="table table-striped table-hover">
-        <thead>
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Property ID</th>
+            <th>Code</th>
+            <th>Address</th>
+            <th>Price</th>
+            <th>Type</th>
+            <th>Zone</th>
+            <th>Developer</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model.Properties)
+        {
             <tr>
-                <th>Property ID</th>
-                <th>Address</th>
-                <th>Price</th>
-                <th>Zone</th>
-                <th>Status</th>
-                <th class="text-center">Actions</th>
+                <td>@p.PropertyID</td>
+                <td>@p.PropertyCode</td>
+                <td>@p.Address</td>
+                <td>@String.Format("{0:N2}", p.Price)</td>
+                <td>@p.PropertyTypeName</td>
+                <td>@p.ZoneName</td>
+                <td>@p.DeveloperTitle</td>
+                <td class="actions-cell">
+                    <div class="action-buttons">
+                        <a asp-action="Edit" asp-route-id="@p.PropertyID" class="btn btn-edit btn-sm">Edit</a>
+                        <a asp-action="Details" asp-route-id="@p.PropertyID" class="btn btn-details btn-sm">Details</a>
+
+                        <form asp-action="Delete" asp-route-id="@p.PropertyID" method="get">
+                            <button class="btn btn-delete btn-sm">Delete</button>
+                        </form>
+                    </div>
+                </td>
             </tr>
-        </thead>
-
-        <tbody>
-            @foreach (var p in Model.Properties)
-            {
-                <tr>
-                    <td>@p.PropertyID</td>
-                    <td>@p.Address</td>
-                    <td>@p.Price</td>
-                    <td>@p.ZoneName</td>
-                    <td>@p.StatusName</td>
-
-                    <td class="text-center">
-                        <a asp-action="Edit" asp-route-id="@p.PropertyID"
-                           class="btn btn-edit btn-sm">Edit</a>
-
-                        <a asp-action="Details" asp-route-id="@p.PropertyID"
-                           class="btn btn-details btn-sm">Details</a>
-
-                        <a asp-action="Delete" asp-route-id="@p.PropertyID"
-                           class="btn btn-delete btn-sm">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+        }
+    </tbody>
+</table>
 
 @if (Model.TotalPages > 0)
 {
@@ -70,6 +70,7 @@
         <div class="custom-pagination-container">
             <div class="custom-pagination">
 
+                <!-- Prev -->
                 @if (Model.Page > 1)
                 {
                     <a asp-action="Index"
@@ -83,15 +84,17 @@
                     <span class="page-btn disabled">Prev</span>
                 }
 
+                <!-- Pages -->
                 @for (int i = 1; i <= Model.TotalPages; i++)
                 {
                     <a asp-action="Index"
                        asp-route-page="@i"
                        asp-route-pageSize="@Model.PageSize"
                        asp-route-search="@Model.SearchTerm"
-                       class="page-btn @(Model.Page == i ? "active" : "")">@i</a>
+                       class="page-btn @(i == Model.Page ? "active" : "")">@i</a>
                 }
 
+                <!-- Next -->
                 @if (Model.Page < Model.TotalPages)
                 {
                     <a asp-action="Index"
@@ -104,6 +107,7 @@
                 {
                     <span class="page-btn disabled">Next</span>
                 }
+
             </div>
         </div>
     </div>

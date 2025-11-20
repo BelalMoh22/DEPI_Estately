@@ -4,121 +4,192 @@
     ViewData["Title"] = "Create Property";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
 <style>
-    .btn-create {
-        background-color: #00204A !important;
-        color: white !important;
-        transition: 0.3s ease !important;
+    .image-preview-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
     }
 
-        .btn-create:hover {
-            background-color: #003A87 !important;
-        }
+    .img-preview-card {
+        position: relative;
+        width: 120px;
+        height: 90px;
+        border: 1px solid #e1e1e1;
+        border-radius: 6px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+    }
+
+    .preview-thumb {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+    }
+
+    .img-remove-btn {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        background: rgba(0,0,0,0.6);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        line-height: 18px;
+        cursor: pointer;
+    }
 </style>
 
 <h4>Create Property</h4>
 
-<form asp-action="Create" method="post" class="mt-4">
-
-    <div class="mb-3">
-        <label>Address</label>
-        <input asp-for="Address" class="form-control" />
-        <span asp-validation-for="Address" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label>Area (m²)</label>
-        <input asp-for="Area" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label>Price</label>
-        <input asp-for="Price" class="form-control" />
-    </div>
+<form asp-action="Create" method="post" enctype="multipart/form-data" class="mt-4">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
     <div class="row">
-        <div class="col-md-4 mb-3">
-            <label>Beds No.</label>
-            <input asp-for="BedsNo" type="number" min="0" class="form-control" />
+        <div class="col-md-8">
+            <div class="mb-3">
+                <label class="form-label">Address <span class="text-danger">*</span></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Price</label>
+                    <input asp-for="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Expected Rent Price</label>
+                    <input asp-for="ExpectedRentPrice" class="form-control" />
+                    <span asp-validation-for="ExpectedRentPrice" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Area (m²)</label>
+                    <input asp-for="Area" class="form-control" />
+                    <span asp-validation-for="Area" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Beds No.</label>
+                    <input asp-for="BedsNo" class="form-control" />
+                    <span asp-validation-for="BedsNo" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Baths No.</label>
+                    <input asp-for="BathsNo" class="form-control" />
+                    <span asp-validation-for="BathsNo" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Floors No.</label>
+                    <input asp-for="FloorsNo" class="form-control" />
+                    <span asp-validation-for="FloorsNo" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Year Built</label>
+                    <input asp-for="YearBuilt" class="form-control" />
+                    <span asp-validation-for="YearBuilt" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Property Type</label>
+                    <select asp-for="PropertyTypeID" class="form-control"
+                            asp-items="@(new SelectList(Model.PropertyTypes, "PropertyTypeID", "TypeName"))">
+                        <option value="">-- Select --</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Property Status</label>
+                    <select asp-for="StatusId" class="form-control"
+                            asp-items="@(new SelectList(Model.Statuses, "StatusID", "StatusName"))">
+                        <option value="">-- Select --</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Zone</label>
+                    <select asp-for="ZoneID" class="form-control" asp-items="@(new SelectList(Model.Zones, "ZoneId", "ZoneName"))">
+                        <option value="">-- Select --</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Agent</label>
+                <select asp-for="AgentId" class="form-control" asp-items="@(new SelectList(Model.Agents, "EmployeeID", "FullName"))">
+                    <option value="">-- Select --</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Developer</label>
+                <select asp-for="DeveloperProfileID" class="form-control" asp-items="@(new SelectList(Model.Developers, "DeveloperProfileID", "DeveloperTitle"))">
+                    <option value="">-- Select --</option>
+                </select>
+            </div>
+
+
+            <div class="mb-3">
+                <label class="form-label">Features</label>
+                <div>
+                    @foreach (var f in Model.AllFeatures)
+                    {
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="SelectedFeatures" value="@f.FeatureID" id="feat-@f.FeatureID" />
+                            <label class="form-check-label" for="feat-@f.FeatureID">@f.FeatureName</label>
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
 
-        <div class="col-md-4 mb-3">
-            <label>Baths No.</label>
-            <input asp-for="BathsNo" type="number" min="0" class="form-control" />
+        <div class="col-md-4">
+            <div class="mb-3">
+                <label class="form-label">Latitude</label>
+                <input asp-for="Latitude" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Longitude</label>
+                <input asp-for="Longitude" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Upload Images</label>
+                <input type="file" id="fileInput" name="UploadedFiles" multiple class="form-control" accept="image/*" />
+                <small class="form-text text-muted">You can select multiple images.</small>
+            </div>
+
+            <div id="previews" class="image-preview-grid mb-3"></div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-create">
+                    <i class="bi bi-check-circle me-2"></i>Create
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left-circle me-2"></i>Back to List
+                </a>
+            </div>
         </div>
-
-        <div class="col-md-4 mb-3">
-            <label>Floors No.</label>
-            <input asp-for="FloorsNo" type="number" min="0" class="form-control" />
-        </div>
-    </div>
-
-    <div class="mb-3">
-        <label>Year Built</label>
-        <input asp-for="YearBuilt" type="number" class="form-control" required />
-        <span asp-validation-for="YearBuilt" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label>Expected Rent Price</label>
-        <input asp-for="ExpectedRentPrice" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label>Latitude</label>
-        <input asp-for="Latitude" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label>Longitude</label>
-        <input asp-for="Longitude" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label>Description</label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-    </div>
-
-    <!-- LOOKUPS -->
-
-    <div class="mb-3">
-        <label>Property Type</label>
-        <select asp-for="PropertyTypeID" class="form-control" asp-items="ViewBag.PropertyTypes"></select>
-    </div>
-
-    <div class="mb-3">
-        <label>Status</label>
-        <select asp-for="StatusId" class="form-control" asp-items="ViewBag.Statuses"></select>
-    </div>
-
-    <div class="mb-3">
-        <label>Developer</label>
-        <select asp-for="DeveloperProfileID" class="form-control" asp-items="ViewBag.Developers"></select>
-    </div>
-
-    <div class="mb-3">
-        <label>Zone</label>
-        <select asp-for="ZoneID" class="form-control" asp-items="ViewBag.Zones"></select>
-    </div>
-
-    <div class="mb-3">
-        <label>Assigned Agent</label>
-        <select asp-for="AgentId" class="form-control" asp-items="ViewBag.Agents"></select>
-    </div>
-
-    <div class="form-check mb-3">
-        <input asp-for="IsFurnished" class="form-check-input" />
-        <label class="form-check-label">Is Furnished</label>
-    </div>
-
-    <div class="mt-4">
-        <button type="submit" class="btn btn-create">
-            <i class="bi bi-check-circle me-2"></i>Create
-        </button>
-        <a asp-action="Index" class="btn btn-secondary">
-            <i class="bi bi-arrow-left-circle me-2"></i>Back to List
-        </a>
     </div>
 </form>
 
@@ -126,4 +197,34 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        (function () {
+            const input = document.getElementById('fileInput');
+            const previews = document.getElementById('previews');
+
+            input.addEventListener('change', function (e) {
+                previews.innerHTML = '';
+
+                Array.from(input.files).forEach(file => {
+                    if (!file.type.startsWith('image/')) return;
+
+                    const reader = new FileReader();
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'img-preview-card';
+
+                    const img = document.createElement('img');
+                    img.className = 'preview-thumb';
+
+                    reader.onload = ev => {
+                        img.src = ev.target.result;
+                    };
+
+                    wrapper.appendChild(img);
+                    previews.appendChild(wrapper);
+                    reader.readAsDataURL(file);
+                });
+            });
+        })();
+    </script>
 }
+

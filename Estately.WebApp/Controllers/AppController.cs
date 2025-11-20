@@ -1,6 +1,4 @@
-﻿using Estately.Services.ViewModels;
-
-namespace Estately.WebApp.Controllers
+﻿namespace Estately.WebApp.Controllers
 {
     public class AppController : Controller
     {
@@ -35,49 +33,70 @@ namespace Estately.WebApp.Controllers
         {
             var all = await _unitOfWork.PropertyRepository.ReadAllIncluding(
                 "Zone",
-                "Zone.City"
+                "Zone.City",
+                "TblPropertyImages"
             );
 
             int totalCount = all.Count();
 
             var paged = all
+                .Where(p => p.IsDeleted == false)
                 .OrderBy(p => p.PropertyID)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
-            var model = new PropertiesListViewModel
+            var model = new PropertyListViewModel
             {
                 Page = page,
                 PageSize = pageSize,
                 TotalCount = totalCount
             };
 
-            string folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/properties");
-
             foreach (var p in paged)
             {
-                // Load only FIRST image
-                string firstImagePattern = $"prop-{p.PropertyID}-1.*";
-
-                var firstImage = Directory
-                    .EnumerateFiles(folder, firstImagePattern)
-                    .Select(Path.GetFileName)
+                // First try: path from TblPropertyImages (new approach)
+                var firstImagePath = p.TblPropertyImages?
+                    .Where(i => i.IsDeleted == false)
+                    .OrderBy(i => i.ImageID)
+                    .Select(i => i.ImagePath)
                     .FirstOrDefault();
 
-                if (firstImage == null)
-                    firstImage = "default.jpg";
+                // Normalize to include folder if only file name is stored
+                if (!string.IsNullOrWhiteSpace(firstImagePath) && !firstImagePath.Contains('/'))
+                {
+                    firstImagePath = $"Images/Properties/{firstImagePath}";
+                }
 
-                model.Properties.Add(new PropertiesViewModel
+                // Fallback for old properties: look for files on disk with legacy pattern
+                if (string.IsNullOrWhiteSpace(firstImagePath))
+                {
+                    string folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "Properties");
+                    string pattern = $"prop-{p.PropertyID}-1.*";
+
+                    var legacy = Directory.Exists(folder)
+                        ? Directory.EnumerateFiles(folder, pattern).Select(Path.GetFileName).FirstOrDefault()
+                        : null;
+
+                    if (!string.IsNullOrWhiteSpace(legacy))
+                    {
+                        firstImagePath = $"Images/Properties/{legacy}";
+                    }
+                }
+
+                // Final fallback
+                firstImagePath ??= "Images/Properties/default.jpg";
+
+                model.Properties.Add(new PropertyViewModel
                 {
                     PropertyID = p.PropertyID,
                     Address = p.Address,
                     CityName = p.Zone?.City?.CityName ?? "",
                     ZoneName = p.Zone?.ZoneName ?? "",
                     Price = (int)p.Price,
-                    Beds = p.BedsNo,
-                    Baths = p.BathsNo,
-                    FirstImage = firstImage
+                    BedsNo = p.BedsNo,
+                    BathsNo = p.BathsNo,
+                    FirstImage = firstImagePath
                 });
             }
 
@@ -121,9 +140,34 @@ namespace Estately.WebApp.Controllers
                 Images = property.TblPropertyImages
                     .Where(i => i.IsDeleted == false)
                     .OrderBy(i => i.ImageID)
-                    .Select(i => i.ImagePath)
+                    .Select(i =>
+                    {
+                        if (string.IsNullOrWhiteSpace(i.ImagePath)) return null;
+                        return i.ImagePath.Contains('/') ? i.ImagePath : $"Images/Properties/{i.ImagePath}";
+                    })
+                    .Where(p => p != null)
+                    .Cast<string>()
                     .ToList()
             };
+
+            // Fallback for legacy properties with images only on disk
+            if (model.Images.Count == 0)
+            {
+                string folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "Properties");
+                string pattern = $"prop-{property.PropertyID}-*.*";
+
+                if (Directory.Exists(folder))
+                {
+                    var legacyFiles = Directory.EnumerateFiles(folder, pattern)
+                        .Select(Path.GetFileName)
+                        .ToList();
+
+                    foreach (var file in legacyFiles)
+                    {
+                        model.Images.Add($"Images/Properties/{file}");
+                    }
+                }
+            }
 
             return View(model);
         }

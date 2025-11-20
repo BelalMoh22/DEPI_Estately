@@ -158,6 +158,7 @@
             justify-content: center !important; /* Center the pagination */
         }
 
+
         .custom-pagination {
             display: flex !important;
             flex-wrap: wrap !important; /* Make responsive on small screens */
@@ -202,6 +203,17 @@
                 cursor: not-allowed !important;
                 pointer-events: none !important;
             }
+
+        .actions-cell .action-buttons {
+            display: flex !important;
+            gap: 6px !important;
+            align-items: center !important;
+        }
+
+        .actions-cell form {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
 
         /* RESPONSIVE */
         @@media (max-width: 576px) {

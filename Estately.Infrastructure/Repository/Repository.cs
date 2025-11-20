@@ -106,7 +106,7 @@ namespace Estately.Infrastructure.Repository
         public async ValueTask<IEnumerable<TEntity>> Search(Expression<Func<TEntity, bool>> predicate)
         {
             return await _dbSet.Where(predicate).AsNoTracking().ToListAsync();
-        } 
+        }
 
         public async Task AddAsync(TEntity entity)
         {
@@ -143,7 +143,18 @@ namespace Estately.Infrastructure.Repository
         public IQueryable<TEntity> Query()
         {
             return _context.Set<TEntity>().AsQueryable();
+        } 
+
+    public async Task DeletePropertyFeatureMappingAsync(int propertyId, int featureId)
+        {
+            var entity = await _context.TblPropertyFeaturesMappings
+                .FirstOrDefaultAsync(x => x.PropertyID == propertyId && x.FeatureID == featureId);
+
+            if (entity != null)
+            {
+                _context.TblPropertyFeaturesMappings.Remove(entity);
+            }
         }
-    } 
-    #endregion
+        #endregion
+    }
 }
