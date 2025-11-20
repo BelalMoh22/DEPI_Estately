@@ -152,6 +152,16 @@
                 background-color: #c82333 !important; /* darker red */
             }
 
+        .btn-create {
+            background-color: #00204A !important;
+            color: white !important;
+            transition: 0.3s ease !important;
+        }
+
+            .btn-create:hover {
+                background-color: #003A87 !important;
+            }
+
         .custom-pagination-container {
             width: 100% !important;
             display: flex !important;
@@ -243,7 +253,7 @@
             <a class="nav-link @(currentController == "Appointments" ? "active" : "")" asp-action="Appointments" asp-controller="Admin">
                 <i class="bi bi-calendar-check me-2"></i> Appointments
             </a>
-            <a class="nav-link @(currentController == "Employees" ? "active" : "")" asp-action="Employees" asp-controller="Admin">
+            <a class="nav-link @(currentController == "TblEmployees" ? "active" : "")" asp-controller="TblEmployees" asp-action="Index">
                 <i class="bi bi-briefcase me-2"></i> Employees
             </a>
             <a class="nav-link @(currentController == "TblBranches" ? "active" : "")" asp-controller="TblBranches" asp-action="Index">
