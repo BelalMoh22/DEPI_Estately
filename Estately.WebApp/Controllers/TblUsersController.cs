@@ -31,6 +31,27 @@ namespace Estately.WebApp.Controllers
             return View(model);
         }
 
+        // CREATE
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            await LoadUserTypesDropdown();
+            return View(new UserViewModel());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(UserViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                await LoadUserTypesDropdown();
+                return View(model);
+            }
+            await _serviceUser.CreateUserAsync(model);
+            return RedirectToAction(nameof(Index));
+        }
+
         // =======================================================
         // EDIT
         // =======================================================

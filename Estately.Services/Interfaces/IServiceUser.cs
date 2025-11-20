@@ -12,6 +12,7 @@ namespace Estately.Services.Interfaces
     {
         Task<UserListViewModel> GetUsersPagedAsync(int page, int pageSize, string? search);
         Task<UserViewModel?> GetUserByIdAsync(int id);
+        Task CreateUserAsync(UserViewModel model);
         Task UpdateUserAsync(UserViewModel model);
         Task DeleteUserAsync(int id);
         //Task ToggleStatusAsync(int id);
