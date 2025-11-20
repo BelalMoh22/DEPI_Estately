@@ -1,0 +1,25 @@
+﻿@model Estately.Services.ViewModels.PropertyTypeViewModel
+
+@{
+    ViewData["Title"] = "Property Type Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h4>Property Type Details</h4>
+
+<div class="details-table p-4">
+    <table class="table table-bordered mb-0">
+        <tr><th>Property Type ID</th><td>@Model.PropertyTypeID</td></tr>
+        <tr><th>Type Name</th><td>@Model.TypeName</td></tr>
+        <tr><th>Description</th><td>@Model.Description</td></tr>
+    </table>
+
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model.PropertyTypeID" class="btn btn-admin">
+            <i class="bi bi-pencil me-1"></i>Edit
+        </a>
+        <a asp-action="Index" class="btn btn-secondary ms-2">
+            <i class="bi bi-arrow-left-circle me-1"></i>Back to List
+        </a>
+    </div>
+</div>

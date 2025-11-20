@@ -14,5 +14,6 @@
         Task<int> CounterAsync();
         int GetMaxId();
         IQueryable<TEntity> Query();
+        Task DeletePropertyFeatureMappingAsync(int propertyId, int featureId);
     }
 }
