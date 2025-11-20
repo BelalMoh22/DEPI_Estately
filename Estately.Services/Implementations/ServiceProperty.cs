@@ -161,7 +161,7 @@ namespace Estately.Services.Implementations
             entity.IsDeleted = model.IsDeleted ?? entity.IsDeleted;
 
             await _unitOfWork.PropertyRepository.UpdateAsync(entity);
-            
+
             // Add new images (existing ones are only removed when the user clicks X,
             // which is handled in the controller via DeleteImageFromDiskAndDb)
             if (model.Images != null)
