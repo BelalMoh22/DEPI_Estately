@@ -22,9 +22,6 @@ public partial class TblDeveloperProfile
 
     public string WebsiteURL { get; set; }
 
-    [NotMapped]
-    public byte[] WebsiteImageByte { get; set; }
-
     public string PortofolioPhoto { get; set; }
 
     public string Phone { get; set; }

@@ -1,15 +1,4 @@
-﻿using Estately.Core.Entities;
-using Estately.Infrastructure.UnitOfWorks;
-using Estately.Services.Interfaces;
-using Estately.Services.ViewModels;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-
-namespace Estately.Services.Implementations
+﻿namespace Estately.Services.Implementations
 {
     public class ServiceEmployee : IServiceEmployee
     {

@@ -21,9 +21,6 @@ namespace Estately.Core.Entities
             [Unicode(false)]
             public string? WebsiteURL { get; set; }
 
-            [NotMapped]
-            public byte[] WebsiteImageByte { get; set; }
-
             [StringLength(800)]
             [Unicode(false)]
             public string? PortofolioPhoto { get; set; }

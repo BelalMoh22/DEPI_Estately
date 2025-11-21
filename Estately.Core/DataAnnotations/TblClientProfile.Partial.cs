@@ -23,9 +23,6 @@ namespace Estately.Core.Entities
             [StringLength(255)]
             public string? Address { get; set; }
 
-            [NotMapped]
-            public byte[]? ProfilePhotoFile { get; set; }
-
             [StringLength(800)]
             public string? ProfilePhoto { get; set; }
 

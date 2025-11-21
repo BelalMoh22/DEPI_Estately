@@ -18,8 +18,6 @@ namespace Estately.Core.Entities
 
         public string Address { get; set; }
 
-        public byte[] ProfilePhotoFile { get; set; }
-
         public string ProfilePhoto { get; set; }
 
         public DateTime? CreatedAt { get; set; }
