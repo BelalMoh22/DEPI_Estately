@@ -5,25 +5,27 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h4>Appointment Details</h4>
+<div class="table-container">
+    <h4>Appointment Details</h4>
 
-<div class="details-table p-4">
-    <table class="table table-bordered mb-0">
-        <tr><th>Appointment ID</th><td>@Model.AppointmentID</td></tr>
-        <tr><th>Property</th><td>@Model.PropertyName</td></tr>
-        <tr><th>Employee</th><td>@Model.EmployeeName</td></tr>
-        <tr><th>Client</th><td>@Model.ClientName</td></tr>
-        <tr><th>Appointment Date</th><td>@Model.AppointmentDate?.ToString("MM/dd/yyyy hh:mm tt")</td></tr>
-        <tr><th>Status</th><td>@Model.StatusName</td></tr>
-        <tr><th>Notes</th><td>@Model.Notes</td></tr>
-    </table>
+    <div class="details-table p-4">
+        <table class="table table-bordered mb-0">
+            <tr><th>Appointment ID</th><td>@Model.AppointmentID</td></tr>
+            <tr><th>Property</th><td>@Model.PropertyName</td></tr>
+            <tr><th>Employee</th><td>@Model.EmployeeName</td></tr>
+            <tr><th>Client</th><td>@Model.ClientName</td></tr>
+            <tr><th>Appointment Date</th><td>@Model.AppointmentDate?.ToString("MM/dd/yyyy hh:mm tt")</td></tr>
+            <tr><th>Status</th><td>@Model.StatusName</td></tr>
+            <tr><th>Notes</th><td>@Model.Notes</td></tr>
+        </table>
 
-    <div class="mt-4">
-        <a asp-action="Edit" asp-route-id="@Model.AppointmentID" class="btn btn-admin">
-            <i class="bi bi-pencil me-1"></i>Edit
-        </a>
-        <a asp-action="Index" class="btn btn-secondary ms-2">
-            <i class="bi bi-arrow-left-circle me-1"></i>Back
-        </a>
+        <div class="mt-4">
+            <a asp-action="Edit" asp-route-id="@Model.AppointmentID" class="btn btn-admin">
+                <i class="bi bi-pencil me-1"></i>Edit
+            </a>
+            <a asp-action="Index" class="btn btn-secondary ms-2">
+                <i class="bi bi-arrow-left-circle me-1"></i>Back
+            </a>
+        </div>
     </div>
 </div>

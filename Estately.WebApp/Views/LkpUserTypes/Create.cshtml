@@ -5,31 +5,39 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h4>Create User Type</h4>
+<div class="table-container">
+    <h4>Create User Type</h4>
 
-<form asp-action="Create" method="post" class="mt-4">
+    <form asp-action="Create" method="post" class="mt-4">
 
-    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-    <div class="mb-3">
-        <label class="form-label">User Type Name</label>
-        <input asp-for="UserTypeName" class="form-control" />
-        <span asp-validation-for="UserTypeName" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label class="form-label">User Type Name</label>
+            <input asp-for="UserTypeName" class="form-control" />
+            <span asp-validation-for="UserTypeName" class="text-danger"></span>
+        </div>
 
-    <div class="mb-3">
-        <label class="form-label">Description</label>
-        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
 
-    <div class="mt-4">
-        <button type="submit" class="btn btn-admin">
-            <i class="bi bi-check-circle me-2"></i>Create
-        </button>
+        <div class="mt-4">
+            <button type="submit" class="btn btn-admin">
+                <i class="bi bi-check-circle me-2"></i>Create
+            </button>
 
-        <a asp-action="Index" class="btn btn-secondary">
-            <i class="bi bi-arrow-left-circle me-2"></i>Back
-        </a>
-    </div>
-</form>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle me-2"></i>Back
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
