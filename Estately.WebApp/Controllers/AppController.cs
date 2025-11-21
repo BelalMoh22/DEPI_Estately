@@ -57,7 +57,6 @@
             {
                 // First try: path from TblPropertyImages (new approach)
                 var firstImagePath = p.TblPropertyImages?
-                    .Where(i => i.IsDeleted == false)
                     .OrderBy(i => i.ImageID)
                     .Select(i => i.ImagePath)
                     .FirstOrDefault();
@@ -131,14 +130,13 @@
                 Price = (int) property.Price,
                 Beds = property.BedsNo,
                 Baths = property.BathsNo,
-                FloorsNo = property.FloorsNo,
+                FloorNo = property.FloorNo ?? null,
                 Area = property.Area,
                 ExpectedRent = (int?)property.ExpectedRentPrice ?? 0,
                 Latitude = property.Latitude,
                 Longitude = property.Longitude,
 
                 Images = property.TblPropertyImages
-                    .Where(i => i.IsDeleted == false)
                     .OrderBy(i => i.ImageID)
                     .Select(i =>
                     {

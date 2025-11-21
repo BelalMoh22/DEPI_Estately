@@ -16,7 +16,8 @@
 <div class="details-table p-3 mb-4">
     <table class="table table-bordered mb-0">
         <tr><th>Property</th><td>@Model.PropertyName</td></tr>
-        <tr><th>Employee/Client</th><td>@Model.EmployeeClientName</td></tr>
+        <tr><th>Employee</th><td>@Model.EmployeeName</td></tr>
+        <tr><th>Client</th><td>@Model.ClientName</td></tr>
         <tr><th>Appointment Date</th><td>@Model.AppointmentDate?.ToString("MM/dd/yyyy hh:mm tt")</td></tr>
         <tr><th>Status</th><td>@Model.StatusName</td></tr>
     </table>

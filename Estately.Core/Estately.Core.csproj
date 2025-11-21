@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DataAnnotations\" />
     <Folder Include="Entities\" />
   </ItemGroup>
 

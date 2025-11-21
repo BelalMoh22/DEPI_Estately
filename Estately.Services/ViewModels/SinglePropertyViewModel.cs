@@ -19,7 +19,7 @@ namespace Estately.Services.ViewModels
         public decimal Price { get; set; }
         public int Beds { get; set; }
         public int Baths { get; set; }
-        public int FloorsNo { get; set; }
+        public int? FloorNo { get; set; } = null;
         public decimal Area { get; set; }
         public decimal? ExpectedRent { get; set; } = 0m;
         public decimal? Latitude { get; set; }

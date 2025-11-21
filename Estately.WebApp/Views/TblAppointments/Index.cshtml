@@ -31,7 +31,8 @@
             <tr>
                 <th>ID</th>
                 <th>Property</th>
-                <th>Employee/Client</th>
+                <th>Employee</th>
+                <th>Client</th>
                 <th>Appointment Date</th>
                 <th>Status</th>
                 <th class="text-center">Actions</th>
@@ -44,7 +45,8 @@
                 <tr>
                     <td>@appointment.AppointmentID</td>
                     <td>@appointment.PropertyName</td>
-                    <td>@appointment.EmployeeClientName</td>
+                    <td>@appointment.EmployeeName</td>
+                    <td>@appointment.ClientName</td>
                     <td>@appointment.AppointmentDate?.ToString("MM/dd/yyyy hh:mm tt")</td>
                     <td>@appointment.StatusName</td>
 

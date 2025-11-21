@@ -23,7 +23,7 @@ namespace Estately.Services.ViewModels
         [Required]
         public string Gender { get; set; } = string.Empty;
         [Required]
-        public string Age { get; set; } = string.Empty;
+        public int Age { get; set; }
         [Required]
         public string Phone { get; set; } = string.Empty;
         [Required]

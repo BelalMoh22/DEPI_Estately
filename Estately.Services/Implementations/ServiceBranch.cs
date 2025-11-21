@@ -38,9 +38,7 @@ namespace Estately.Services.Implementations
         {
             var branches = await _unitOfWork.BranchRepository.ReadAllAsync();
 
-            var query = branches
-                .Where(b => b.IsDeleted == false)
-                .AsQueryable();
+            var query = branches.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search))
             {
@@ -81,7 +79,6 @@ namespace Estately.Services.Implementations
                 ManagerName = model.ManagerName,
                 Address = model.Address,
                 Phone = model.Phone,
-                IsDeleted = false
             };
 
             await _unitOfWork.BranchRepository.AddAsync(branch);
@@ -103,8 +100,6 @@ namespace Estately.Services.Implementations
             branch.Address = model.Address;
             branch.Phone = model.Phone;
 
-            branch.IsDeleted = model.IsDeleted;
-
             await _unitOfWork.BranchRepository.UpdateAsync(branch);
             await _unitOfWork.CompleteAsync();
         }
@@ -118,8 +113,6 @@ namespace Estately.Services.Implementations
             var branch = await _unitOfWork.BranchRepository.GetByIdAsync(id);
             if (branch == null)
                 return;
-
-            branch.IsDeleted = true;
 
             await _unitOfWork.BranchRepository.UpdateAsync(branch);
             await _unitOfWork.CompleteAsync();
@@ -143,7 +136,6 @@ namespace Estately.Services.Implementations
                 .Query()
                 .Include(e => e.JobTitle)
                 .Where(e =>
-                    e.IsDeleted == false &&
                     e.JobTitle != null &&
                     e.JobTitle.JobTitleName.Contains("Manager")
                 )
@@ -178,7 +170,6 @@ namespace Estately.Services.Implementations
                 ManagerName = b.ManagerName,
                 Address = b.Address,
                 Phone = b.Phone,
-                IsDeleted = b.IsDeleted
             };
         }
     }

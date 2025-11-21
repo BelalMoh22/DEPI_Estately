@@ -30,7 +30,8 @@ namespace Estately.WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            return View();
+            await LoadDropdowns();
+            return View(new AppointmentViewModel());
         }
 
         [HttpPost]
@@ -44,9 +45,9 @@ namespace Estately.WebApp.Controllers
             }
 
             // Validate that required IDs are selected
-            if (model.EmployeeClientID == null || model.PropertyID == null || model.StatusID == null)
+            if (model.EmployeeID == null || model.ClientProfileID == null || model.PropertyID == null || model.StatusID == null)
             {
-                ModelState.AddModelError("", "Please select valid Employee/Client, Property, and Status.");
+                ModelState.AddModelError("", "Please select valid Employee, Client, Property, and Status.");
                 await LoadDropdowns();
                 return View(model);
             }
@@ -140,14 +141,25 @@ namespace Estately.WebApp.Controllers
         private async Task LoadDropdowns()
         {
             // GET ACTUAL DATA FROM DATABASE
-            var employeeClients = await _unitOfWork.EmployeeClientRepository.ReadAllAsync();
+            var employees = await _unitOfWork.EmployeeRepository.ReadAllAsync();
+            var clients = await _unitOfWork.ClientProfileRepository.ReadAllAsync();
+
             var properties = await _unitOfWork.PropertyRepository.ReadAllAsync();
             var statuses = await _unitOfWork.AppointmentStatusRepository.ReadAllAsync();
 
             // POPULATE DROPDOWNS WITH REAL DATA
-            ViewBag.EmployeeClients = new SelectList(employeeClients, "EmployeeClientID", "EmployeeClientID");
+            ViewBag.Employees = new SelectList(
+                employees.Select(e => new { e.EmployeeID, FullName = e.FirstName + " " + e.LastName }),
+                "EmployeeID",
+                "FullName");
+
+            ViewBag.Clients = new SelectList(
+                clients.Select(c => new { c.ClientProfileID, FullName = (c.FirstName + " " + c.LastName).Trim() }),
+                "ClientProfileID",
+                "FullName");
+
             ViewBag.Properties = new SelectList(properties, "PropertyID", "Address");
-            ViewBag.Statuses = new SelectList(statuses, "StatusID", "StatusName");
+            ViewBag.Statuses = new SelectList(statuses, "StatusId", "StatusName");
         }
     }
 }
