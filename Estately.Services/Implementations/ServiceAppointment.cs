@@ -56,11 +56,14 @@ namespace Estately.Services.Implementations
         // ====================================================
         public async Task CreateAppointmentAsync(AppointmentViewModel model)
         {
+            // Resolve or create EmployeeClient mapping based on selected employee and client
+            int employeeClientId = await GetOrCreateEmployeeClientIdAsync(model.EmployeeID, model.ClientProfileID);
+
             var appointment = new TblAppointment
             {
                 StatusID = model.StatusID ?? 0,
                 PropertyID = model.PropertyID ?? 0,
-                EmployeeClientID = model.EmployeeClientID ?? 0,
+                EmployeeClientID = employeeClientId,
                 AppointmentDate = model.AppointmentDate ?? DateTime.Now,
                 Notes = model.Notes ?? string.Empty
             };
@@ -68,6 +71,7 @@ namespace Estately.Services.Implementations
             await _unitOfWork.AppointmentRepository.AddAsync(appointment);
             await _unitOfWork.CompleteAsync();
         }
+
         // ====================================================
         // 2. GET APPOINTMENT BY ID
         // ====================================================
@@ -86,9 +90,11 @@ namespace Estately.Services.Implementations
             var appointment = await _unitOfWork.AppointmentRepository.GetByIdAsync(model.AppointmentID);
             if (appointment == null) return;
 
+            int employeeClientId = await GetOrCreateEmployeeClientIdAsync(model.EmployeeID, model.ClientProfileID);
+
             appointment.StatusID = model.StatusID ?? 0;
             appointment.PropertyID = model.PropertyID ?? 0;
-            appointment.EmployeeClientID = model.EmployeeClientID ?? 0;
+            appointment.EmployeeClientID = employeeClientId;
             appointment.AppointmentDate = model.AppointmentDate ?? DateTime.Now;
             appointment.Notes = model.Notes ?? string.Empty;
 
@@ -159,10 +165,43 @@ namespace Estately.Services.Implementations
                 EmployeeClientID = a.EmployeeClientID,
                 AppointmentDate = a.AppointmentDate,
                 Notes = a.Notes,
-                StatusName = a.Status?.ToString(), // Using ToString() as fallback
-                PropertyName = a.Property?.Address, // Using Address as display name
-                EmployeeClientName = a.EmployeeClient?.EmployeeClientID.ToString() // Using ID as fallback
+                StatusName = a.Status?.StatusName ?? a.StatusID.ToString(),
+                PropertyName = a.Property?.Address,
+                // Map employee/client info if navigation is loaded
+                EmployeeID = a.EmployeeClient?.EmployeeID,
+                ClientProfileID = a.EmployeeClient?.ClientProfileID,
+                EmployeeName = a.EmployeeClient?.Employee != null
+                    ? $"{a.EmployeeClient.Employee.FirstName} {a.EmployeeClient.Employee.LastName}"
+                    : null,
+                ClientName = a.EmployeeClient?.ClientProfile != null
+                    ? $"{a.EmployeeClient.ClientProfile.FirstName} {a.EmployeeClient.ClientProfile.LastName}"
+                    : null
             };
+        }
+
+        private async Task<int> GetOrCreateEmployeeClientIdAsync(int? employeeId, int? clientProfileId)
+        {
+            if (employeeId == null || clientProfileId == null)
+                throw new ArgumentException("EmployeeID and ClientProfileID are required to create an appointment.");
+
+            var allMappings = await _unitOfWork.EmployeeClientRepository.ReadAllAsync();
+            var existing = allMappings.FirstOrDefault(ec => ec.EmployeeID == employeeId && ec.ClientProfileID == clientProfileId);
+
+            if (existing != null)
+                return existing.EmployeeClientID;
+
+            var newMapping = new TblEmployeeClient
+            {
+                EmployeeID = employeeId.Value,
+                ClientProfileID = clientProfileId.Value,
+                AssignmentDate = DateTime.Now,
+                IsDeleted = false
+            };
+
+            await _unitOfWork.EmployeeClientRepository.AddAsync(newMapping);
+            await _unitOfWork.CompleteAsync();
+
+            return newMapping.EmployeeClientID;
         }
     }
 }

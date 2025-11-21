@@ -12,29 +12,33 @@
 
     <div class="row">
         <div class="col-md-6 mb-3">
-            <label class="form-label">Property</label>
+            <label asp-for="PropertyName" class="form-label"></label>
             <input asp-for="PropertyName" class="form-control" readonly />
-            <span asp-validation-for="PropertyID" class="text-danger"></span>
         </div>
 
         <div class="col-md-6 mb-3">
-            <label class="form-label">Employee/Client</label>
-            <input asp-for="EmployeeClientName" class="form-control" readonly />
-            <span asp-validation-for="EmployeeClientID" class="text-danger"></span>
+            <label asp-for="EmployeeName" class="form-label"></label>
+            <input asp-for="EmployeeName" class="form-control" readonly />
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-6 mb-3">
-            <label class="form-label">Appointment Date</label>
-            <input asp-for="AppointmentDate" type="datetime-local" class="form-control" />
-            <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+            <label asp-for="ClientName" class="form-label"></label>
+            <input asp-for="ClientName" class="form-control" readonly />
         </div>
 
         <div class="col-md-6 mb-3">
-            <label class="form-label">Status</label>
+            <label asp-for="StatusName" class="form-label"></label>
             <input asp-for="StatusName" class="form-control" readonly />
-            <span asp-validation-for="StatusID" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="AppointmentDate" class="form-label"></label>
+            <input asp-for="AppointmentDate" type="datetime-local" class="form-control" />
+            <span asp-validation-for="AppointmentDate" class="text-danger"></span>
         </div>
     </div>
 

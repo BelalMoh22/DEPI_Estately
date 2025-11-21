@@ -15,5 +15,8 @@ public partial class LkpPropertyHistoryType
 
         [StringLength(255)]
         public string? Description { get; set; }
+
+        [InverseProperty("HistoryType")]
+        public virtual ICollection<TblPropertyHistory>? TblPropertyHistories { get; set; } = new List<TblPropertyHistory>();
     }
 }

@@ -6,7 +6,6 @@ public partial class TblClientProfile
     public TblClientProfile()
     {
         CreatedAt ??= DateTime.Now;
-        IsDeleted ??= false;
     }
 
     private class TblClientProfileMetadata
@@ -29,5 +28,18 @@ public partial class TblClientProfile
 
         [Column(TypeName = "datetime")]
         public DateTime? CreatedAt { get; set; }
+
+        [InverseProperty("ClientProfile")]
+        public virtual ICollection<TblClientPropertyInterest>? TblClientPropertyInterests { get; set; } = new List<TblClientPropertyInterest>();
+
+        [InverseProperty("ClientProfile")]
+        public virtual ICollection<TblEmployeeClient>? TblEmployeeClients { get; set; } = new List<TblEmployeeClient>();
+
+        [InverseProperty("ClientProfile")]
+        public virtual ICollection<TblFavorite>? TblFavorites { get; set; } = new List<TblFavorite>();
+
+        [ForeignKey("UserID")]
+        [InverseProperty("TblClientProfile")]
+        public virtual TblUser? User { get; set; }
     }
 }

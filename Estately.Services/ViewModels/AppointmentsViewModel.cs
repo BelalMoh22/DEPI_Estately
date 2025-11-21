@@ -14,8 +14,15 @@ namespace Estately.Services.ViewModels
         [Display(Name = "Property")]
         public int? PropertyID { get; set; }
 
-        [Required(ErrorMessage = "Employee/Client is required")]
-        [Display(Name = "Employee/Client")]
+        [Required(ErrorMessage = "Employee is required")]
+        [Display(Name = "Employee")]
+        public int? EmployeeID { get; set; }
+
+        [Required(ErrorMessage = "Client is required")]
+        [Display(Name = "Client")]
+        public int? ClientProfileID { get; set; }
+
+        // Internal mapping ID (EmployeeClient table)
         public int? EmployeeClientID { get; set; }
 
         [Required(ErrorMessage = "Appointment date is required")]
@@ -32,8 +39,11 @@ namespace Estately.Services.ViewModels
         [Display(Name = "Property")]
         public string? PropertyName { get; set; }
 
-        [Display(Name = "Employee/Client")]
-        public string? EmployeeClientName { get; set; }
+        [Display(Name = "Employee")]
+        public string? EmployeeName { get; set; }
+
+        [Display(Name = "Client")]
+        public string? ClientName { get; set; }
     }
 
     public class AppointmentListViewModel : BaseViewModel

@@ -5,7 +5,6 @@ public partial class TblAppointment
 {
     public TblAppointment()
     {
-        // No special defaults beyond EF mapping
     }
 
     private class TblAppointmentMetadata
@@ -15,5 +14,17 @@ public partial class TblAppointment
 
         [Column(TypeName = "text")]
         public string? Notes { get; set; }
+
+        [ForeignKey("EmployeeClientID")]
+        [InverseProperty("TblAppointments")]
+        public virtual TblEmployeeClient? EmployeeClient { get; set; }
+
+        [ForeignKey("PropertyID")]
+        [InverseProperty("TblAppointments")]
+        public virtual TblProperty? Property { get; set; }
+
+        [ForeignKey("StatusID")]
+        [InverseProperty("TblAppointment")]
+        public virtual LkpAppointmentStatus? Status { get; set; }
     }
 }

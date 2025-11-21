@@ -15,5 +15,6 @@ public partial class LkpAppointmentStatus
 
         [StringLength(255)]
         public string? Description { get; set; }
+
     }
 }

@@ -5,7 +5,6 @@ public partial class TblBranch
 {
     public TblBranch()
     {
-        IsDeleted ??= false;
     }
 
     private class TblBranchMetadata
@@ -25,5 +24,8 @@ public partial class TblBranch
         [StringLength(255)]
         [Unicode(false)]
         public string Phone { get; set; }
+
+        [InverseProperty("Branch")]
+        public virtual ICollection<TblBranchDepartment>? TblBranchDepartments { get; set; } = new List<TblBranchDepartment>();
     }
 }

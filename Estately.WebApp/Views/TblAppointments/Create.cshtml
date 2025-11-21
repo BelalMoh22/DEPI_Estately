@@ -12,32 +12,49 @@
 
     <div class="row">
         <div class="col-md-6 mb-3">
-            <label class="form-label">Property ID</label>
-            <input asp-for="PropertyID" class="form-control" />
+            <label asp-for="PropertyID" class="form-label"></label>
+            @Html.DropDownListFor(m => m.PropertyID,
+                (SelectList)ViewBag.Properties,
+                "-- Select Property --",
+                new { @class = "form-control" })
             <span asp-validation-for="PropertyID" class="text-danger"></span>
-            <small class="text-muted">Enter a valid Property ID that exists in the database</small>
         </div>
 
         <div class="col-md-6 mb-3">
-            <label class="form-label">Employee/Client ID</label>
-            <input asp-for="EmployeeClientID" class="form-control" />
-            <span asp-validation-for="EmployeeClientID" class="text-danger"></span>
-            <small class="text-muted">Enter a valid Employee/Client ID that exists in the database</small>
+            <label asp-for="EmployeeID" class="form-label"></label>
+            @Html.DropDownListFor(m => m.EmployeeID,
+                (SelectList)ViewBag.Employees,
+                "-- Select Employee --",
+                new { @class = "form-control" })
+            <span asp-validation-for="EmployeeID" class="text-danger"></span>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-6 mb-3">
-            <label class="form-label">Appointment Date</label>
-            <input asp-for="AppointmentDate" type="datetime-local" class="form-control" />
-            <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+            <label asp-for="ClientProfileID" class="form-label"></label>
+            @Html.DropDownListFor(m => m.ClientProfileID,
+                (SelectList)ViewBag.Clients,
+                "-- Select Client --",
+                new { @class = "form-control" })
+            <span asp-validation-for="ClientProfileID" class="text-danger"></span>
         </div>
 
         <div class="col-md-6 mb-3">
-            <label class="form-label">Status ID</label>
-            <input asp-for="StatusID" class="form-control" />
+            <label asp-for="StatusID" class="form-label"></label>
+            @Html.DropDownListFor(m => m.StatusID,
+                (SelectList)ViewBag.Statuses,
+                "-- Select Status --",
+                new { @class = "form-control" })
             <span asp-validation-for="StatusID" class="text-danger"></span>
-            <small class="text-muted">Enter a valid Status ID that exists in the database</small>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="AppointmentDate" class="form-label"></label>
+            <input asp-for="AppointmentDate" type="datetime-local" class="form-control" />
+            <span asp-validation-for="AppointmentDate" class="text-danger"></span>
         </div>
     </div>
 
