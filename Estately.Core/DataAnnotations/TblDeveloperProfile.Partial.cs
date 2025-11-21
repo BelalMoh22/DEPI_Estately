@@ -1,0 +1,35 @@
+namespace Estately.Core.Entities;
+
+[MetadataType(typeof(TblDeveloperProfileMetadata))]
+public partial class TblDeveloperProfile
+{
+    public TblDeveloperProfile()
+    {
+        IsDeleted ??= false;
+        CreatedAt ??= DateTime.Now;
+    }
+
+    private class TblDeveloperProfileMetadata
+    {
+        [Required]
+        [StringLength(255)]
+        public string DeveloperTitle { get; set; }
+
+        [StringLength(255)]
+        public string? DeveloperName { get; set; }
+
+        [StringLength(800)]
+        [Unicode(false)]
+        public string? WebsiteURL { get; set; }
+
+        [StringLength(800)]
+        [Unicode(false)]
+        public string? PortofolioPhoto { get; set; }
+
+        [StringLength(50)]
+        public string? Phone { get; set; }
+
+        [Column(TypeName = "datetime")]
+        public DateTime? CreatedAt { get; set; }
+    }
+}
