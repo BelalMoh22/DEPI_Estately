@@ -109,7 +109,6 @@ namespace Estately.Services.Implementations
                         PropertyID = entity.PropertyID,
                         ImagePath = img.ImagePath,
                         UploadedDate = DateTime.Now,
-                        IsDeleted = false
                     });
                 }
             }
@@ -145,7 +144,7 @@ namespace Estately.Services.Implementations
             entity.Price = model.Price;
             entity.BedsNo = model.BedsNo;
             entity.BathsNo = model.BathsNo;
-            entity.FloorsNo = model.FloorsNo;
+            entity.FloorNo = model.FloorNo;
             entity.Latitude = model.Latitude;
             entity.Longitude = model.Longitude;
             entity.Description = model.Description;
@@ -155,7 +154,6 @@ namespace Estately.Services.Implementations
             entity.ZoneID = model.ZoneID;
             entity.StatusId = model.StatusId;
             entity.ExpectedRentPrice = model.ExpectedRentPrice;
-            entity.IsFurnished = model.IsFurnished;
             entity.YearBuilt = model.YearBuilt;
             entity.ListingDate = model.ListingDate;
             entity.IsDeleted = model.IsDeleted ?? entity.IsDeleted;
@@ -291,7 +289,7 @@ namespace Estately.Services.Implementations
                 Price = p.Price,
                 BedsNo = p.BedsNo,
                 BathsNo = p.BathsNo,
-                FloorsNo = p.FloorsNo,
+                FloorNo = p.FloorNo,
                 Latitude = p.Latitude,
                 Longitude = p.Longitude,
                 Description = p.Description,
@@ -299,12 +297,11 @@ namespace Estately.Services.Implementations
                 PropertyTypeID = p.PropertyTypeID,
                 DeveloperProfileID = p.DeveloperProfileID,
                 ZoneID = p.ZoneID,
-                StatusId = p.StatusId,
+                StatusId = p.StatusId ?? 1,
                 PropertyCode = p.PropertyCode,
                 ExpectedRentPrice = p.ExpectedRentPrice,
-                YearBuilt = p.YearBuilt ?? 0,
+                YearBuilt = p.YearBuilt ?? 2025,
                 ListingDate = p.ListingDate ?? DateTime.Now,
-                IsFurnished = p.IsFurnished,
                 IsDeleted = p.IsDeleted,
 
                 DeveloperTitle = p.DeveloperProfile?.DeveloperTitle,
@@ -314,13 +311,11 @@ namespace Estately.Services.Implementations
                 AgentName = $"{p.Agent?.FirstName} {p.Agent?.LastName}",
 
                 Images = p.TblPropertyImages?
-                    .Where(i => i.IsDeleted == false)
                     .Select(i => new PropertyImageViewModel
                     {
                         ImageID = i.ImageID,
                         ImagePath = i.ImagePath,
                         UploadedDate = i.UploadedDate,
-                        IsDeleted = i.IsDeleted
                     }).ToList() ?? new(),
 
                 SelectedFeatures = p.TblPropertyFeaturesMappings?
@@ -339,7 +334,7 @@ namespace Estately.Services.Implementations
                 Price = vm.Price,
                 BedsNo = vm.BedsNo,
                 BathsNo = vm.BathsNo,
-                FloorsNo = vm.FloorsNo,
+                FloorNo = vm.FloorNo,
                 Latitude = vm.Latitude,
                 Longitude = vm.Longitude,
                 Description = vm.Description,
@@ -349,7 +344,6 @@ namespace Estately.Services.Implementations
                 ZoneID = vm.ZoneID,
                 StatusId = vm.StatusId,
                 ExpectedRentPrice = vm.ExpectedRentPrice,
-                IsFurnished = vm.IsFurnished,
                 YearBuilt = vm.YearBuilt,
                 ListingDate = vm.ListingDate,
                 IsDeleted = vm.IsDeleted ?? false

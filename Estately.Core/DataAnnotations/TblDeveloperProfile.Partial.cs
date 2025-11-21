@@ -5,7 +5,6 @@ public partial class TblDeveloperProfile
 {
     public TblDeveloperProfile()
     {
-        IsDeleted ??= false;
         CreatedAt ??= DateTime.Now;
     }
 

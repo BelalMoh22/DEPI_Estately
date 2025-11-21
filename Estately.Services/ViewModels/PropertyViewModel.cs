@@ -17,7 +17,7 @@ namespace Estately.Services.ViewModels
         public int PropertyTypeID { get; set; }
 
         [Required(ErrorMessage = "Status is required")]
-        public int StatusId { get; set; }
+        public int? StatusId { get; set; } = 1; // Default to "Available"
 
         [Required(ErrorMessage = "Zone is required")]
         public int ZoneID { get; set; }
@@ -52,7 +52,7 @@ namespace Estately.Services.ViewModels
         public int YearBuilt { get; set; }
 
         [Required]
-        public int FloorsNo { get; set; }
+        public int? FloorNo { get; set; }
 
         [Required]
         public int BedsNo { get; set; }

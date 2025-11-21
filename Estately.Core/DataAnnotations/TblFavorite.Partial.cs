@@ -6,7 +6,6 @@ public partial class TblFavorite
     public TblFavorite()
     {
         CreatedAt ??= DateTime.Now;
-        IsDeleted ??= false;
     }
 
     private class TblFavoriteMetadata

@@ -5,7 +5,6 @@ public partial class TblZone
 {
     public TblZone()
     {
-        IsDeleted ??= false;
     }
 
     private class TblZoneMetadata

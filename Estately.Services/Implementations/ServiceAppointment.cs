@@ -195,7 +195,6 @@ namespace Estately.Services.Implementations
                 EmployeeID = employeeId.Value,
                 ClientProfileID = clientProfileId.Value,
                 AssignmentDate = DateTime.Now,
-                IsDeleted = false
             };
 
             await _unitOfWork.EmployeeClientRepository.AddAsync(newMapping);

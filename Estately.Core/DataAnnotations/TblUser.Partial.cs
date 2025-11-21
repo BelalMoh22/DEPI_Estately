@@ -6,11 +6,7 @@ public partial class TblUser
     public TblUser()
     {
         UserTypeID ??= 1;
-        IsEmployee ??= false;
-        IsClient ??= true;
-        IsDeveloper ??= false;
         CreatedAt ??= DateTime.Now;
-        IsDeleted ??= false;
     }
 
     private class TblUserMetadata

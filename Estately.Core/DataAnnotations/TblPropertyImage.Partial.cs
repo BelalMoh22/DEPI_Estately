@@ -6,7 +6,6 @@ public partial class TblPropertyImage
     public TblPropertyImage()
     {
         UploadedDate ??= DateTime.Now;
-        IsDeleted ??= false;
     }
 
     private class TblPropertyImageMetadata

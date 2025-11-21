@@ -6,8 +6,6 @@ public partial class TblEmployee
     public TblEmployee()
     {
         HireDate ??= DateTime.Now;
-        IsActive ??= true;
-        IsDeleted ??= false;
     }
 
     private class TblEmployeeMetadata

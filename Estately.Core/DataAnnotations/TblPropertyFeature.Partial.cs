@@ -5,7 +5,6 @@ public partial class TblPropertyFeature
 {
     public TblPropertyFeature()
     {
-        IsDeleted ??= false;
         CreatedAt ??= DateTime.Now;
     }
 

@@ -5,10 +5,9 @@ public partial class TblProperty
 {
     public TblProperty()
     {
-        ListingDate ??= DateTime.Now;
         ExpectedRentPrice ??= 0m;
         IsDeleted ??= false;
-        IsFurnished ??= false;
+        ListingDate = DateTime.Now;
     }
 
     private class TblPropertyMetadata

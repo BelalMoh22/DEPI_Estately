@@ -5,7 +5,6 @@ public partial class TblPropertyFeaturesMapping
 {
     public TblPropertyFeaturesMapping()
     {
-        IsDeleted ??= false;
     }
 
     private class TblPropertyFeaturesMappingMetadata

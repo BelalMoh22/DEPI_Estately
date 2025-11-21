@@ -33,7 +33,7 @@ namespace Estately.Services.Implementations
                 "User"
             );
 
-            var query = employees.Where(e => e.IsDeleted == false).AsQueryable();
+            var query = employees.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search))
             {
@@ -78,7 +78,6 @@ namespace Estately.Services.Implementations
             return new EmployeesListViewModel
             {
                 Employees = list
-                    .Where(e => e.IsDeleted == false)
                     .Select(ConvertToVM)
                     .ToList()
             };
@@ -99,7 +98,7 @@ namespace Estately.Services.Implementations
                 "User"
             );
 
-            var e = employees.FirstOrDefault(x => x.EmployeeID == id && x.IsDeleted == false);
+            var e = employees.FirstOrDefault(x => x.EmployeeID == id);
             if (e == null) return null;
 
             return ConvertToVM(e);
@@ -139,8 +138,6 @@ namespace Estately.Services.Implementations
         {
             var entity = await _unitOfWork.EmployeeRepository.GetByIdAsync(id);
             if (entity == null) return;
-
-            entity.IsDeleted = true;
             await _unitOfWork.EmployeeRepository.UpdateAsync(entity);
             await _unitOfWork.CompleteAsync();
         }
@@ -151,7 +148,7 @@ namespace Estately.Services.Implementations
         public async Task<int> GetEmployeeCounterAsync()
         {
             var all = await _unitOfWork.EmployeeRepository.ReadAllAsync();
-            return all.Count(e => e.IsDeleted == false);
+            return all.Count();
         }
 
         // -----------------------------------------------------------------
@@ -199,8 +196,6 @@ namespace Estately.Services.Implementations
                 ReportsTo = vm.ReportsTo,
                 Salary = vm.Salary,
                 HireDate = vm.HireDate,
-                IsActive = true,
-                IsDeleted = false
             };
         }
     }

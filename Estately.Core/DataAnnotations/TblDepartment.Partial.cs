@@ -5,7 +5,6 @@ public partial class TblDepartment
 {
     public TblDepartment()
     {
-        IsDeleted ??= false;
         CreatedAt ??= DateTime.Now;
     }
 

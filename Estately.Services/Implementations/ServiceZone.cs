@@ -19,7 +19,6 @@ namespace Estately.Services.Implementations
         {
             var zones = await _unitOfWork.ZoneRepository.ReadAllIncluding("City");
             var zoneList = zones
-                .Where(z => z.IsDeleted == false)
                 .Select(ConvertToViewModel)
                 .ToList();
             return new ZonesListViewModel
@@ -40,7 +39,6 @@ namespace Estately.Services.Implementations
 
             // EXCLUDE SOFT-DELETED ZONES
             var query = zones
-                .Where(z => z.IsDeleted == false)
                 .AsQueryable();
 
             // Search
@@ -94,7 +92,6 @@ namespace Estately.Services.Implementations
             {
                 CityID = model.CityId,
                 ZoneName = model.ZoneName,
-                IsDeleted = false
             };
 
             await _unitOfWork.ZoneRepository.AddAsync(zone);
@@ -124,9 +121,7 @@ namespace Estately.Services.Implementations
             var zone = await _unitOfWork.ZoneRepository.GetByIdAsync(id);
             if (zone == null) return;
 
-            zone.IsDeleted = true;
-
-            await _unitOfWork.ZoneRepository.UpdateAsync(zone);
+            await _unitOfWork.ZoneRepository.DeleteAsync(id);
             await _unitOfWork.CompleteAsync();
         }
 

@@ -73,10 +73,6 @@ namespace Estately.Services.Implementations
             user.Email = model.Email;
             user.Username = model.Username;
             user.UserTypeID = model.UserTypeID;
-            user.IsEmployee = model.IsEmployee;
-            user.IsClient = model.IsClient;
-            user.IsDeveloper = model.IsDeveloper;
-            user.IsDeleted = model.IsDeleted ?? false;
 
             await _unitOfWork.UserRepository.UpdateAsync(user);
             await _unitOfWork.CompleteAsync();
@@ -89,8 +85,6 @@ namespace Estately.Services.Implementations
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
             if (user == null) return;
-
-            user.IsDeleted = true;
 
             await _unitOfWork.UserRepository.UpdateAsync(user);
             await _unitOfWork.CompleteAsync();
@@ -170,11 +164,7 @@ namespace Estately.Services.Implementations
                 UserTypeID = u.UserTypeID,
                 Email = u.Email,
                 Username = u.Username,
-                IsEmployee = u.IsEmployee,
-                IsClient = u.IsClient,
-                IsDeveloper = u.IsDeveloper,
-                CreatedAt = u.CreatedAt,
-                IsDeleted = u.IsDeleted,
+                CreatedAt = u.CreatedAt ?? DateTime.Now,
                 UserTypeName = u.UserType?.UserTypeName
             };
         }

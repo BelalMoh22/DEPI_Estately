@@ -27,9 +27,7 @@ namespace Estately.Services.Implementations
             var deps = await _unitOfWork.DepartmentRepository.ReadAllAsync();
 
             // EXCLUDE SOFT-DELETED DEPARTMENTS
-            var query = deps
-                .Where(z => z.IsDeleted == false)
-                .AsQueryable();
+            var query = deps.AsQueryable();
 
             // Search
             if (!string.IsNullOrWhiteSpace(searchTerm))
@@ -69,7 +67,6 @@ namespace Estately.Services.Implementations
                 DepartmentName = model.DepartmentName,
                 ManagerName = model.ManagerName,
                 Email = model.Email,
-                IsDeleted = false
             };
 
             await _unitOfWork.DepartmentRepository.AddAsync(dep);
@@ -91,8 +88,6 @@ namespace Estately.Services.Implementations
             var dep = await _unitOfWork.DepartmentRepository.GetByIdAsync(id);
             if (dep == null) return;
 
-            dep.IsDeleted = true;
-
             await _unitOfWork.DepartmentRepository.UpdateAsync(dep);
             await _unitOfWork.CompleteAsync();
         }
@@ -106,7 +101,6 @@ namespace Estately.Services.Implementations
                 .Query()
                 .Include(e => e.JobTitle)
                 .Where(e =>
-                    e.IsDeleted == false &&
                     e.JobTitle != null &&
                     e.JobTitle.JobTitleName.Contains("Manager")
                 )
@@ -128,7 +122,6 @@ namespace Estately.Services.Implementations
                 DepartmentName = d.DepartmentName,
                 ManagerName = d.ManagerName,
                 Email = d.Email,
-                IsDeleted = d.IsDeleted
             };
         }
     }

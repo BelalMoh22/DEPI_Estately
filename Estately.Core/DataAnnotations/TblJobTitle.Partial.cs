@@ -5,7 +5,6 @@ public partial class TblJobTitle
 {
     public TblJobTitle()
     {
-        IsDeleted ??= false;
     }
 
     private class TblJobTitleMetadata
