@@ -1,0 +1,59 @@
+﻿@model Estately.Services.ViewModels.AppointmentViewModel
+
+@{
+    ViewData["Title"] = "Create Appointment";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h4>Create Appointment</h4>
+
+<form asp-action="Create" method="post" class="mt-4">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Property ID</label>
+            <input asp-for="PropertyID" class="form-control" />
+            <span asp-validation-for="PropertyID" class="text-danger"></span>
+            <small class="text-muted">Enter a valid Property ID that exists in the database</small>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Employee/Client ID</label>
+            <input asp-for="EmployeeClientID" class="form-control" />
+            <span asp-validation-for="EmployeeClientID" class="text-danger"></span>
+            <small class="text-muted">Enter a valid Employee/Client ID that exists in the database</small>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Appointment Date</label>
+            <input asp-for="AppointmentDate" type="datetime-local" class="form-control" />
+            <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Status ID</label>
+            <input asp-for="StatusID" class="form-control" />
+            <span asp-validation-for="StatusID" class="text-danger"></span>
+            <small class="text-muted">Enter a valid Status ID that exists in the database</small>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Notes</label>
+        <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Notes" class="text-danger"></span>
+    </div>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-admin">
+            <i class="bi bi-check-circle me-2"></i>Create
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left-circle me-2"></i>Back
+        </a>
+    </div>
+</form>

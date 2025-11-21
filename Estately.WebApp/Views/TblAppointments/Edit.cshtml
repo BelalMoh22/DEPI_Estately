@@ -1,0 +1,56 @@
+﻿@model Estately.Services.ViewModels.AppointmentViewModel
+
+@{
+    ViewData["Title"] = "Edit Appointment";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h4>Edit Appointment</h4>
+
+<form asp-action="Edit" method="post" class="mt-4">
+    <input type="hidden" asp-for="AppointmentID" />
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Property</label>
+            <input asp-for="PropertyName" class="form-control" readonly />
+            <span asp-validation-for="PropertyID" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Employee/Client</label>
+            <input asp-for="EmployeeClientName" class="form-control" readonly />
+            <span asp-validation-for="EmployeeClientID" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Appointment Date</label>
+            <input asp-for="AppointmentDate" type="datetime-local" class="form-control" />
+            <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Status</label>
+            <input asp-for="StatusName" class="form-control" readonly />
+            <span asp-validation-for="StatusID" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Notes</label>
+        <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Notes" class="text-danger"></span>
+    </div>
+
+    <div class="mt-4">
+        <button class="btn btn-admin">
+            <i class="bi bi-save me-2"></i>Save Changes
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left-circle me-2"></i>Back
+        </a>
+    </div>
+</form>
