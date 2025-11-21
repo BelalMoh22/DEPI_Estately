@@ -6,21 +6,19 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Estately.Core.Entities;
-
-[Table("LkpPropertyStatus")]
-public partial class LkpPropertyStatus
+namespace Estately.Core.Entities
 {
-    [Key]
-    public int StatusID { get; set; }
+    [Table("LkpPropertyStatus")]
+    public partial class LkpPropertyStatus
+    {
+        [Key]
+        public int StatusID { get; set; }
 
-    [Required]
-    [StringLength(255)]
-    public string StatusName { get; set; }
+        public string StatusName { get; set; }
 
-    [StringLength(255)]
-    public string Description { get; set; }
+        public string Description { get; set; }
 
-    [InverseProperty("Status")]
-    public virtual ICollection<TblProperty> TblProperties { get; set; } = new List<TblProperty>();
+        [InverseProperty("Status")]
+        public virtual ICollection<TblProperty> TblProperties { get; set; } = new List<TblProperty>();
+    }
 }

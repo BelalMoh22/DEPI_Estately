@@ -1,21 +1,26 @@
-namespace Estately.Core.Entities;
-
-[MetadataType(typeof(TblPropertyImageMetadata))]
-public partial class TblPropertyImage
+namespace Estately.Core.Entities
 {
-    public TblPropertyImage()
+    [MetadataType(typeof(TblPropertyImageMetadata))]
+    public partial class TblPropertyImage
     {
-        UploadedDate ??= DateTime.Now;
-    }
+        public TblPropertyImage()
+        {
+            UploadedDate ??= DateTime.Now;
+        }
 
-    private class TblPropertyImageMetadata
-    {
-        [Required]
-        [StringLength(255)]
-        [Unicode(false)]
-        public string ImagePath { get; set; }
+        private class TblPropertyImageMetadata
+        {
+            [Required]
+            [StringLength(255)]
+            [Unicode(false)]
+            public string ImagePath { get; set; }
 
-        [Column(TypeName = "datetime")]
-        public DateTime? UploadedDate { get; set; }
+            [Column(TypeName = "datetime")]
+            public DateTime? UploadedDate { get; set; }
+
+            [ForeignKey("PropertyID")]
+            [InverseProperty("TblPropertyImages")]
+            public virtual TblProperty Property { get; set; }
+        }
     }
 }

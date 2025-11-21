@@ -16,21 +16,12 @@ public partial class TblUser
 
     public int? UserTypeID { get; set; }
 
-    [Required]
-    [StringLength(255)]
-    [Unicode(false)]
     public string Email { get; set; }
 
-    [Required]
-    [StringLength(255)]
     public string Username { get; set; }
 
-    [Required]
-    [StringLength(500)]
-    [Unicode(false)]
     public string PasswordHash { get; set; }
 
-    [Column(TypeName = "datetime")]
     public DateTime? CreatedAt { get; set; }
 
     [InverseProperty("User")]

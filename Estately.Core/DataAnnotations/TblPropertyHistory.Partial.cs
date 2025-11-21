@@ -21,5 +21,17 @@ public partial class TblPropertyHistory
 
         [Column(TypeName = "datetime")]
         public DateTime? CreatedAt { get; set; }
+
+        [ForeignKey("HistoryTypeID")]
+        [InverseProperty("TblPropertyHistories")]
+        public virtual LkpPropertyHistoryType HistoryType { get; set; }
+
+        [ForeignKey("PropertyID")]
+        [InverseProperty("TblPropertyHistories")]
+        public virtual TblProperty Property { get; set; }
+
+        [ForeignKey("UserID")]
+        [InverseProperty("TblPropertyHistories")]
+        public virtual TblUser User { get; set; }
     }
 }

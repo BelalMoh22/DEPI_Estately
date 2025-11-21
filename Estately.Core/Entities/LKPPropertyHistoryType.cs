@@ -6,20 +6,18 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Estately.Core.Entities;
-
-public partial class LkpPropertyHistoryType
+namespace Estately.Core.Entities
 {
-    [Key]
-    public int HistoryTypeID { get; set; }
+    public partial class LkpPropertyHistoryType
+    {
+        [Key]
+        public int HistoryTypeID { get; set; }
 
-    [Required]
-    [StringLength(255)]
-    public string Name { get; set; }
+        public string Name { get; set; }
 
-    [StringLength(255)]
-    public string Description { get; set; }
+        public string Description { get; set; }
 
-    [InverseProperty("HistoryType")]
-    public virtual ICollection<TblPropertyHistory> TblPropertyHistories { get; set; } = new List<TblPropertyHistory>();
+        [InverseProperty("HistoryType")]
+        public virtual ICollection<TblPropertyHistory> TblPropertyHistories { get; set; } = new List<TblPropertyHistory>();
+    }
 }

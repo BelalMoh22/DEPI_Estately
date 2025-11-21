@@ -19,7 +19,6 @@ public partial class TblFavorite
 
     public int PropertyID { get; set; }
 
-    [Column(TypeName = "datetime")]
     public DateTime? CreatedAt { get; set; }
 
     [ForeignKey("ClientProfileID")]
