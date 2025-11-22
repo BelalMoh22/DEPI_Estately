@@ -5,72 +5,80 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h4>Create Appointment</h4>
+<div class="table-container">
+    <h4>Create Appointment</h4>
 
-<form asp-action="Create" method="post" class="mt-4">
-    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    <form asp-action="Create" method="post" class="mt-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label asp-for="PropertyID" class="form-label"></label>
-            @Html.DropDownListFor(m => m.PropertyID,
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="PropertyID" class="form-label"></label>
+                @Html.DropDownListFor(m => m.PropertyID,
                 (SelectList)ViewBag.Properties,
-                "-- Select Property --",
-                new { @class = "form-control" })
-            <span asp-validation-for="PropertyID" class="text-danger"></span>
+                                "-- Select Property --",
+                                new { @class = "form-control" })
+                <span asp-validation-for="PropertyID" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="EmployeeID" class="form-label"></label>
+                @Html.DropDownListFor(m => m.EmployeeID,
+                                (SelectList)ViewBag.Employees,
+                                "-- Select Employee --",
+                                new { @class = "form-control" })
+                <span asp-validation-for="EmployeeID" class="text-danger"></span>
+            </div>
         </div>
 
-        <div class="col-md-6 mb-3">
-            <label asp-for="EmployeeID" class="form-label"></label>
-            @Html.DropDownListFor(m => m.EmployeeID,
-                (SelectList)ViewBag.Employees,
-                "-- Select Employee --",
-                new { @class = "form-control" })
-            <span asp-validation-for="EmployeeID" class="text-danger"></span>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="ClientProfileID" class="form-label"></label>
+                @Html.DropDownListFor(m => m.ClientProfileID,
+                                (SelectList)ViewBag.Clients,
+                                "-- Select Client --",
+                                new { @class = "form-control" })
+                <span asp-validation-for="ClientProfileID" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="StatusID" class="form-label"></label>
+                @Html.DropDownListFor(m => m.StatusID,
+                                (SelectList)ViewBag.Statuses,
+                                "-- Select Status --",
+                                new { @class = "form-control" })
+                <span asp-validation-for="StatusID" class="text-danger"></span>
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label asp-for="ClientProfileID" class="form-label"></label>
-            @Html.DropDownListFor(m => m.ClientProfileID,
-                (SelectList)ViewBag.Clients,
-                "-- Select Client --",
-                new { @class = "form-control" })
-            <span asp-validation-for="ClientProfileID" class="text-danger"></span>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="AppointmentDate" class="form-label"></label>
+                <input asp-for="AppointmentDate" type="datetime-local" class="form-control" />
+                <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+            </div>
         </div>
 
-        <div class="col-md-6 mb-3">
-            <label asp-for="StatusID" class="form-label"></label>
-            @Html.DropDownListFor(m => m.StatusID,
-                (SelectList)ViewBag.Statuses,
-                "-- Select Status --",
-                new { @class = "form-control" })
-            <span asp-validation-for="StatusID" class="text-danger"></span>
+        <div class="mb-3">
+            <label class="form-label">Notes</label>
+            <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Notes" class="text-danger"></span>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label asp-for="AppointmentDate" class="form-label"></label>
-            <input asp-for="AppointmentDate" type="datetime-local" class="form-control" />
-            <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+        <div class="mt-4">
+            <button type="submit" class="btn btn-admin">
+                <i class="bi bi-check-circle me-2"></i>Create
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle me-2"></i>Back
+            </a>
         </div>
-    </div>
+    </form>
+</div>
 
-    <div class="mb-3">
-        <label class="form-label">Notes</label>
-        <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
-        <span asp-validation-for="Notes" class="text-danger"></span>
-    </div>
-
-    <div class="mt-4">
-        <button type="submit" class="btn btn-admin">
-            <i class="bi bi-check-circle me-2"></i>Create
-        </button>
-
-        <a asp-action="Index" class="btn btn-secondary">
-            <i class="bi bi-arrow-left-circle me-2"></i>Back
-        </a>
-    </div>
-</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

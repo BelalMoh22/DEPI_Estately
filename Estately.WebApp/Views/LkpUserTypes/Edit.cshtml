@@ -5,30 +5,32 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h4>Edit User Type</h4>
+<div class="table-container">
+    <h4>Edit User Type</h4>
 
-<form asp-action="Edit" method="post" class="mt-4">
+    <form asp-action="Edit" method="post" class="mt-4">
+        <input type="hidden" asp-for="UserTypeID" />
+        <div class="mb-3">
+            <label class="form-label">User Type Name</label>
+            <input asp-for="UserTypeName" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="mt-4">
+            <button class="btn btn-admin">
+                <i class="bi bi-save me-2"></i>Save Changes
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle me-2"></i>Back
+            </a>
+        </div>
+    </form>
+</div>
 
-    <input type="hidden" asp-for="UserTypeID" />
-
-    <div class="mb-3">
-        <label class="form-label">User Type Name</label>
-        <input asp-for="UserTypeName" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Description</label>
-        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-    </div>
-
-    <div class="mt-4">
-        <button class="btn btn-admin">
-            <i class="bi bi-save me-2"></i>Save Changes
-        </button>
-
-        <a asp-action="Index" class="btn btn-secondary">
-            <i class="bi bi-arrow-left-circle me-2"></i>Back
-        </a>
-    </div>
-
-</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

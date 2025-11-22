@@ -17,48 +17,51 @@
         }
 </style>
 
-<h4>Edit Department</h4>
+<div class="table-container">
+    <h4>Edit Department</h4>
 
-<form asp-action="Edit" method="post" class="mt-4">
-    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-    
-    <input type="hidden" asp-for="DepartmentID" />
+    <form asp-action="Edit" method="post" class="mt-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-    <div class="mb-3">
-        <label asp-for="DepartmentID" class="form-label">Department ID</label>
-        <input asp-for="DepartmentID" class="form-control" disabled />
-    </div>
+        <input type="hidden" asp-for="DepartmentID" />
 
-    <div class="mb-3">
-        <label asp-for="DepartmentName" class="form-label">Department Name <span class="text-danger">*</span></label>
-        <input asp-for="DepartmentName" class="form-control" />
-        <span asp-validation-for="DepartmentName" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label asp-for="DepartmentID" class="form-label">Department ID</label>
+            <input asp-for="DepartmentID" class="form-control" disabled />
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="ManagerName" class="form-label">Manager Name</label>
-        <select asp-for="ManagerName" class="form-control" asp-items="ViewBag.Managers">
-            <option value="">-- Select Manager --</option>
-        </select>
+        <div class="mb-3">
+            <label asp-for="DepartmentName" class="form-label">Department Name <span class="text-danger">*</span></label>
+            <input asp-for="DepartmentName" class="form-control" />
+            <span asp-validation-for="DepartmentName" class="text-danger"></span>
+        </div>
 
-        <span asp-validation-for="ManagerName" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label asp-for="ManagerName" class="form-label">Manager Name</label>
+            <select asp-for="ManagerName" class="form-control" asp-items="ViewBag.Managers">
+                <option value="">-- Select Manager --</option>
+            </select>
 
-    <div class="mb-3">
-        <label asp-for="Email" class="form-label">Email</label>
-        <input asp-for="Email" type="email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
+            <span asp-validation-for="ManagerName" class="text-danger"></span>
+        </div>
 
-    <div class="mt-4">
-        <button type="submit" class="btn btn-save">
-            <i class="bi bi-save me-2"></i>Save Changes
-        </button>
-        <a asp-action="Index" class="btn btn-secondary">
-            <i class="bi bi-arrow-left-circle me-2"></i>Back to List
-        </a>
-    </div>
-</form>
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" type="email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-save">
+                <i class="bi bi-save me-2"></i>Save Changes
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle me-2"></i>Back to List
+            </a>
+        </div>
+    </form>
+
+</div>
 
 @section Scripts {
     @{
