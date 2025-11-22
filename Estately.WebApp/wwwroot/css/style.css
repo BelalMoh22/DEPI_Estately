@@ -2171,6 +2171,7 @@ select option:nth-child(23) {
 select option:nth-child(n+24) {
   background-color: #495057;
 }*/
+/* ===================================================================================================== */
 /* section-verifying  */
 .verify-icon i {
   font-size: 45px;
