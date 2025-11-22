@@ -295,7 +295,7 @@ namespace Estately.Services.Implementations
                 Description = p.Description,
                 AgentId = p.AgentId,
                 PropertyTypeID = p.PropertyTypeID,
-                DeveloperProfileID = p.DeveloperProfileID,
+                DeveloperProfileID = p.DeveloperProfileID ?? null,
                 ZoneID = p.ZoneID,
                 StatusId = p.StatusId ?? 1,
                 PropertyCode = p.PropertyCode,

@@ -11,7 +11,7 @@ namespace Estately.Services.ViewModels
         // Foreign Keys
         // -----------------------
         [Required(ErrorMessage = "Developer Profile is required")]
-        public int DeveloperProfileID { get; set; }
+        public int? DeveloperProfileID { get; set; }
 
         [Required(ErrorMessage = "Property Type is required")]
         public int PropertyTypeID { get; set; }

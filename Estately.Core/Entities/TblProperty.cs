@@ -13,7 +13,7 @@ namespace Estately.Core.Entities
 
         public int? AgentId { get; set; }
 
-        public int DeveloperProfileID { get; set; }
+        public int? DeveloperProfileID { get; set; }
 
         public int PropertyTypeID { get; set; }
 
