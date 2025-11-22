@@ -14,6 +14,7 @@ namespace Estately.Services.Interfaces
         Task UpdateCityAsync(CityViewModel model);
         Task DeleteCityAsync(int id);
         Task AssignZoneAsync(int cityId, int zoneId);
+        Task<bool> CityNameExistsAsync(string cityName);
         Task<int> GetCityCounterAsync();
         int GetMaxIDAsync();
         ValueTask<IEnumerable<TblCity>> SearchCityAsync(Expression<Func<TblCity, bool>> predicate);

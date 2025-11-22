@@ -56,6 +56,14 @@ namespace Estately.WebApp.Controllers
                 await LoadZonesDropdown();
                 return View(model);
             }
+            // Check if exists
+            bool exists = await _serviceCity.CityNameExistsAsync(model.CityName);
+
+            if (exists)
+            {
+                ModelState.AddModelError("CityName", "This city already exists.");
+                return View(model);
+            }
             await _serviceCity.CreateCityAsync(model);
             return RedirectToAction(nameof(Index));
         }
