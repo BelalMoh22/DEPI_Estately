@@ -46,157 +46,159 @@
     }
 </style>
 
-<h4>Edit Property</h4>
+<div class="table-container">
+    <h4>Edit Property</h4>
 
-<form asp-action="Edit" method="post" enctype="multipart/form-data" class="mt-4">
-    <input type="hidden" asp-for="PropertyID" />
-    <input type="hidden" asp-for="PropertyCode" />
+    <form asp-action="Edit" method="post" enctype="multipart/form-data" class="mt-4">
+        <input type="hidden" asp-for="PropertyID" />
+        <input type="hidden" asp-for="PropertyCode" />
 
-    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-    <div class="row">
-        <div class="col-md-8">
-            <div class="mb-3">
-                <label class="form-label">Address <span class="text-danger">*</span></label>
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger"></span>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="mb-3">
+                    <label class="form-label">Address <span class="text-danger">*</span></label>
+                    <input asp-for="Address" class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Price</label>
+                        <input asp-for="Price" class="form-control" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Area (m²)</label>
+                        <input asp-for="Area" class="form-control" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Year Built</label>
+                        <input asp-for="YearBuilt" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Beds No.</label>
+                        <input asp-for="BedsNo" class="form-control" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Baths No.</label>
+                        <input asp-for="BathsNo" class="form-control" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Floor No.</label>
+                        <input asp-for="FloorNo" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Property Type</label>
+                        <select asp-for="PropertyTypeID" class="form-control" asp-items="@(new SelectList(Model.PropertyTypes, "PropertyTypeID", "TypeName"))"></select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Status</label>
+                        <select asp-for="StatusId" class="form-control" asp-items="@(new SelectList(Model.Statuses, "StatusID", "StatusName"))"></select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Zone</label>
+                        <select asp-for="ZoneID" class="form-control" asp-items="@(new SelectList(Model.Zones, "ZoneId", "ZoneName"))"></select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Agent</label>
+                    <select asp-for="AgentId" class="form-control" asp-items="@(new SelectList(Model.Agents, "EmployeeID", "FullName"))">
+                        <option value="">-- Select --</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Developer</label>
+                    <select asp-for="DeveloperProfileID" class="form-control" asp-items="@(new SelectList(Model.Developers, "DeveloperProfileID", "DeveloperTitle"))">
+                        <option value="">-- Select --</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Features</label>
+                    <div>
+                        @foreach (var f in Model.AllFeatures)
+                        {
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       name="SelectedFeatures"
+                                       value="@f.FeatureID"
+                                       id="feat-@f.FeatureID"
+                                       @(Model.SelectedFeatures != null && Model.SelectedFeatures.Contains(f.FeatureID) ? "checked" : "") />
+
+                                <label class="form-check-label" for="feat-@f.FeatureID">
+                                    @f.FeatureName
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Price</label>
-                    <input asp-for="Price" class="form-control" />
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label class="form-label">Latitude</label>
+                    <input asp-for="Latitude" class="form-control" />
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Area (m²)</label>
-                    <input asp-for="Area" class="form-control" />
+                <div class="mb-3">
+                    <label class="form-label">Longitude</label>
+                    <input asp-for="Longitude" class="form-control" />
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Year Built</label>
-                    <input asp-for="YearBuilt" class="form-control" />
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Beds No.</label>
-                    <input asp-for="BedsNo" class="form-control" />
+                <div class="mb-3">
+                    <label class="form-label">Upload New Images</label>
+                    <input type="file" id="fileInput" name="UploadedFiles" multiple class="form-control" accept="image/*" />
+                    <small class="form-text text-muted">You can select multiple images. Existing images are shown below.</small>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Baths No.</label>
-                    <input asp-for="BathsNo" class="form-control" />
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Floor No.</label>
-                    <input asp-for="FloorNo" class="form-control" />
-                </div>
-            </div>
 
-            <div class="mb-3">
-                <label class="form-label">Description</label>
-                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
-            </div>
-
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Property Type</label>
-                    <select asp-for="PropertyTypeID" class="form-control" asp-items="@(new SelectList(Model.PropertyTypes, "PropertyTypeID", "TypeName"))"></select>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Status</label>
-                    <select asp-for="StatusId" class="form-control" asp-items="@(new SelectList(Model.Statuses, "StatusID", "StatusName"))"></select>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Zone</label>
-                    <select asp-for="ZoneID" class="form-control" asp-items="@(new SelectList(Model.Zones, "ZoneId", "ZoneName"))"></select>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Agent</label>
-                <select asp-for="AgentId" class="form-control" asp-items="@(new SelectList(Model.Agents, "EmployeeID", "FullName"))">
-                    <option value="">-- Select --</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Developer</label>
-                <select asp-for="DeveloperProfileID" class="form-control" asp-items="@(new SelectList(Model.Developers, "DeveloperProfileID", "DeveloperTitle"))">
-                    <option value="">-- Select --</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Features</label>
-                <div>
-                    @foreach (var f in Model.AllFeatures)
+                <h6>Existing Images</h6>
+                <div id="existingImages" class="image-preview-grid mb-3">
+                    @if (Model.Images != null && Model.Images.Count > 0)
                     {
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input"
-                                   type="checkbox"
-                                   name="SelectedFeatures"
-                                   value="@f.FeatureID"
-                                   id="feat-@f.FeatureID"
-                                   @(Model.SelectedFeatures != null && Model.SelectedFeatures.Contains(f.FeatureID) ? "checked" : "") />
-
-                            <label class="form-check-label" for="feat-@f.FeatureID">
-                                @f.FeatureName
-                            </label>
-                        </div>
+                        foreach (var img in Model.Images)
+                        {
+                            <div class="img-preview-card" data-image-id="@img.ImageID">
+                                <img src="~/@img.ImagePath" class="preview-thumb" />
+                                <button type="button" class="img-remove-btn existing-remove" title="Remove image" data-image-id="@img.ImageID">&times;</button>
+                            </div>
+                        }
                     }
+                    else
+                    {
+                        <div class="text-muted">No images uploaded.</div>
+                    }
+                </div>
+
+                <div id="ImagesToDeleteContainer"></div>
+
+                <div id="newPreviews" class="image-preview-grid mb-3"></div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-admin">
+                        <i class="bi bi-save me-2"></i>Save Changes
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary ms-2">
+                        <i class="bi bi-arrow-left-circle me-2"></i>Back to List
+                    </a>
                 </div>
             </div>
         </div>
-
-        <div class="col-md-4">
-            <div class="mb-3">
-                <label class="form-label">Latitude</label>
-                <input asp-for="Latitude" class="form-control" />
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Longitude</label>
-                <input asp-for="Longitude" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Upload New Images</label>
-                <input type="file" id="fileInput" name="UploadedFiles" multiple class="form-control" accept="image/*" />
-                <small class="form-text text-muted">You can select multiple images. Existing images are shown below.</small>
-            </div>
-
-            <h6>Existing Images</h6>
-            <div id="existingImages" class="image-preview-grid mb-3">
-                @if (Model.Images != null && Model.Images.Count > 0)
-                {
-                    foreach (var img in Model.Images)
-                    {
-                        <div class="img-preview-card" data-image-id="@img.ImageID">
-                            <img src="~/@img.ImagePath" class="preview-thumb" />
-                            <button type="button" class="img-remove-btn existing-remove" title="Remove image" data-image-id="@img.ImageID">&times;</button>
-                        </div>
-                    }
-                }
-                else
-                {
-                    <div class="text-muted">No images uploaded.</div>
-                }
-            </div>
-
-            <div id="ImagesToDeleteContainer"></div>
-
-            <div id="newPreviews" class="image-preview-grid mb-3"></div>
-
-            <div class="mt-4">
-                <button type="submit" class="btn btn-admin">
-                    <i class="bi bi-save me-2"></i>Save Changes
-                </button>
-                <a asp-action="Index" class="btn btn-secondary ms-2">
-                    <i class="bi bi-arrow-left-circle me-2"></i>Back to List
-                </a>
-            </div>
-        </div>
-    </div>
-</form>
+    </form>
+</div>
 
 @section Scripts {
     @{

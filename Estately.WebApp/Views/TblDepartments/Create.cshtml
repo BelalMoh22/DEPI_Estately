@@ -5,44 +5,46 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h4>Create Department</h4>
+<div class="table-container">
+    <h4>Create Department</h4>
 
-<form asp-action="Create" method="post" class="mt-4">
-    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    <form asp-action="Create" method="post" class="mt-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-    <div class="mb-3">
-        <label asp-for="DepartmentName" class="form-label">Department Name <span class="text-danger">*</span></label>
-        <input asp-for="DepartmentName" class="form-control" />
-        <span asp-validation-for="DepartmentName" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="ManagerName" class="form-label">Manager Name</label>
-        <div class="form-group">
-            <select asp-for="ManagerName" class="form-control"
-                    asp-items="ViewBag.Managers">
-                <option value="">-- Select Manager --</option>
-            </select>
+        <div class="mb-3">
+            <label asp-for="DepartmentName" class="form-label">Department Name <span class="text-danger">*</span></label>
+            <input asp-for="DepartmentName" class="form-control" />
+            <span asp-validation-for="DepartmentName" class="text-danger"></span>
         </div>
 
-        <span asp-validation-for="ManagerName" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label asp-for="ManagerName" class="form-label">Manager Name</label>
+            <div class="form-group">
+                <select asp-for="ManagerName" class="form-control"
+                        asp-items="ViewBag.Managers">
+                    <option value="">-- Select Manager --</option>
+                </select>
+            </div>
 
-    <div class="mb-3">
-        <label asp-for="Email" class="form-label">Email</label>
-        <input asp-for="Email" type="email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
+            <span asp-validation-for="ManagerName" class="text-danger"></span>
+        </div>
 
-    <div class="mt-4">
-        <button type="submit" class="btn btn-create">
-            <i class="bi bi-check-circle me-2"></i>Create
-        </button>
-        <a asp-action="Index" class="btn btn-secondary">
-            <i class="bi bi-arrow-left me-2"></i>Back to List
-        </a>
-    </div>
-</form>
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" type="email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-create">
+                <i class="bi bi-check-circle me-2"></i>Create
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Back to List
+            </a>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
     @{

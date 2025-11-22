@@ -111,17 +111,42 @@ namespace Estately.WebApp.Controllers
         // =======================================================
         // DELETE
         // =======================================================
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[HttpGet]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    // Optional: Check if status is being used by any properties before deletion
+        //    // var isUsed = await CheckIfStatusIsUsed(id);
+        //    // if (isUsed)
+        //    // {
+        //    //     TempData["ErrorMessage"] = "Cannot delete status because it is being used by properties.";
+        //    //     return RedirectToAction(nameof(Index));
+        //    // }
+
+        //    await _service.DeletePropertyStatusAsync(id);
+        //    return RedirectToAction(nameof(Index));
+        //}
         public async Task<IActionResult> Delete(int id)
         {
-            // Optional: Check if status is being used by any properties before deletion
-            // var isUsed = await CheckIfStatusIsUsed(id);
-            // if (isUsed)
-            // {
-            //     TempData["ErrorMessage"] = "Cannot delete status because it is being used by properties.";
-            //     return RedirectToAction(nameof(Index));
-            // }
+            var model = await _service.GetPropertyStatusByIdAsync(id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return View(model);
+        }
+
+        // POST: TblDepartments/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var model = await _service.GetPropertyStatusByIdAsync(id);
+            if (model == null)
+            {
+                return NotFound();
+            }
 
             await _service.DeletePropertyStatusAsync(id);
             return RedirectToAction(nameof(Index));

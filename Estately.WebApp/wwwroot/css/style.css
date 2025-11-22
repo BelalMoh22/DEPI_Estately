@@ -2066,16 +2066,17 @@ nav[aria-label="breadcrumb"] li:before {
   color: rgba(255, 255, 255, 0.796) !important;
 }
 
+/* ===================================================================================================== */
 /* Style for select box options - gradient from white to #495057 */
-select option {
+/*select option {
   background-color: white;
   color: #495057;
-}
+}*/
 
 /* Create alternating gradient effect for select options */
 /* Since CSS can't style individual options with varying colors without JS, */
 /* we'll style all options with a gradient */
-select option:nth-child(1) {
+/*select option:nth-child(1) {
   background-color: #ffffff;
 }
 
@@ -2169,8 +2170,7 @@ select option:nth-child(23) {
 
 select option:nth-child(n+24) {
   background-color: #495057;
-}
-/* ===================================================================================================== */
+}*/
 /* section-verifying  */
 .verify-icon i {
   font-size: 45px;
