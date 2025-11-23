@@ -10,6 +10,25 @@ namespace Estately.Services.Interfaces
         Task<PropertyListViewModel> GetPropertiesPagedAsync(int page, int pageSize, string? search);
 
         // ---------------------------------------------------------
+        // 1b. Pagination + Comprehensive Filtering
+        // ---------------------------------------------------------
+        Task<PropertyListViewModel> GetPropertiesFilteredAsync(
+            int page, 
+            int pageSize, 
+            string? search = null,
+            string? city = null,
+            string? zones = null,
+            string? developers = null,
+            string? propertyTypes = null,
+            decimal? minPrice = null,
+            decimal? maxPrice = null,
+            decimal? minArea = null,
+            decimal? maxArea = null,
+            int? bedrooms = null,
+            int? bathrooms = null,
+            string? amenities = null);
+
+        // ---------------------------------------------------------
         // 2. Get Property By ID (Images + Features loaded)
         // ---------------------------------------------------------
         Task<PropertyViewModel?> GetPropertyByIdAsync(int id);
