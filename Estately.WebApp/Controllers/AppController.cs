@@ -275,6 +275,41 @@ namespace Estately.WebApp.Controllers
             return View();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> VerifySalesAgent(string phone)
+        {
+            if (string.IsNullOrWhiteSpace(phone))
+            {
+                return Json(new { isAgent = false });
+            }
+
+            phone = phone.Trim();
+
+            // Normalize input: keep digits only
+            var digitsOnly = new string(phone.Where(char.IsDigit).ToArray());
+
+            // Handle Egyptian country code: +20 / 0020
+            // Examples:
+            //  "+201007007007"  -> "01007007007"
+            //  "00201007007007" -> "01007007007"
+            if (digitsOnly.StartsWith("20") && digitsOnly.Length > 10)
+            {
+                // Remove leading 20 and ensure local 0
+                digitsOnly = "0" + digitsOnly.Substring(2);
+            }
+            else if (digitsOnly.StartsWith("0020") && digitsOnly.Length > 12)
+            {
+                digitsOnly = "0" + digitsOnly.Substring(4);
+            }
+
+            var normalizedPhone = digitsOnly;
+
+            var matches = await _unitOfWork.EmployeeRepository
+                .Search(e => e.Phone == normalizedPhone);
+
+            bool isAgent = matches.Any();
+
+            return Json(new { isAgent });
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
