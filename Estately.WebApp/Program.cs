@@ -31,6 +31,12 @@ namespace Estately.WebApp
                 .AddEntityFrameworkStores<AppDBContext>()
                 .AddDefaultTokenProviders();
 
+            // Ensure [Authorize] redirects to the correct login endpoint
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Accounts/Login";
+            });
+
 
             //builder.Services.AddControllersWithViews();
             builder.Services.AddControllersWithViews().AddJsonOptions(options =>
