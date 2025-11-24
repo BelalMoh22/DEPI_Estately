@@ -99,25 +99,25 @@ namespace Estately.Services.Implementations
         // ====================================================
         public async Task DeleteUserTypeAsync(int id)
         {
-            // 1️⃣ Get the user type
+            // ⿡ Get the user type
             var userType = await _unitOfWork.UserTypeRepository.GetByIdAsync(id);
             if (userType == null)
                 return;
 
-            // 2️⃣ Check if any ApplicationUser uses this UserTypeID
+            // ⿢ Check if any ApplicationUser uses this UserTypeID
             var usersWithType = await _unitOfWork.UserRepository
                 .Query()
                 .Where(u => u.UserTypeID == id)
                 .ToListAsync();
 
-            // 3️⃣ If users exist → block delete
+            // ⿣ If users exist → block delete
             if (usersWithType.Any())
             {
                 throw new InvalidOperationException(
                     $"Cannot delete user type. There are {usersWithType.Count} users associated with this type.");
             }
 
-            // 4️⃣ Safe delete
+            // ⿤ Safe delete
             await _unitOfWork.UserTypeRepository.DeleteAsync(id);
             await _unitOfWork.CompleteAsync();
         }
@@ -157,21 +157,17 @@ namespace Estately.Services.Implementations
         // ====================================================
         // 10. CHECK IF USER TYPE NAME IS UNIQUE
         // ====================================================
-        public async Task<bool> IsUserTypeNameUniqueAsync(string userTypeName, int? userTypeId)
+        public async Task<bool> IsUserTypeNameUniqueAsync(string userTypeName, int? excludeId = null)
         {
-            var exists = await _unitOfWork.UserTypeRepository.Search(ut =>
-                ut.UserTypeName.ToLower() == userTypeName.ToLower()
-                && (userTypeId == null || ut.UserTypeID != userTypeId.Value));
+            var existing = await _unitOfWork.UserTypeRepository.Search(ut =>
+                ut.UserTypeName.ToLower() == userTypeName.ToLower());
 
-            return !exists.Any();
-        }
+            if (excludeId.HasValue)
+            {
+                existing = existing.Where(ut => ut.UserTypeID != excludeId.Value);
+            }
 
-        public async Task<bool> IsTypeUsedAsync(int typeId)
-        {
-            var properties = await _unitOfWork.UserRepository
-                .Search(p => p.UserTypeID == typeId);
-
-            return properties.Any();
+            return !existing.Any();
         }
         // ====================================================
         // HELPER: ENTITY -> VIEWMODEL

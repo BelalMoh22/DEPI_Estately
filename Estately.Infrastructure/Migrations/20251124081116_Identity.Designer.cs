@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Estately.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20251122220216_InitIdentitySchema")]
-    partial class InitIdentitySchema
+    [Migration("20251124081116_Identity")]
+    partial class Identity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

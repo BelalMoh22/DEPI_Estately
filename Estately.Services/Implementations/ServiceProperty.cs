@@ -572,12 +572,9 @@ namespace Estately.Services.Implementations
 
                 DeveloperTitle = p.DeveloperProfile?.DeveloperTitle,
                 PropertyTypeName = p.PropertyType?.TypeName,
-                StatusName = p.Status.StatusName ?? "Available",
                 ZoneName = p.Zone?.ZoneName ?? "",
                 CityName = p.Zone?.City?.CityName ?? "",
-                AgentName = $"{p.Agent?.FirstName} {p.Agent?.LastName}",
                 StatusName = p.Status?.StatusName ?? "Available",
-                ZoneName = p.Zone?.ZoneName,
                 AgentName = p.Agent != null ? $"{p.Agent.FirstName} {p.Agent.LastName}" : null,
 
                 Images = p.TblPropertyImages?

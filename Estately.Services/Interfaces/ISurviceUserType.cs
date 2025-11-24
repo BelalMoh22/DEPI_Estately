@@ -40,7 +40,5 @@ namespace Estately.Services.Interfaces
 
         // Additional method that might be useful for your UserType entity
         Task<bool> IsUserTypeNameUniqueAsync(string userTypeName, int? excludeId = null);
-        Task<bool> IsTypeUsedAsync(int typeId);
-
     }
 }

@@ -12,7 +12,7 @@ namespace Estately.Infrastructure.Data
             var optionsBuilder = new DbContextOptionsBuilder<AppDBContext>();
 
             var connectionString =
-                "Server=Belal-2004;Database=EstatelyDB;Trusted_Connection=True;TrustServerCertificate=True;";
+                "Server=YUSSIF\\DEPI2025R3G2;Initial Catalog=EstatelyDB;Integrated Security=True;Trust Server Certificate=True;";
             optionsBuilder.UseSqlServer(connectionString);
 
             return new AppDBContext(optionsBuilder.Options);
