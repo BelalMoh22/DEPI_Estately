@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Estately.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20251124081116_Identity")]
+    [Migration("20251124155835_Identity")]
     partial class Identity
     {
         /// <inheritdoc />

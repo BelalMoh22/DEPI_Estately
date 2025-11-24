@@ -1461,6 +1461,10 @@ nav[aria-label="breadcrumb"] li:before {
   max-width: 100%;
 }
 
+.mobile-search .mobile-row {
+  width: 100%;
+}
+
 .mobile-search-input-wrapper {
   display: flex;
   align-items: center;
@@ -2420,7 +2424,8 @@ nav[aria-label="breadcrumb"] li:before {
 /* ===================================================================================================== */
 /* Desktop Filter Buttons and Modals */
 /* ===================================================================================================== */
-.desktop-filter-btn {
+.desktop-filter-btn,
+.mobile-filter-btn {
   flex: 1;
   padding: 0.75rem 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -2434,21 +2439,25 @@ nav[aria-label="breadcrumb"] li:before {
   justify-content: space-between;
   transition: all 0.3s ease;
   white-space: nowrap;
+  box-shadow: none;
 }
 
-.desktop-filter-btn:hover {
+.desktop-filter-btn:hover,
+.mobile-filter-btn:hover {
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.5);
   color: white;
 }
 
-.desktop-filter-btn.has-selection {
+.desktop-filter-btn.has-selection,
+.mobile-filter-btn.has-selection {
   background: rgba(1, 92, 154, 0.3);
   border-color: #015C9A;
   color: white;
 }
 
-.desktop-filter-btn i {
+.desktop-filter-btn i,
+.mobile-filter-btn i {
   font-size: 0.75rem;
   transition: transform 0.3s ease;
 }
@@ -2532,6 +2541,11 @@ nav[aria-label="breadcrumb"] li:before {
   padding: 1rem 1.5rem;
   background: #f8f9fa;
   border-radius: 0 0 12px 12px;
+}
+
+/* Hide City modal Apply button (selection is immediate on click) */
+#applyCityBtn {
+  display: none;
 }
 
 .desktop-filter-modal .property-types-grid {

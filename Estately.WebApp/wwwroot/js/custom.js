@@ -12,6 +12,7 @@
     var overlay = document.getElementById("overlayer");
 
     function fadeOut(el) {
+      if (!el) return;
       el.style.opacity = 1;
       (function fade() {
         if ((el.style.opacity -= 0.1) < 0) {
@@ -23,8 +24,8 @@
     }
 
     setTimeout(function () {
-      fadeOut(loader);
-      fadeOut(overlay);
+      if (loader) fadeOut(loader);
+      if (overlay) fadeOut(overlay);
     }, 200);
   };
   preloader();

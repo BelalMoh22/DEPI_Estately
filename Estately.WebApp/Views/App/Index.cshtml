@@ -113,31 +113,79 @@
 
                             <!-- Mobile Search Interface -->
                             <div class="mobile-search d-lg-none">
-                                <div class="mobile-search-container">
-                                    <div class="mobile-search-category-wrapper mb-3">
-                                        <select class="search-category-select form-select" id="searchCategorySelect">
-                                            <option value="">All Categories</option>
-                                            <option value="zones">Zones</option>
-                                            <option value="developers">Developers</option>
-                                            <option value="cities">Cities</option>
-                                        </select>
-                                    </div>
-                                    <div class="mobile-search-input-wrapper">
-                                        <i class="fa-solid fa-magnifying-glass mobile-search-icon"></i>
-                                        <input type="text"
-                                               class="mobile-search-input"
-                                               id="mobileSearchInput"
-                                               placeholder="Area, Compound, Developer"
-                                               autocomplete="off" />
-                                        <div class="search-suggestions" id="searchSuggestions"></div>
-                                        <button class="mobile-filter-button"
-                                                type="button"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#filterModal">
-                                            <i class="fa-solid fa-sliders-h"></i>
-                                        </button>
-                                    </div>
+                                <!-- Row 1: City & Zones -->
+                                <div class="mobile-row d-flex gap-3 mb-3">
+                                    <button type="button"
+                                            class="btn mobile-filter-btn flex-fill"
+                                            id="mobileCityBtn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#cityModal">
+                                        <span class="btn-text" id="mobileSelectedCityText">City</span>
+                                        <i class="fa-solid fa-chevron-down ms-1"></i>
+                                    </button>
+
+                                    <button type="button"
+                                            class="btn mobile-filter-btn flex-fill"
+                                            id="mobileZonesBtn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#desktopZonesModal">
+                                        <span class="btn-text" id="mobileZonesText">Zones</span>
+                                        <i class="fa-solid fa-chevron-down ms-1"></i>
+                                    </button>
                                 </div>
+
+                                <!-- Row 2: Amenities & Property Types -->
+                                <div class="mobile-row d-flex gap-2 mb-2">
+                                    <button type="button"
+                                            class="btn mobile-filter-btn flex-fill"
+                                            id="mobileAmenitiesBtn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#desktopAmenitiesModal">
+                                        <span class="btn-text" id="mobileAmenitiesText">Amenities</span>
+                                        <i class="fa-solid fa-chevron-down ms-1"></i>
+                                    </button>
+
+                                    <button type="button"
+                                            class="btn mobile-filter-btn flex-fill"
+                                            id="mobilePropertyTypesBtn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#desktopPropertyTypesModal">
+                                        <span class="btn-text" id="mobilePropertyTypesText">Property Types</span>
+                                        <i class="fa-solid fa-chevron-down ms-1"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Row 3: Beds & Baths & Price Range -->
+                                <div class="mobile-row d-flex gap-2 mb-2">
+                                    <button type="button"
+                                            class="btn mobile-filter-btn flex-fill"
+                                            id="mobileBedsBathsBtn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#desktopBedsBathsModal">
+                                        <span class="btn-text" id="mobileBedsBathsText">Beds &amp; Baths</span>
+                                        <i class="fa-solid fa-chevron-down ms-1"></i>
+                                    </button>
+
+                                    <button type="button"
+                                            class="btn mobile-filter-btn flex-fill"
+                                            id="mobilePriceRangeBtn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#desktopPriceRangeModal">
+                                        <span class="btn-text" id="mobilePriceRangeText">Price Range</span>
+                                        <i class="fa-solid fa-chevron-down ms-1"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Row 4: Search Button (Full Width) -->
+                                <div class="mobile-row mb-3">
+                                    <button class="search-button btn button mobile-search-btn w-100" type="button">
+                                        <span class="btn-text">Search Properties</span>
+                                        <i class="fa-solid fa-magnifying-glass ms-2"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Mobile Selected Filters Display -->
+                                <div class="mobile-selected-filters selected-filters d-flex flex-wrap gap-1 mb-2" id="mobileSelectedFilters"></div>
                             </div>
                         </div>
                     </div>
