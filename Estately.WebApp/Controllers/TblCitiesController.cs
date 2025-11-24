@@ -57,7 +57,7 @@ namespace Estately.WebApp.Controllers
                 return View(model);
             }
             // Check if exists
-            bool exists = await _serviceCity.CityNameExistsAsync(model.CityName);
+            bool exists = await _serviceCity.CityNameExistsAsync(model.CityName, null);
 
             if (exists)
             {
@@ -92,10 +92,15 @@ namespace Estately.WebApp.Controllers
                 return View(model);
             }
 
-            // check existence using the existing service method
-            var existing = await _serviceCity.GetCityByIdAsync(model.CityID);
-            if (existing == null)
-                return NotFound();
+            // Check if the new name belongs to another city
+            bool exists = await _serviceCity.CityNameExistsAsync(model.CityName, model.CityID);
+
+            if (exists)
+            {
+                ModelState.AddModelError("CityName", "Another city with this name already exists.");
+                await LoadZonesDropdown();
+                return View(model);
+            }
 
             await _serviceCity.UpdateCityAsync(model);
             return RedirectToAction(nameof(Index));
@@ -118,7 +123,21 @@ namespace Estately.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var city = await _serviceCity.GetCityByIdAsync(id);
+
+            if (city == null)
+                return NotFound();
+
+            // 🚫 Prevent deletion if city has zones
+            if (city.ZoneCount > 0)
+            {
+                TempData["Error"] = "Cannot delete this city because it contains zones. You must delete those zones first.";
+                return RedirectToAction(nameof(Delete), new { id });
+            }
+
             await _serviceCity.DeleteCityAsync(id);
+
+            TempData["Success"] = "City deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

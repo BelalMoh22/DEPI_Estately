@@ -117,6 +117,7 @@
                                 asp-items="@(new SelectList(Model.PropertyTypes, "PropertyTypeID", "TypeName"))">
                             <option value="">-- Select --</option>
                         </select>
+                        <span asp-validation-for="PropertyTypeID" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-4 mb-3">
@@ -124,6 +125,7 @@
                         <select asp-for="StatusId" class="form-control"
                                 asp-items="@(new SelectList(Model.Statuses, "StatusID", "StatusName"))">
                             <option value="">-- Select --</option>
+                            <span asp-validation-for="StatusId" class="text-danger"></span>
                         </select>
                     </div>
 
@@ -132,6 +134,7 @@
                         <select asp-for="ZoneID" class="form-control" asp-items="@(new SelectList(Model.Zones, "ZoneId", "ZoneName"))">
                             <option value="">-- Select --</option>
                         </select>
+                        <span asp-validation-for="ZoneID" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -177,7 +180,8 @@
                 <div class="mb-3">
                     <label class="form-label">Upload Images</label>
                     <input type="file" id="fileInput" name="UploadedFiles" multiple class="form-control" accept="image/*" />
-                    <small class="form-text text-muted">You can select multiple images.</small>
+                    <span asp-validation-for="UploadedFiles" class="text-danger"></span>
+                    <p class="form-text text-muted">You must upload at least 3 images.</p>
                 </div>
 
                 <div id="previews" class="image-preview-grid mb-3"></div>

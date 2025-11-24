@@ -32,22 +32,92 @@
             return View(vm);
         }
         // --------------------------- CREATE POST ---------------------------
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create(PropertyViewModel vm)
+        //{
+        //    if (vm.Price <= 0)
+        //    {
+        //        ModelState.AddModelError("Price", "Price is required.");
+        //    }
+        //    if (vm.Area <= 0)
+        //    {
+        //        ModelState.AddModelError("Area", "Area is required.");
+        //    }
+        //    if (vm.PropertyTypeID <= 0)
+        //    {
+        //        ModelState.AddModelError("PropertyTypeID", "Property Type is required.");
+        //    }
+        //    if (vm.StatusId <= 0)
+        //    {
+        //        ModelState.AddModelError("StatusId", "Property Status is required.");
+        //    }
+        //    if (vm.ZoneID <= 0)
+        //    {
+        //        ModelState.AddModelError("ZoneID", "Zone is required.");
+        //    }
+        //    if (vm.UploadedFiles == null || vm.UploadedFiles.Count < 3)
+        //    {
+        //        ModelState.AddModelError("UploadedFiles", "You must upload at least 3 images.");
+
+        //        // reload dropdowns
+        //        vm = await BuildPropertyViewModelAsync(vm);
+        //        return View(vm);
+        //    }
+
+        //    if (!ModelState.IsValid)
+        //    {
+        //        vm = await BuildPropertyViewModelAsync(vm);
+        //        return View(vm);
+        //    }
+
+        //    await HandleImageUpload(vm);
+        //    await _service.CreatePropertyAsync(vm);
+        //    return RedirectToAction(nameof(Index));
+        //}
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PropertyViewModel vm)
         {
+            // -----------------------------
+            // 🔥 Add ALL validations
+            // -----------------------------
+            if (vm.Price <= 0)
+                ModelState.AddModelError("Price", "Price is required.");
+
+            if (vm.Area <= 0)
+                ModelState.AddModelError("Area", "Area is required.");
+
+            if (vm.PropertyTypeID <= 0)
+                ModelState.AddModelError("PropertyTypeID", "Property Type is required.");
+
+            if (vm.StatusId <= 0)
+                ModelState.AddModelError("StatusId", "Property Status is required.");
+
+            if (vm.ZoneID <= 0)
+                ModelState.AddModelError("ZoneID", "Zone is required.");
+
+            if (vm.UploadedFiles == null || vm.UploadedFiles.Count < 3)
+                ModelState.AddModelError("UploadedFiles", "You must upload at least 3 images.");
+
+            // -----------------------------
+            // 🔥 If validation failed → reload dropdowns + return view
+            // -----------------------------
             if (!ModelState.IsValid)
             {
-                vm = await BuildPropertyViewModelAsync(vm);
+                vm = await BuildPropertyViewModelAsync(vm); // reload dropdowns
                 return View(vm);
             }
 
+            // -----------------------------
+            // 🔥 Valid → upload images + save
+            // -----------------------------
             await HandleImageUpload(vm);
-
             await _service.CreatePropertyAsync(vm);
 
             return RedirectToAction(nameof(Index));
         }
+
 
         // --------------------------- EDIT GET ---------------------------
         public async Task<IActionResult> Edit(int id)

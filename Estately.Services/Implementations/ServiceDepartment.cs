@@ -114,6 +114,65 @@ namespace Estately.Services.Implementations
         {
             return await _unitOfWork.DepartmentRepository.Search(predicate);
         }
+
+        public async Task<bool> DepartmentNameExistsAsync(string name, int? departmentId)
+        {
+            var deps = await _unitOfWork.DepartmentRepository
+                .Search(d => d.DepartmentName.ToLower() == name.ToLower()
+                            && (departmentId == null || d.DepartmentID != departmentId.Value));
+
+            return deps.Any();
+        }
+
+        //public async Task<bool> DepartmentNameExistsAsync(string name)
+        //{
+        //    var deps = await _unitOfWork.DepartmentRepository
+        //        .Search(d => d.DepartmentName.ToLower() == name.ToLower());
+
+        //    return deps.Any();
+        //}
+
+        //public async Task<bool> DepartmentNameExistsForEditAsync(string name, int id)
+        //{
+        //    var deps = await _unitOfWork.DepartmentRepository
+        //        .Search(d => d.DepartmentName.ToLower() == name.ToLower()
+        //                  && d.DepartmentID != id);
+
+        //    return deps.Any();
+        //}
+
+        public async Task<bool> ManagerAssignedAsync(string managerName, int? id)
+        {
+            if (string.IsNullOrEmpty(managerName))
+                return false;
+
+            var deps = await _unitOfWork.DepartmentRepository
+                .Search(d => d.ManagerName == managerName
+                            && (id == null || d.DepartmentID != id.Value));
+
+            return deps.Any();
+        }
+
+        public async Task<bool> EmailExistsAsync(string email, int? id)
+        {
+            if (string.IsNullOrEmpty(email))
+                return false;
+
+            var deps = await _unitOfWork.DepartmentRepository
+                .Search(d => d.Email.ToLower() == email.ToLower()
+                            && (id == null || d.DepartmentID != id.Value));
+
+            return deps.Any();
+        }
+
+        public async Task<bool> HasEmployeesAsync(int departmentId)
+        {
+            var employees = await _unitOfWork.EmployeeRepository
+                .Search(e => e.BranchDepartment.DepartmentID == departmentId);
+
+            return employees.Any();
+        }
+
         private DepartmentsViewModel ConvertToViewModel(TblDepartment d)
         {
             return new DepartmentsViewModel

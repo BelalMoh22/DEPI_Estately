@@ -30,7 +30,6 @@ namespace Estately.WebApp.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var model = await _serviceZone.GetZoneByIdAsync(id);
-
             if (model == null)
                 return NotFound();
 
@@ -50,14 +49,28 @@ namespace Estately.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ZonesViewModel model)
         {
-            if (ModelState.IsValid)
+            // Model-level validation
+            if (!ModelState.IsValid)
             {
-                await _serviceZone.CreateZoneAsync(model);
-                return RedirectToAction(nameof(Index));
+                ViewBag.City = new SelectList(await _serviceZone.GetAllCitiesAsync(), "CityID", "CityName", model.CityId);
+                return View(model);
             }
 
-            ViewBag.City = new SelectList(await _serviceZone.GetAllCitiesAsync(), "CityId", "CityName", model.CityId);
-            return View(model);
+            // Business validation — prevent duplicate zone names in the same city
+            var exists = await _serviceZone.SearchZoneAsync(z =>
+                z.ZoneName.ToLower() == model.ZoneName.ToLower() &&
+                z.CityID == model.CityId
+            );
+
+            if (exists.Any())
+            {
+                ModelState.AddModelError("ZoneName", "This zone already exists in the selected city.");
+                ViewBag.City = new SelectList(await _serviceZone.GetAllCitiesAsync(), "CityID", "CityName", model.CityId);
+                return View(model);
+            }
+
+            await _serviceZone.CreateZoneAsync(model);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: TblZones/Edit/5
@@ -65,9 +78,7 @@ namespace Estately.WebApp.Controllers
         {
             var model = await _serviceZone.GetZoneByIdAsync(id);
             if (model == null)
-            {
                 return NotFound();
-            }
 
             var cities = await _serviceZone.GetAllCitiesAsync();
             ViewBag.City = new SelectList(cities, "CityID", "CityName", model.CityId);
@@ -83,23 +94,34 @@ namespace Estately.WebApp.Controllers
             if (id != model.ZoneId)
                 return NotFound();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _serviceZone.UpdateZoneAsync(model);
-                return RedirectToAction(nameof(Index));
+                ViewBag.City = new SelectList(await _serviceZone.GetAllCitiesAsync(), "CityID", "CityName", model.CityId);
+                return View(model);
             }
 
-            // Reload dropdown when validation fails
-            var cities = await _serviceZone.GetAllCitiesAsync();
-            ViewBag.City = new SelectList(cities, "CityID", "CityName", model.CityId);
+            // Prevent duplicate zones
+            var exists = await _serviceZone.SearchZoneAsync(z =>
+                z.ZoneName.ToLower() == model.ZoneName.ToLower() &&
+                z.CityID == model.CityId &&
+                z.ZoneID != model.ZoneId
+            );
 
-            return View(model);
+            if (exists.Any())
+            {
+                ModelState.AddModelError("ZoneName", "This zone already exists in the selected city.");
+                ViewBag.City = new SelectList(await _serviceZone.GetAllCitiesAsync(), "CityID", "CityName", model.CityId);
+                return View(model);
+            }
+
+            await _serviceZone.UpdateZoneAsync(model);
+            return RedirectToAction(nameof(Index));
         }
 
+        // GET: TblZones/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             var zone = await _serviceZone.GetZoneByIdAsync(id);
-
             if (zone == null)
                 return NotFound();
 
@@ -113,8 +135,14 @@ namespace Estately.WebApp.Controllers
         {
             var model = await _serviceZone.GetZoneByIdAsync(id);
             if (model == null)
-            {
                 return NotFound();
+
+            // Optional: prevent deletion if a zone is used by properties
+            var hasProperties = await _serviceZone.ZoneHasPropertiesAsync(id);
+            if (hasProperties)
+            {
+                TempData["Error"] = "You cannot delete this zone because it contains properties. You must delete those properties first.";
+                return RedirectToAction(nameof(Delete), new { id });
             }
 
             await _serviceZone.DeleteZoneAsync(id);

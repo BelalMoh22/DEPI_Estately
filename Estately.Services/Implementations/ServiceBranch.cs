@@ -114,7 +114,7 @@ namespace Estately.Services.Implementations
             if (branch == null)
                 return;
 
-            await _unitOfWork.BranchRepository.UpdateAsync(branch);
+            await _unitOfWork.BranchRepository.DeleteAsync(id);
             await _unitOfWork.CompleteAsync();
         }
 
@@ -156,6 +156,38 @@ namespace Estately.Services.Implementations
         public async ValueTask<IEnumerable<TblBranch>> SearchZoneAsync(Expression<Func<TblBranch, bool>> predicate)
         {
             return await _unitOfWork.BranchRepository.Search(predicate);
+        }
+
+        public async Task<bool> BranchHasEmployeesAsync(int branchId)
+        {
+            var employees = await _unitOfWork.EmployeeRepository
+                .Search(e => e.BranchDepartment.BranchID == branchId);
+
+            return employees.Any();
+        }
+        public async Task<bool> BranchNameExistsAsync(string name, int? branchId)
+        {
+            var result = await _unitOfWork.BranchRepository
+                .Search(b => b.BranchName.ToLower() == name.ToLower()
+                            && (branchId == null || b.BranchID != branchId.Value));
+
+            return result.Any();
+        }
+        public async Task<bool> ManagerAssignedElsewhereAsync(string manager, int? excludeId)
+        {
+            var branches = await _unitOfWork.BranchRepository
+                .Search(b => b.ManagerName == manager
+                          && (excludeId == null || b.BranchID != excludeId));
+
+            return branches.Any();
+        }
+        public async Task<bool> BranchPhoneExistsAsync(string phone, int? branchId)
+        {
+            var result = await _unitOfWork.BranchRepository
+                .Search(b => b.Phone == phone
+                            && (branchId == null || b.BranchID != branchId.Value));
+
+            return result.Any();
         }
 
         // ================================

@@ -125,6 +125,23 @@ namespace Estately.Services.Implementations
             return await _unitOfWork.PropertyTypeRepository.Search(predicate);
         }
 
+        public async Task<bool> TypeNameExistsAsync(string typeName, int? id)
+        {
+            var types = await _unitOfWork.PropertyTypeRepository
+                .Search(pt => pt.TypeName.ToLower() == typeName.ToLower() &&
+                              (id == null || pt.PropertyTypeID != id.Value));
+
+            return types.Any();
+        }
+
+        public async Task<bool> IsTypeUsedAsync(int typeId)
+        {
+            var properties = await _unitOfWork.PropertyRepository
+                .Search(p => p.PropertyTypeID == typeId);
+
+            return properties.Any();
+        }
+
         // ====================================================
         // HELPER: ENTITY -> VIEWMODEL
         // ====================================================

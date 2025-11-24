@@ -56,13 +56,18 @@ namespace Estately.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PropertyTypeViewModel model)
         {
-            if (ModelState.IsValid)
+            if (await _servicePropertyType.TypeNameExistsAsync(model.TypeName, null))
             {
-                await _servicePropertyType.CreatePropertyTypeAsync(model);
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError("TypeName", "This property type name already exists.");
             }
-            return View(model);
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            await _servicePropertyType.CreatePropertyTypeAsync(model);
+            return RedirectToAction(nameof(Index));
         }
+
 
         // GET: LkpPropertyTypes/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -86,17 +91,20 @@ namespace Estately.WebApp.Controllers
         public async Task<IActionResult> Edit(int id, PropertyTypeViewModel model)
         {
             if (id != model.PropertyTypeID)
-            {
                 return NotFound();
+
+            if (await _servicePropertyType.TypeNameExistsAsync(model.TypeName, id))
+            {
+                ModelState.AddModelError("TypeName", "This property type name already exists.");
             }
 
-            if (ModelState.IsValid)
-            {
-                await _servicePropertyType.UpdatePropertyTypeAsync(model);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(model);
+            if (!ModelState.IsValid)
+                return View(model);
+
+            await _servicePropertyType.UpdatePropertyTypeAsync(model);
+            return RedirectToAction(nameof(Index));
         }
+
 
         // GET: LkpPropertyTypes/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -120,8 +128,15 @@ namespace Estately.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (await _servicePropertyType.IsTypeUsedAsync(id))
+            {
+                TempData["Error"] = "Cannot delete this property type because it is used in properties.";
+                return RedirectToAction(nameof(Delete), new { id });
+            }
+
             await _servicePropertyType.DeletePropertyTypeAsync(id);
             return RedirectToAction(nameof(Index));
         }
+
     }
 }
