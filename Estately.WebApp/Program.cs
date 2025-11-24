@@ -1,12 +1,37 @@
+﻿using Estately.Core.Entities.Identity;
+using Estately.Services.Interfaces.Email;
+using Estately.Services.Implementations;
+using Microsoft.AspNetCore.Identity;
+
 namespace Estately.WebApp
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            builder.Services.AddDbContext<AppDBContext>(options =>
+                options.UseSqlServer(connectionString));
+
+            // Use custom ApplicationUser/ApplicationRole with int keys
+            builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(
+                options => options.Password = new PasswordOptions
+                {
+                    RequireDigit = true,
+                    RequireLowercase = true,
+                    RequireUppercase = true,
+                    RequireNonAlphanumeric = false,
+                    RequiredLength = 6,
+                    RequiredUniqueChars = 1
+                }
+                )
+                .AddEntityFrameworkStores<AppDBContext>()
+                .AddDefaultTokenProviders();
+
+
             //builder.Services.AddControllersWithViews();
             builder.Services.AddControllersWithViews().AddJsonOptions(options =>
             {
@@ -14,13 +39,14 @@ namespace Estately.WebApp
             });
 
             //Add Context with Connection 
-            builder.Services.AddDbContext<AppDBContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            //builder.Services.AddDbContext<AppDBContext>(options =>
+            //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            // register repositories & unitofwork
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            builder.Services.AddScoped<IServiceUser, ServiceUser>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IServiceProperty, ServiceProperty>();
             builder.Services.AddScoped<IServiceZone, ServiceZone>();
             builder.Services.AddScoped<IServiceUserType, ServiceUserType>();
@@ -33,14 +59,10 @@ namespace Estately.WebApp
 
             // Add this if not already there
             builder.Services.AddScoped<IServiceCity, ServiceCity>();
-
-
-
-            //builder.Services.AddScoped<IServiceProperty, ServiceProperty>();
-            //builder.Services.AddScoped<IServiceZone, ServiceZone>();
-            //// Add this line to register your service
-            //builder.Services.AddScoped<IServiceUserType, ServiceUserType>();
             builder.Services.AddScoped<IServicePropertyStatus, ServicePropertyStatus>();
+            builder.Services.AddScoped<AccountService>();
+            //builder.Services.AddScoped<IEmailSender,SmtpEmailSender>();
+            //builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
 
             // Add session support for admin authentication
             builder.Services.AddDistributedMemoryCache();
@@ -52,6 +74,14 @@ namespace Estately.WebApp
             });
 
             var app = builder.Build();
+
+            //// SEED USERS
+            //// ⭐ RUN SEEDING HERE
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            //    await DefaultUsersSeeder.SeedAsync(userManager);
+            //}
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -68,6 +98,7 @@ namespace Estately.WebApp
             // Enable session middleware
             app.UseSession();
             
+            app.UseAuthentication(); // Add this line to enable authentication
             app.UseAuthorization();
 
             app.MapStaticAssets();

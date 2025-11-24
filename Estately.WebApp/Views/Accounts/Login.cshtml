@@ -1,0 +1,86 @@
+﻿@model Estately.Services.ViewModels.LoginViewModel
+
+<style>
+    .auth-wrapper {
+        min-height: 100vh;
+        background: #f8fafc;
+        padding: 20px;
+    }
+
+    .auth-card {
+        max-width: 430px;
+        background: #fff;
+        border-radius: 16px;
+    }
+
+    .form-input {
+        border-radius: 12px;
+        padding: 10px 14px;
+    }
+
+    .password-field {
+        padding-right: 40px;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 14px;
+        top: 38px;
+        cursor: pointer;
+        color: #6c757d;
+    }
+</style>
+
+
+<div class="auth-wrapper d-flex justify-content-center align-items-center">
+    <div class="auth-card shadow p-4 rounded-4">
+
+        <h2 class="text-center mb-2 fw-bold header-Text">Welcome Back</h2>
+        <p class="text-center text-muted mb-4">Login to continue</p>
+
+        <form asp-action="Login" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+            <div class="mb-3">
+                <label asp-for="UserName" class="form-label"></label>
+                <input asp-for="UserName" class="form-control form-input" />
+                <span asp-validation-for="UserName" class="text-danger small"></span>
+            </div>
+            <!-- Password with toggle -->
+            <div class="mb-3 position-relative">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" type="password" class="form-control form-input password-field" />
+                <i class="fa-solid fa-eye toggle-password"></i>
+                <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+
+            <div class="form-check mb-3">
+                <input asp-for="RememberMe" class="form-check-input" />
+                <label asp-for="RememberMe" class="form-check-label">Remember Me</label>
+            </div>
+
+            <button type="submit" class="btn button w-100 py-2 rounded-3 fw-bold text-white">
+                Login
+            </button>
+
+            <div class="mt-2 text-center">
+                <span class="text-muted">Don't have an account?</span>
+                <a asp-action="Register" class="ms-1 text-decoration-none main-Text">Register here</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.querySelectorAll('.toggle-password').forEach(icon => {
+            icon.addEventListener('click', function () {
+                const input = this.previousElementSibling;
+                input.type = input.type === 'password' ? 'text' : 'password';
+                this.classList.toggle('fa-eye-slash');
+            });
+        });
+    </script>
+}

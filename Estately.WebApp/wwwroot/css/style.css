@@ -1163,6 +1163,20 @@ nav[aria-label="breadcrumb"] li:before {
   transition: 0.5s !important;
 }
 
+.site-header.scrolled .logout,
+.offcanvas .logout {
+  background-color: #dc3545 !important;
+  color: #ffffff !important;
+  transition: 0.5s !important;
+}
+
+.site-header.scrolled .logout:hover,
+.offcanvas .logout:hover {
+  background-color: #b52a37 !important;
+  color: #ffffff !important;
+  transition: 0.5s !important;
+}
+
 .offcanvas {
   width: 250px !important;
 }

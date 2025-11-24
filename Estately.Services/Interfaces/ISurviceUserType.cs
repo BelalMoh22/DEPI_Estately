@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using Estately.Services.ViewModels;
+﻿using System.Linq.Expressions;
 
 namespace Estately.Services.Interfaces
 {
@@ -40,7 +36,5 @@ namespace Estately.Services.Interfaces
 
         // Additional method that might be useful for your UserType entity
         Task<bool> IsUserTypeNameUniqueAsync(string userTypeName, int? excludeId = null);
-        Task<bool> IsTypeUsedAsync(int typeId);
-
     }
 }

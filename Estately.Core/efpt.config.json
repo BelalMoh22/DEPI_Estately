@@ -115,10 +115,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[TblUsers]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[TblZones]",
          "ObjectType": 0
       }
