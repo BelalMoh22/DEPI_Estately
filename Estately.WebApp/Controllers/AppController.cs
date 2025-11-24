@@ -1,17 +1,7 @@
-﻿using System.Security.Claims;
-﻿using Estately.Core.Entities;
-using Estately.Core.Entities.Identity;
-using Estately.Core.Interfaces;
-using Estately.Services.Interfaces;
-using Estately.Services.ViewModels;
+﻿using Estately.Core.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Hosting;
-﻿using Estately.Services.Interfaces;
-using Estately.Services.ViewModels;
-using Estately.Core.Entities;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 namespace Estately.WebApp.Controllers
 {
     public class AppController : Controller
@@ -717,6 +707,7 @@ namespace Estately.WebApp.Controllers
             bool isAgent = matches.Any();
 
             return Json(new { isAgent });
+        }
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
