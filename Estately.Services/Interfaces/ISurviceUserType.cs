@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using Estately.Services.ViewModels;
+﻿using System.Linq.Expressions;
 
 namespace Estately.Services.Interfaces
 {
