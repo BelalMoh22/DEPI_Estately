@@ -11,7 +11,6 @@ namespace Estately.WebApp.Controllers
     public class TblDepartmentsController : Controller
     {
         private readonly IServiceDepartment _serviceDep;
-
         public TblDepartmentsController(IServiceDepartment serviceDep)
         {
             _serviceDep = serviceDep;
