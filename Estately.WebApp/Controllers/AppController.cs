@@ -1,4 +1,9 @@
 ﻿using Estately.Services.Interfaces;
+using Estately.Services.ViewModels;
+using Estately.Core.Entities;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace Estately.WebApp.Controllers
 {
@@ -238,13 +243,159 @@ namespace Estately.WebApp.Controllers
         {
             return View();
         }
-        public IActionResult Favorites() 
+        [Authorize]
+        public async Task<IActionResult> Favorites() 
         {
-            return View();
+            var clientProfileId = await GetCurrentClientProfileIdAsync();
+            if (clientProfileId == null)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            var allFavorites = await _unitOfWork.FavoriteRepository.ReadAllIncluding(
+                "Property",
+                "Property.Zone",
+                "Property.Zone.City",
+                "Property.PropertyType",
+                "Property.Status",
+                "Property.TblPropertyImages");
+
+            var userFavorites = allFavorites
+                .Where(f => f.ClientProfileID == clientProfileId.Value && f.Property != null)
+                .ToList();
+
+            var favoriteProperties = userFavorites
+                .Select(f => MapToPropertyViewModel(f.Property))
+                .ToList();
+
+            return View(favoriteProperties);
         }
         public IActionResult Advertise() 
         {
             return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddFavorite(int propertyId)
+        {
+            var clientProfileId = await GetCurrentClientProfileIdAsync();
+            if (clientProfileId == null)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            var existingFavoriteQuery = _unitOfWork.FavoriteRepository.Query();
+            var existingFavorite = await existingFavoriteQuery
+                .FirstOrDefaultAsync(f => f.ClientProfileID == clientProfileId.Value && f.PropertyID == propertyId);
+
+            if (existingFavorite == null)
+            {
+                var favorite = new TblFavorite
+                {
+                    ClientProfileID = clientProfileId.Value,
+                    PropertyID = propertyId,
+                    CreatedAt = DateTime.Now
+                };
+
+                await _unitOfWork.FavoriteRepository.AddAsync(favorite);
+                await _unitOfWork.CompleteAsync();
+                TempData["FavoriteAdded"] = "Property added to favorites.";
+            }
+            else
+            {
+                TempData["FavoriteAdded"] = "This property is already in your favorites.";
+            }
+
+            var referer = Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrWhiteSpace(referer))
+            {
+                return Redirect(referer);
+            }
+
+            return RedirectToAction("Properties", "App");
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveFavorite(int propertyId)
+        {
+            var clientProfileId = await GetCurrentClientProfileIdAsync();
+            if (clientProfileId == null)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            var favoriteQuery = _unitOfWork.FavoriteRepository.Query();
+            var favorite = await favoriteQuery
+                .FirstOrDefaultAsync(f => f.ClientProfileID == clientProfileId.Value && f.PropertyID == propertyId);
+
+            if (favorite != null)
+            {
+                await _unitOfWork.FavoriteRepository.DeleteAsync(favorite.FavoriteID);
+                await _unitOfWork.CompleteAsync();
+                TempData["FavoriteRemoved"] = "Property removed from favorites.";
+            }
+
+            return RedirectToAction(nameof(Favorites));
+        }
+
+        private PropertyViewModel MapToPropertyViewModel(TblProperty property)
+        {
+            return new PropertyViewModel
+            {
+                PropertyID = property.PropertyID,
+                Address = property.Address ?? string.Empty,
+                Price = property.Price,
+                Area = property.Area,
+                BedsNo = property.BedsNo,
+                BathsNo = property.BathsNo,
+                ZoneID = property.ZoneID,
+                PropertyTypeID = property.PropertyTypeID,
+                StatusId = property.StatusId,
+                FirstImage = property.TblPropertyImages != null && property.TblPropertyImages.Any()
+                    ? (property.TblPropertyImages.First().ImagePath.Contains('/')
+                        ? property.TblPropertyImages.First().ImagePath
+                        : $"Images/Properties/{property.TblPropertyImages.First().ImagePath}")
+                    : "Images/Properties/default.jpg",
+                CityName = property.Zone?.City?.CityName,
+                ZoneName = property.Zone?.ZoneName,
+                PropertyTypeName = property.PropertyType?.TypeName ?? string.Empty,
+                StatusName = property.Status?.StatusName
+            };
+        }
+
+        private async Task<int?> GetCurrentClientProfileIdAsync()
+        {
+            if (!User.Identity?.IsAuthenticated ?? true)
+            {
+                return null;
+            }
+
+            var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(userIdValue) || !int.TryParse(userIdValue, out var userId))
+            {
+                return null;
+            }
+
+            var clientQuery = _unitOfWork.ClientProfileRepository.Query();
+            var client = await clientQuery.FirstOrDefaultAsync(c => c.UserID == userId);
+
+            if (client == null)
+            {
+                // Auto-create a minimal client profile for this authenticated user
+                client = new TblClientProfile
+                {
+                    UserID = userId
+                };
+
+                await _unitOfWork.ClientProfileRepository.AddAsync(client);
+                await _unitOfWork.CompleteAsync();
+            }
+
+            return client.ClientProfileID;
         }
     }
 }

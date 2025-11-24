@@ -80,6 +80,24 @@
     }
 </style>
 
+@if (TempData["FavoriteAdded"] != null)
+{
+    var favoriteMessage = TempData["FavoriteAdded"]?.ToString() ?? string.Empty;
+    var isWarning = favoriteMessage.Contains("already", StringComparison.OrdinalIgnoreCase);
+    var toastClass = isWarning ? "text-bg-warning" : "text-bg-success";
+
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+        <div class="toast show align-items-center @toastClass border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    @favoriteMessage
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+}
+
 <div class="hero page-inner overlay"
      style="background-image: url('@Url.Content("~/images/hero_bg_1.jpg")')">
     <div class="container">
@@ -146,6 +164,21 @@
 
                                 <a asp-action="PropertySingle" asp-controller="App" asp-route-id="@property.PropertyID"
                                    class="btn button py-2 px-3">See details</a>
+
+                                @if (User?.Identity != null && User.Identity.IsAuthenticated)
+                                {
+                                    <form asp-action="AddFavorite" asp-controller="App" method="post" class="d-inline ms-2" data-preserve-scroll="true">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="propertyId" value="@property.PropertyID" />
+                                        <button type="submit" class="btn btn-outline-secondary py-2 px-3">Add to favorites</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <a asp-action="Login" asp-controller="Accounts"
+                                       class="btn btn-outline-secondary py-2 px-3 ms-2">Add to favorites</a>
+                                }
+
                             </div>
                         </div>
 
