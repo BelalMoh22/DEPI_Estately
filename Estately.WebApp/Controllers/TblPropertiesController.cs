@@ -12,11 +12,132 @@
             _unitOfWork = unitOfWork;
             _env = env;
         }
+
         // --------------------------- INDEX ---------------------------
         public async Task<IActionResult> Index(int page = 1, int pageSize = 10, string? search = null)
         {
             var vm = await _service.GetPropertiesPagedAsync(page, pageSize, search);
             return View(vm);
+        }
+
+        // --------------------------- FIXED ZONES API ---------------------------
+        [HttpGet]
+        public async Task<IActionResult> GetAllZones()
+        {
+            var zones = await _service.GetAllZonesAsync();
+            var result = zones
+                .Select(z => new {
+                    id = z.ZoneId,
+                    name = z.ZoneName,
+                    displayName = !string.IsNullOrWhiteSpace(z.City) ? $"{z.ZoneName}, {z.City}" : z.ZoneName
+                })
+                .OrderBy(z => z.name)
+                .ToList();
+            return Json(result);
+        }
+
+        // --------------------------- CITIES API ---------------------------
+        [HttpGet]
+        public async Task<IActionResult> GetAllCities()
+        {
+            var cities = await _unitOfWork.CityRepository.ReadAllAsync();
+            var result = cities
+                .Where(c => !string.IsNullOrWhiteSpace(c.CityName))
+                .Select(c => new { id = c.CityID, name = c.CityName })
+                .OrderBy(c => c.name)
+                .ToList();
+            return Json(result);
+        }
+
+        // --------------------------- FIXED AREAS API ---------------------------
+        [HttpGet]
+        public async Task<IActionResult> GetAllAreas()
+        {
+            var zones = await _service.GetAllZonesAsync();
+            var result = zones
+                .Select(z => new {
+                    id = z.ZoneId,
+                    name = z.ZoneName,
+                    cityName = z.City ?? "",
+                    displayName = !string.IsNullOrWhiteSpace(z.City) ? $"{z.ZoneName}, {z.City}" : z.ZoneName
+                })
+                .OrderBy(z => z.name)
+                .ToList();
+            return Json(result);
+        }
+
+        // --------------------------- DEVELOPERS API ---------------------------
+        [HttpGet]
+        public async Task<IActionResult> GetAllDevelopers()
+        {
+            var developers = await _unitOfWork.DeveloperProfileRepository.ReadAllAsync();
+            var result = developers
+                .Where(d => !string.IsNullOrWhiteSpace(d.DeveloperName))
+                .Select(d => new { id = d.DeveloperProfileID, name = d.DeveloperName })
+                .OrderBy(d => d.name)
+                .ToList();
+            return Json(result);
+        }
+
+        // --------------------------- AMENITIES API ---------------------------
+        [HttpGet]
+        public async Task<IActionResult> GetAllAmenities()
+        {
+            var features = await _unitOfWork.PropertyFeatureRepository.ReadAllAsync();
+            var result = features
+                .Where(f => !string.IsNullOrWhiteSpace(f.FeatureName))
+                .Select(f => new { id = f.FeatureID, name = f.FeatureName })
+                .OrderBy(f => f.name)
+                .ToList();
+            return Json(result);
+        }
+
+        // --------------------------- SUGGESTIONS API ---------------------------
+        [HttpGet]
+        public async Task<IActionResult> Suggestions(string category, string term)
+        {
+            if (string.IsNullOrWhiteSpace(category) || string.IsNullOrWhiteSpace(term))
+            {
+                return Json(new List<object>());
+            }
+
+            term = term.ToLower().Trim();
+            var suggestions = new List<object>();
+
+            switch (category.ToLower())
+            {
+                case "zones":
+                    var zones = await _unitOfWork.ZoneRepository.ReadAllAsync();
+                    suggestions = zones
+                        .Where(z => z.ZoneName != null && z.ZoneName.ToLower().Contains(term))
+                        .Take(10)
+                        .Select(z => new { id = z.ZoneID.ToString(), name = z.ZoneName, text = z.ZoneName })
+                        .Cast<object>()
+                        .ToList();
+                    break;
+
+                case "developers":
+                    var developers = await _unitOfWork.DeveloperProfileRepository.ReadAllAsync();
+                    suggestions = developers
+                        .Where(d => d.DeveloperTitle != null && d.DeveloperTitle.ToLower().Contains(term))
+                        .Take(10)
+                        .Select(d => new { id = d.DeveloperProfileID.ToString(), name = d.DeveloperTitle, text = d.DeveloperTitle })
+                        .Cast<object>()
+                        .ToList();
+                    break;
+
+                case "cities":
+                    var cities = await _unitOfWork.CityRepository.ReadAllAsync();
+                    suggestions = cities
+                        .Where(c => c.CityName != null && c.CityName.ToLower().Contains(term))
+                        .Take(10)
+                        .Select(c => new { id = c.CityID.ToString(), name = c.CityName, text = c.CityName })
+                        .Cast<object>()
+                        .ToList();
+                    break;
+            }
+
+            return Json(suggestions);
         }
 
         // --------------------------- CREATE GET ---------------------------
@@ -34,6 +155,7 @@
 
             return View(vm);
         }
+
         // --------------------------- CREATE POST ---------------------------
         //    if (vm.Price <= 0)
         //    {
@@ -213,7 +335,6 @@
             if (vm == null)
                 return NotFound();
 
-            // Ensure features and lookup collections are populated for the view
             vm = await BuildPropertyViewModelAsync(vm);
 
             return View(vm);
@@ -254,7 +375,6 @@
             return RedirectToAction(nameof(Index));
         }
 
-
         // ---------------------------------------------------------------
         // IMAGE HANDLING
         // ---------------------------------------------------------------
@@ -275,7 +395,6 @@
                 string originalName = Path.GetFileNameWithoutExtension(file.FileName);
                 string timeStamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
                 string safeBaseName = string.IsNullOrWhiteSpace(originalName) ? "image" : originalName.Trim();
-                // Final file name: OriginalName_yyyyMMddHHmmssfff.ext
                 string name = $"{safeBaseName}_{timeStamp}{ext}";
                 string path = Path.Combine(folder, name);
 
@@ -289,6 +408,7 @@
                 });
             }
         }
+
         private async Task DeleteImageFromDiskAndDb(int id)
         {
             var img = await _unitOfWork.PropertyImageRepository.GetByIdAsync(id);
@@ -303,7 +423,7 @@
         }
 
         // ---------------------------------------------------------------
-        // BUILD VIEWMODEL (NO VIEWBAG)
+        // BUILD VIEWMODEL
         // ---------------------------------------------------------------
         private async Task<PropertyViewModel> BuildPropertyViewModelAsync(PropertyViewModel vm)
         {
@@ -313,7 +433,6 @@
             vm.Developers = await _service.GetAllDevelopersAsync();
             vm.Zones = await _service.GetAllZonesAsync();
 
-            // Strong typed Agents list
             var employees = await _unitOfWork.EmployeeRepository.ReadAllIncluding("JobTitle");
             employees = employees.Where(e => e.JobTitle?.JobTitleName == "Sales Agent");
 
