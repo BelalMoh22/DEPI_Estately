@@ -27,7 +27,7 @@
         public IRepository<LkpPropertyStatus> PropertyStatusRepository { get; }
         public IRepository<LkpPropertyHistoryType> PropertyHistoryTypeRepository { get; }
         public IRepository<LkpPropertyType> PropertyTypeRepository { get; }
-        public IRepository<TblUser> UserRepository { get; }
+        public IUserRepository UserRepository { get; }
         public IRepository<LkpUserType> UserTypeRepository { get; }
         public IRepository<TblZone> ZoneRepository { get; }
 
@@ -55,7 +55,8 @@
             IRepository<LkpPropertyStatus> propertyStatusRepo,
             IRepository<LkpPropertyHistoryType> propertyHistoryTypeRepo,
             IRepository<LkpPropertyType> propertyTypeRepo,
-            IRepository<TblUser> userRepo,
+            IUserRepository userRepo,
+            //IRepository<TblUser> userRepo,
             IRepository<LkpUserType> userTypeRepo,
             IRepository<TblZone> zoneRepo)
         {

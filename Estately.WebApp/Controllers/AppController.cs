@@ -226,6 +226,18 @@ namespace Estately.WebApp.Controllers
         {
             return View();
         }
+        public IActionResult ClientAccount()
+        {
+            return View();
+        }
+        public IActionResult EmployeeAccount()
+        {
+            return View();
+        }
+        public IActionResult DeveloperAccount()
+        {
+            return View();
+        }
         public IActionResult Favorites() 
         {
             return View();
