@@ -1,7 +1,7 @@
-﻿@model Estately.Services.ViewModels.PropertyStatusViewModel
+﻿@model Estately.Services.ViewModels.PropertyFeatureViewModel
 
 @{
-    ViewData["Title"] = "Create Property Status";
+    ViewData["Title"] = "Create Property Feature";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -18,14 +18,13 @@
 </style>
 
 <div class="table-container">
-    <h4>Create Property Status</h4>
+    <h4>Create Property Feature</h4>
 
     <form asp-action="Create" method="post" class="mt-4">
-
         <div class="mb-3">
-            <label>Status Name <span class="text-danger">*</span></label>
-            <input asp-for="StatusName" class="form-control" />
-            <span asp-validation-for="StatusName" class="text-danger"></span>
+            <label>Feature Name <span class="text-danger">*</span></label>
+            <input asp-for="FeatureName" class="form-control" />
+            <span asp-validation-for="FeatureName" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
@@ -34,12 +33,11 @@
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
 
-        @* لو محتاج تضيف properties count من الادمن *@
-        @* <div class="mb-3">
-        <label>Properties Count</label>
-        <input asp-for="PropertiesCount" class="form-control" />
-        <span asp-validation-for="PropertiesCount" class="text-danger"></span>
-    </div> *@
+        <div class="mb-3 form-check">
+            <input asp-for="IsAmenity" class="form-check-input" />
+            <label asp-for="IsAmenity" class="form-check-label">Is Amenity?</label>
+            <span asp-validation-for="IsAmenity" class="text-danger"></span>
+        </div>
 
         <div class="mt-4">
             <button type="submit" class="btn btn-create">
@@ -49,7 +47,6 @@
                 <i class="bi bi-arrow-left-circle me-2"></i>Back to List
             </a>
         </div>
-
     </form>
 </div>
 

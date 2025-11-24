@@ -117,11 +117,11 @@ namespace Estately.Services.ViewModels
     // -----------------------
     // Features (NEW)
     // -----------------------
-    public class PropertyFeatureViewModel
-    {
-        public int FeatureID { get; set; }
-        public string FeatureName { get; set; }
-    }
+    //public class PropertyFeatureViewModel
+    //{
+    //    public int FeatureID { get; set; }
+    //    public string FeatureName { get; set; }
+    //}
 
     public class PropertyFeatureMappingViewModel
     {

@@ -38,18 +38,19 @@ namespace Estately.WebApp.Controllers
         // GET: TblDepartments/Create
         public async Task<IActionResult> Create()
         {
-            var model = new DepartmentsViewModel();
-
             var employees = await _serviceDep.GetAllManagersAsync();
 
-            ViewBag.Managers = employees.Select(e => new SelectListItem
-            {
-                Value = e.FirstName + " " + e.LastName,
-                Text = e.FirstName + " " + e.LastName
-            }).ToList();
+            ViewBag.Managers = employees
+                .Select(e => new SelectListItem
+                {
+                    Value = $"{e.FirstName} {e.LastName}",
+                    Text = $"{e.FirstName} {e.LastName}"
+                })
+                .ToList();
 
-            return View(model);
+            return View(new DepartmentsViewModel());
         }
+
 
 
         // POST: TblDepartments/Create
@@ -59,30 +60,61 @@ namespace Estately.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(DepartmentsViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _serviceDep.CreateDepartmentAsync(model);
-                return RedirectToAction(nameof(Index));
+                await LoadManagersAsync();
+                return View(model);
             }
 
-            return View(model);
+            // 1) Duplicate Name
+            if (await _serviceDep.DepartmentNameExistsAsync(model.DepartmentName, null))
+            {
+                ModelState.AddModelError("DepartmentName", "This department already exists.");
+                await LoadManagersAsync();
+                return View(model);
+            }
+
+            // 2) Manager already assigned
+            if (!string.IsNullOrEmpty(model.ManagerName) &&
+                await _serviceDep.ManagerAssignedAsync(model.ManagerName, null))
+            {
+                ModelState.AddModelError("ManagerName", "This manager is already assigned to another department.");
+                await LoadManagersAsync();
+                return View(model);
+            }
+
+            // 3) Email unique
+            if (!string.IsNullOrEmpty(model.Email) &&
+                await _serviceDep.EmailExistsAsync(model.Email, null))
+            {
+                ModelState.AddModelError("Email", "This email is already used by another department.");
+                await LoadManagersAsync();
+                return View(model);
+            }
+
+            await _serviceDep.CreateDepartmentAsync(model);
+            return RedirectToAction(nameof(Index));
         }
+
+
 
         // GET: TblDepartments/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             var model = await _serviceDep.GetDepartmentByIdAsync(id);
+            if (model == null) return NotFound();
 
-            var managers = await _serviceDep.GetAllManagersAsync();
-
-            ViewBag.Managers = new SelectList(
-                managers,
-                "FirstName",  // or FullName if you add property
-                "FirstName"
-            );
+            var employees = await _serviceDep.GetAllManagersAsync();
+            ViewBag.Managers = employees.Select(e => new SelectListItem
+            {
+                Value = $"{e.FirstName} {e.LastName}",
+                Text = $"{e.FirstName} {e.LastName}",
+                Selected = model.ManagerName == $"{e.FirstName} {e.LastName}"
+            }).ToList();
 
             return View(model);
         }
+
 
         // POST: TblDepartments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -94,14 +126,43 @@ namespace Estately.WebApp.Controllers
             if (id != model.DepartmentID)
                 return NotFound();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _serviceDep.UpdateDepartmentAsync(model);
-                return RedirectToAction(nameof(Index));
+                await LoadManagersAsync();
+                return View(model);
             }
 
-            return View(model);
+            // 1) Duplicate name (excluding current)
+            if (await _serviceDep.DepartmentNameExistsAsync(model.DepartmentName, model.DepartmentID))
+            {
+                ModelState.AddModelError("DepartmentName", "Another department with this name already exists.");
+                await LoadManagersAsync();
+                return View(model);
+            }
+
+            // 2) Manager assigned elsewhere
+            if (!string.IsNullOrEmpty(model.ManagerName) &&
+                await _serviceDep.ManagerAssignedAsync(model.ManagerName, model.DepartmentID))
+            {
+                ModelState.AddModelError("ManagerName", "This manager is already assigned to another department.");
+                await LoadManagersAsync();
+                return View(model);
+            }
+
+            // 3) Unique email on edit
+            if (!string.IsNullOrEmpty(model.Email) &&
+                await _serviceDep.EmailExistsAsync(model.Email, model.DepartmentID))
+            {
+                ModelState.AddModelError("Email", "This email is already used by another department.");
+                await LoadManagersAsync();
+                return View(model);
+            }
+
+            await _serviceDep.UpdateDepartmentAsync(model);
+            return RedirectToAction(nameof(Index));
         }
+
+
 
         // GET: TblDepartments/Delete/5
         public async Task<IActionResult> Delete(int id)
@@ -120,14 +181,27 @@ namespace Estately.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var model = await _serviceDep.GetDepartmentByIdAsync(id);
-            if (model == null)
+            // Prevent delete if employees exist
+            if (await _serviceDep.HasEmployeesAsync(id))
             {
-                return NotFound();
+                TempData["Error"] = "Cannot delete this department because it has assigned employees.";
+                return RedirectToAction(nameof(Index));
             }
 
             await _serviceDep.DeleteDepartmentAsync(id);
             return RedirectToAction(nameof(Index));
         }
+
+
+        private async Task LoadManagersAsync()
+        {
+            var managers = await _serviceDep.GetAllManagersAsync();
+            ViewBag.Managers = managers.Select(m => new SelectListItem
+            {
+                Text = m.FirstName + " " + m.LastName,
+                Value = m.FirstName + " " + m.LastName
+            });
+        }
+
     }
 }

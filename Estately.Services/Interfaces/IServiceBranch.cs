@@ -16,6 +16,10 @@ namespace Estately.Services.Interfaces
         Task DeleteBranchAsync(int id);
         Task<int> GetBranchCounterAsync();
         Task<IEnumerable<TblEmployee>> GetAllManagersAsync();
+        Task<bool> BranchHasEmployeesAsync(int branchId);
+        Task<bool> BranchNameExistsAsync(string branchName, int? branchId);
+        Task<bool> ManagerAssignedElsewhereAsync(string managerName, int? branchId);
+        Task<bool> BranchPhoneExistsAsync(string phone, int? branchId);
         int GetMaxIDAsync();
         ValueTask<IEnumerable<TblBranch>> SearchZoneAsync(Expression<Func<TblBranch, bool>> predicate);
     }

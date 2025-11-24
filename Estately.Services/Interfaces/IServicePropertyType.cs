@@ -16,6 +16,8 @@ namespace Estately.Services.Interfaces
         Task UpdatePropertyTypeAsync(PropertyTypeViewModel model);
         Task DeletePropertyTypeAsync(int id);
         Task<int> GetPropertyTypeCounterAsync();
+        Task<bool> TypeNameExistsAsync(string typeName, int? id);
+        Task<bool> IsTypeUsedAsync(int typeId);
         int GetMaxIDAsync();
         ValueTask<IEnumerable<LkpPropertyType>> SearchPropertyTypeAsync(Expression<Func<LkpPropertyType, bool>> predicate);
     }
