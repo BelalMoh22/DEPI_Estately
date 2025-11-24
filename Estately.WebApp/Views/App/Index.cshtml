@@ -147,6 +147,71 @@
     </div>
 </div>
 
+<!-- Toast container for Sales Agent verification -->
+<div aria-live="polite" aria-atomic="true" class="position-relative">
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+        <div id="verifyToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="verifyToastBody">
+                    Agent verified successfully.
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var verifyBtn = document.getElementById('verifyAgentBtn');
+        var phoneInput = document.getElementById('phoneNumber');
+        var toastElement = document.getElementById('verifyToast');
+        var toastBody = document.getElementById('verifyToastBody');
+
+        if (!verifyBtn || !phoneInput || !toastElement || !toastBody || typeof bootstrap === 'undefined') {
+            return;
+        }
+
+        var toast = new bootstrap.Toast(toastElement);
+
+        verifyBtn.addEventListener('click', function () {
+            var phone = (phoneInput.value || '').trim();
+            if (!phone) {
+                toastBody.textContent = 'Please enter a phone number.';
+                toastElement.classList.remove('bg-success');
+                toastElement.classList.add('bg-danger');
+                toast.show();
+                return;
+            }
+
+            var url = '/App/VerifySalesAgent?phone=' + encodeURIComponent(phone);
+
+            fetch(url, {
+                method: 'GET'
+            })
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    if (data && data.isAgent) {
+                        toastBody.textContent = 'This phone number belongs to a verified sales agent.';
+                        toastElement.classList.remove('bg-danger');
+                        toastElement.classList.add('bg-success');
+                    } else {
+                        toastBody.textContent = 'This phone number is not registered as a sales agent.';
+                        toastElement.classList.remove('bg-success');
+                        toastElement.classList.add('bg-danger');
+                    }
+                    toast.show();
+                })
+                .catch(function () {
+                    toastBody.textContent = 'An error occurred while verifying the sales agent.';
+                    toastElement.classList.remove('bg-success');
+                    toastElement.classList.add('bg-danger');
+                    toast.show();
+                });
+        });
+    });
+</script>
+
 <!-- City Selection Modal -->
 <div class="modal fade desktop-filter-modal" id="cityModal" tabindex="-1" aria-labelledby="cityModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -645,7 +710,7 @@
                                     data-bs-dismiss="modal">
                                 Cancel
                             </button>
-                            <button type="button" class="btn button mt-3">Verify</button>
+                            <button type="button" class="btn button mt-3" id="verifyAgentBtn">Verify</button>
                         </div>
                     </div>
                 </div>

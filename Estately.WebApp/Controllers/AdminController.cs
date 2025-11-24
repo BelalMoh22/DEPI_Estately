@@ -16,6 +16,17 @@ namespace Estately.WebApp.Controllers
         }
         public async Task<IActionResult> Dashboard()
         {
+            if (User?.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            var userTypeId = User.FindFirst("UserTypeId")?.Value;
+            if (userTypeId != "4")
+            {
+                return RedirectToAction("Index", "App");
+            }
+
             var stats = new
             {
                 TotalUsers = (await _unitOfWork.UserRepository.GetAllAsync()).Count(),
@@ -25,7 +36,7 @@ namespace Estately.WebApp.Controllers
                 TotalClients = (await _unitOfWork.ClientProfileRepository.ReadAllAsync()).Count(),
                 TotalBranches = (await _unitOfWork.BranchRepository.ReadAllAsync()).Count()
             };
-              
+
             ViewBag.Stats = stats;
             return View();
         }
