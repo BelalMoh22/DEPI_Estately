@@ -23,6 +23,7 @@ namespace Estately.Services.Implementations
                 "PropertyType",
                 "Status",
                 "Zone",
+                "Agent",
                 "TblPropertyImages",
                 "TblPropertyFeaturesMappings"
             );
@@ -320,6 +321,7 @@ namespace Estately.Services.Implementations
                 "PropertyType",
                 "Status",
                 "Zone",
+                "Agent",
                 "TblPropertyImages",
                 "TblPropertyFeaturesMappings"
             );
@@ -391,7 +393,7 @@ namespace Estately.Services.Implementations
             var entity = await _unitOfWork.PropertyRepository.GetByIdAsync(model.PropertyID);
             if (entity == null) return;
 
-            // Update scalar fields on the already-tracked entity to avoid EF tracking conflicts
+            // EF is tracking this entity, so modifying fields is enough
             entity.Address = model.Address;
             entity.Area = model.Area;
             entity.Price = model.Price;
@@ -409,29 +411,29 @@ namespace Estately.Services.Implementations
             entity.ExpectedRentPrice = model.ExpectedRentPrice;
             entity.YearBuilt = model.YearBuilt;
             entity.ListingDate = model.ListingDate;
-            entity.IsDeleted = model.IsDeleted ?? entity.IsDeleted;
 
-            await _unitOfWork.PropertyRepository.UpdateAsync(entity);
+            // ❌ Remove this line:
+            // await _unitOfWork.PropertyRepository.UpdateAsync(entity);
 
-            // Add new images (existing ones are only removed when the user clicks X,
-            // which is handled in the controller via DeleteImageFromDiskAndDb)
+            // Save new images
             if (model.Images != null)
             {
                 foreach (var img in model.Images)
                 {
-                    await _unitOfWork.PropertyImageRepository.AddAsync(
-                        new TblPropertyImage
-                        {
-                            PropertyID = model.PropertyID,
-                            ImagePath = img.ImagePath,
-                            UploadedDate = DateTime.Now
-                        });
+                    await _unitOfWork.PropertyImageRepository.AddAsync(new TblPropertyImage
+                    {
+                        PropertyID = model.PropertyID,
+                        ImagePath = img.ImagePath,
+                        UploadedDate = DateTime.Now
+                    });
                 }
             }
 
-            // Replace feature mappings
-            var maps = await _unitOfWork.PropertyFeaturesMappingRepository.ReadAllAsync();
-            var oldMaps = maps.Where(f => f.PropertyID == model.PropertyID);
+            // Replace features
+            var maps = await _unitOfWork.PropertyFeaturesMappingRepository
+                                        .ReadAllAsync();
+
+            var oldMaps = maps.Where(f => f.PropertyID == model.PropertyID).ToList();
 
             foreach (var m in oldMaps)
             {
@@ -449,8 +451,10 @@ namespace Estately.Services.Implementations
                     });
             }
 
+            // Final save
             await _unitOfWork.CompleteAsync();
         }
+
 
         // ----------------------------------------------------
         // DELETE
@@ -459,6 +463,15 @@ namespace Estately.Services.Implementations
         {
             var entity = await _unitOfWork.PropertyRepository.GetByIdAsync(id);
             if (entity == null) return;
+            // Only allow delete when status is "Unavailable"
+            var statuses = await _unitOfWork.PropertyStatusRepository.ReadAllAsync();
+            var unavailableStatus = statuses.FirstOrDefault(s => s.StatusName == "Unavailable");
+
+            if (unavailableStatus == null || entity.StatusId != unavailableStatus.StatusID)
+            {
+                // Do not delete if status is not "Unavailable"
+                return;
+            }
 
             entity.IsDeleted = true;
 
@@ -563,6 +576,9 @@ namespace Estately.Services.Implementations
                 ZoneName = p.Zone?.ZoneName ?? "",
                 CityName = p.Zone?.City?.CityName ?? "",
                 AgentName = $"{p.Agent?.FirstName} {p.Agent?.LastName}",
+                StatusName = p.Status?.StatusName ?? "Available",
+                ZoneName = p.Zone?.ZoneName,
+                AgentName = p.Agent != null ? $"{p.Agent.FirstName} {p.Agent.LastName}" : null,
 
                 Images = p.TblPropertyImages?
                     .Select(i => new PropertyImageViewModel
@@ -603,7 +619,6 @@ namespace Estately.Services.Implementations
                 IsDeleted = vm.IsDeleted ?? false
             };
         }
-
         // ----------------------------------------------------
         // REQUIRED INTERFACE METHODS (ADDED)
         // ----------------------------------------------------

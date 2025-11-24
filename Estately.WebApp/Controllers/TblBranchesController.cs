@@ -1,4 +1,5 @@
-﻿using Estately.Services.Interfaces;
+﻿using Estately.Services.Implementations;
+using Estately.Services.Interfaces;
 using Estately.Services.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -65,14 +66,33 @@ namespace Estately.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(BranchViewModel model)
         {
-            if (ModelState.IsValid)
+            if (await _serviceBranch.BranchNameExistsAsync(model.BranchName, null))
+                ModelState.AddModelError("BranchName", "This branch name already exists.");
+
+            if (!string.IsNullOrEmpty(model.ManagerName) &&
+                await _serviceBranch.ManagerAssignedElsewhereAsync(model.ManagerName, null))
+                ModelState.AddModelError("ManagerName", "This manager is already assigned to another branch.");
+
+            if (await _serviceBranch.BranchPhoneExistsAsync(model.Phone, null))
+                ModelState.AddModelError("Phone", "This phone number already exists for another branch.");
+
+            if (!ModelState.IsValid)
             {
-                await _serviceBranch.CreateBranchAsync(model);
-                return RedirectToAction(nameof(Index));
+                var managers = await _serviceBranch.GetAllManagersAsync();
+                ViewBag.Managers = managers.Select(m => new SelectListItem
+                {
+                    Value = $"{m.FirstName} {m.LastName}",
+                    Text = $"{m.FirstName} {m.LastName}"
+                }).ToList();
+
+                return View(model);
             }
 
-            return View(model);
+            await _serviceBranch.CreateBranchAsync(model);
+            TempData["Success"] = "Branch created successfully.";
+            return RedirectToAction(nameof(Index));
         }
+
 
         // ===============================
         // GET: TblBranches/Edit/5
@@ -95,7 +115,6 @@ namespace Estately.WebApp.Controllers
             return View(model);
         }
 
-
         // ===============================
         // POST: TblBranches/Edit/5
         // ===============================
@@ -104,24 +123,35 @@ namespace Estately.WebApp.Controllers
         public async Task<IActionResult> Edit(int id, BranchViewModel model)
         {
             if (id != model.BranchID)
-                return BadRequest();
+                return NotFound();
 
             if (!ModelState.IsValid)
-            {
-                // 🔥 FIX — Repopulate managers dropdown
-                var managers = await _serviceBranch.GetAllManagersAsync();
-                ViewBag.Managers = managers.Select(m => new SelectListItem
-                {
-                    Value = $"{m.FirstName} {m.LastName}",
-                    Text = $"{m.FirstName} {m.LastName}"
-                }).ToList();
+                return View(model);
 
+            // 🔥 UNIQUE BRANCH NAME CHECK ON UPDATE
+            if (await _serviceBranch.BranchNameExistsAsync(model.BranchName, model.BranchID))
+            {
+                ModelState.AddModelError("BranchName", "This branch name already exists.");
+                return View(model);
+            }
+
+            // 🔥 CHECK IF MANAGER IS ALREADY ASSIGNED TO ANOTHER BRANCH (EXCLUDING THIS ONE)
+            if (!string.IsNullOrEmpty(model.ManagerName) &&
+                await _serviceBranch.ManagerAssignedElsewhereAsync(model.ManagerName, model.BranchID))
+            {
+                ModelState.AddModelError("ManagerName", "This manager is already assigned to another branch.");
+                return View(model);
+            }
+
+            // 🔥 UNIQUE PHONE CHECK ON UPDATE
+            if (await _serviceBranch.BranchPhoneExistsAsync(model.Phone, model.BranchID))
+            {
+                ModelState.AddModelError("Phone", "This phone number already exists for another branch.");
                 return View(model);
             }
 
             await _serviceBranch.UpdateBranchAsync(model);
-
-            TempData["Success"] = "Branch updated successfully";
+            TempData["Success"] = "Branch updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -141,15 +171,24 @@ namespace Estately.WebApp.Controllers
         // POST: TblBranches/Delete/5
         // ===============================
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var model = await _serviceBranch.GetBranchByIdAsync(id);
             if (model == null)
+            {
                 return NotFound();
+            }
+
+            if (await _serviceBranch.BranchHasEmployeesAsync(id))
+            {
+                TempData["Error"] = "Cannot delete this branch because it contains employees. You must delete those employees first.";
+                return RedirectToAction(nameof(Delete), new { id });
+            }
 
             await _serviceBranch.DeleteBranchAsync(id);
+            TempData["Success"] = "Branch deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
+
     }
 }

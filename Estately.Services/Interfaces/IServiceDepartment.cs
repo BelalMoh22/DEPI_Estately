@@ -15,6 +15,11 @@ namespace Estately.Services.Interfaces
         Task UpdateDepartmentAsync(DepartmentsViewModel model);
         Task DeleteDepartmentAsync(int id);
         Task<IEnumerable<TblEmployee>> GetAllManagersAsync();
+        Task<bool> DepartmentNameExistsAsync(string name, int? departmentId);
+        //Task<bool> DepartmentNameExistsForEditAsync(string name, int id);
+        Task<bool> EmailExistsAsync(string email, int? id);
+        Task<bool> ManagerAssignedAsync(string managerName, int? id);
+        Task<bool> HasEmployeesAsync(int departmentId);
         Task<int> GetDepartmentCounterAsync();
         int GetMaxIDAsync();
         ValueTask<IEnumerable<TblDepartment>> SearchDepartmentAsync(Expression<Func<TblDepartment, bool>> predicate);
