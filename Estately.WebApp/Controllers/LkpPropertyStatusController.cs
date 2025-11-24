@@ -64,6 +64,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _service.CreatePropertyStatusAsync(model);
+            TempData["Success"] = "Status created successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -94,6 +95,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _service.UpdatePropertyStatusAsync(model);
+            TempData["Success"] = "Status updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -144,6 +146,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _service.DeletePropertyStatusAsync(id);
+            TempData["Success"] = "Status deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

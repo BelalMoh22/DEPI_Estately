@@ -10,7 +10,6 @@ namespace Estately.Services.ViewModels
         // -----------------------
         // Foreign Keys
         // -----------------------
-        [Required(ErrorMessage = "Developer Profile is required")]
         public int? DeveloperProfileID { get; set; }
 
         [Required(ErrorMessage = "Property Type is required")]
@@ -48,22 +47,16 @@ namespace Estately.Services.ViewModels
 
         public bool? IsDeleted { get; set; } = false; // ignored in UI
 
-        [Required]
         public int YearBuilt { get; set; }
 
-        [Required]
         public int? FloorNo { get; set; }
 
-        [Required]
         public int BedsNo { get; set; }
 
-        [Required]
         public int BathsNo { get; set; }
 
-        [Required]
         public decimal Latitude { get; set; }
 
-        [Required]
         public decimal Longitude { get; set; }
 
         public bool? IsFurnished { get; set; }

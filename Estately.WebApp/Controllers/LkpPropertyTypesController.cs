@@ -65,6 +65,7 @@ namespace Estately.WebApp.Controllers
                 return View(model);
 
             await _servicePropertyType.CreatePropertyTypeAsync(model);
+            TempData["Success"] = "Property type created successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -102,6 +103,7 @@ namespace Estately.WebApp.Controllers
                 return View(model);
 
             await _servicePropertyType.UpdatePropertyTypeAsync(model);
+            TempData["Success"] = "Property type updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -135,6 +137,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _servicePropertyType.DeletePropertyTypeAsync(id);
+            TempData["Success"] = "Property type deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

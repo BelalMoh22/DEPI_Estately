@@ -53,6 +53,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _serviceAppointment.CreateAppointmentAsync(model);
+            TempData["Success"] = "Appointment created successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -100,6 +101,7 @@ namespace Estately.WebApp.Controllers
                 return NotFound();
 
             await _serviceAppointment.UpdateAppointmentAsync(model);
+            TempData["Success"] = "Appointment updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -121,6 +123,7 @@ namespace Estately.WebApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _serviceAppointment.DeleteAppointmentAsync(id);
+            TempData["Success"] = "Appointment deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

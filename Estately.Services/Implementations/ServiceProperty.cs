@@ -210,6 +210,15 @@ namespace Estately.Services.Implementations
         {
             var entity = await _unitOfWork.PropertyRepository.GetByIdAsync(id);
             if (entity == null) return;
+            // Only allow delete when status is "Unavailable"
+            var statuses = await _unitOfWork.PropertyStatusRepository.ReadAllAsync();
+            var unavailableStatus = statuses.FirstOrDefault(s => s.StatusName == "Unavailable");
+
+            if (unavailableStatus == null || entity.StatusId != unavailableStatus.StatusID)
+            {
+                // Do not delete if status is not "Unavailable"
+                return;
+            }
 
             entity.IsDeleted = true;
 
@@ -310,9 +319,9 @@ namespace Estately.Services.Implementations
 
                 DeveloperTitle = p.DeveloperProfile?.DeveloperTitle,
                 PropertyTypeName = p.PropertyType?.TypeName,
-                StatusName = p.Status.StatusName ?? "Available",
-                ZoneName = p.Zone.ZoneName,
-                AgentName = $"{p.Agent?.FirstName} {p.Agent?.LastName}",
+                StatusName = p.Status?.StatusName ?? "Available",
+                ZoneName = p.Zone?.ZoneName,
+                AgentName = p.Agent != null ? $"{p.Agent.FirstName} {p.Agent.LastName}" : null,
 
                 Images = p.TblPropertyImages?
                     .Select(i => new PropertyImageViewModel
@@ -353,7 +362,6 @@ namespace Estately.Services.Implementations
                 IsDeleted = vm.IsDeleted ?? false
             };
         }
-
         // ----------------------------------------------------
         // REQUIRED INTERFACE METHODS (ADDED)
         // ----------------------------------------------------

@@ -29,13 +29,12 @@
 
             vm = await BuildPropertyViewModelAsync(vm);
 
+            // Ensure status dropdown starts with the "-- Select --" placeholder
+            vm.StatusId = 0;
+
             return View(vm);
         }
         // --------------------------- CREATE POST ---------------------------
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create(PropertyViewModel vm)
-        //{
         //    if (vm.Price <= 0)
         //    {
         //        ModelState.AddModelError("Price", "Price is required.");
@@ -69,12 +68,6 @@
         //    {
         //        vm = await BuildPropertyViewModelAsync(vm);
         //        return View(vm);
-        //    }
-
-        //    await HandleImageUpload(vm);
-        //    await _service.CreatePropertyAsync(vm);
-        //    return RedirectToAction(nameof(Index));
-        //}
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PropertyViewModel vm)
@@ -97,8 +90,26 @@
             if (vm.ZoneID <= 0)
                 ModelState.AddModelError("ZoneID", "Zone is required.");
 
-            if (vm.UploadedFiles == null || vm.UploadedFiles.Count < 3)
-                ModelState.AddModelError("UploadedFiles", "You must upload at least 3 images.");
+            if (vm.UploadedFiles == null || vm.UploadedFiles.Count < 1)
+                ModelState.AddModelError("UploadedFiles", "You must upload at least 1 image.");
+
+            // -----------------------------
+            // 🔥 Duplicate address validation
+            // -----------------------------
+            if (!string.IsNullOrWhiteSpace(vm.Address))
+            {
+                var allProps = await _unitOfWork.PropertyRepository.ReadAllAsync();
+                var normalizedAddress = vm.Address.Trim().ToLower();
+
+                bool duplicate = allProps.Any(p => p.IsDeleted == false &&
+                    p.ZoneID == vm.ZoneID &&
+                    (p.Address ?? string.Empty).Trim().ToLower() == normalizedAddress);
+
+                if (duplicate)
+                {
+                    ModelState.AddModelError("Address", "A property with this address already exists.");
+                }
+            }
 
             // -----------------------------
             // 🔥 If validation failed → reload dropdowns + return view
@@ -114,7 +125,7 @@
             // -----------------------------
             await HandleImageUpload(vm);
             await _service.CreatePropertyAsync(vm);
-
+            TempData["Success"] = "Property created successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -135,9 +146,50 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(PropertyViewModel vm)
         {
+            var allImages = await _unitOfWork.PropertyImageRepository.ReadAllAsync();
+            var existingImages = allImages.Where(i => i.PropertyID == vm.PropertyID).ToList();
+
+            var imagesMarkedForDeletion = vm.ImagesToDelete?.Count ?? 0;
+            var newUploads = vm.UploadedFiles?.Count ?? 0;
+            var finalImageCount = existingImages.Count - imagesMarkedForDeletion + newUploads;
+
+            if (finalImageCount < 1)
+            {
+                ModelState.AddModelError("UploadedFiles", "You must have at least 1 image.");
+            }
+
+            // -----------------------------
+            // 🔥 Duplicate address validation on Edit
+            // -----------------------------
+            if (!string.IsNullOrWhiteSpace(vm.Address))
+            {
+                var allProps = await _unitOfWork.PropertyRepository.ReadAllAsync();
+                var normalizedAddress = vm.Address.Trim().ToLower();
+
+                bool duplicate = allProps.Any(p => p.IsDeleted == false &&
+                    p.PropertyID != vm.PropertyID &&
+                    p.ZoneID == vm.ZoneID &&
+                    (p.Address ?? string.Empty).Trim().ToLower() == normalizedAddress);
+
+                if (duplicate)
+                {
+                    ModelState.AddModelError("Address", "A property with this address already exists.");
+                }
+            }
+
             if (!ModelState.IsValid)
             {
                 vm = await BuildPropertyViewModelAsync(vm);
+
+                vm.Images = existingImages
+                    .Where(i => vm.ImagesToDelete == null || !vm.ImagesToDelete.Contains(i.ImageID))
+                    .Select(i => new PropertyImageViewModel
+                    {
+                        ImageID = i.ImageID,
+                        ImagePath = i.ImagePath,
+                        UploadedDate = i.UploadedDate
+                    }).ToList();
+
                 return View(vm);
             }
 
@@ -150,7 +202,7 @@
             }
 
             await _service.UpdatePropertyAsync(vm);
-
+            TempData["Success"] = "Property updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -189,8 +241,16 @@
             {
                 return NotFound();
             }
+            if (!string.Equals(model.StatusName, "Unavailable", StringComparison.OrdinalIgnoreCase))
+            {
+                //ModelState.AddModelError(string.Empty, "Property can only be deleted when its status is 'Unavailable'.");
+                TempData["Error"] = "Cannot delete this property when its status is 'Unavailable'.";
+                //return View("Delete", model);
+                return RedirectToAction(nameof(Delete), new { id });
+            }
 
             await _service.DeletePropertyAsync(id);
+            TempData["Success"] = "Property deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

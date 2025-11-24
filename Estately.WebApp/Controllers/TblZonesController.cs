@@ -70,6 +70,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _serviceZone.CreateZoneAsync(model);
+            TempData["Success"] = "Zone created successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -115,6 +116,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _serviceZone.UpdateZoneAsync(model);
+            TempData["Success"] = "Zone updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -146,6 +148,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _serviceZone.DeleteZoneAsync(id);
+            TempData["Success"] = "Zone deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
     }
