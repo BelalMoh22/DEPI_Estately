@@ -55,18 +55,16 @@ namespace Estately.WebApp.Controllers
         public async Task<IActionResult> Create(PropertyStatusViewModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
 
-            // Check if status name is unique
             if (!await _service.IsStatusNameUniqueAsync(model.StatusName))
             {
-                ModelState.AddModelError("StatusName", "Status name already exists. Please choose a different name.");
+                ModelState.AddModelError("StatusName", "Status name already exists.");
                 return View(model);
             }
 
             await _service.CreatePropertyStatusAsync(model);
+            TempData["Success"] = "Status created successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -88,23 +86,16 @@ namespace Estately.WebApp.Controllers
         public async Task<IActionResult> Edit(PropertyStatusViewModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
 
-            // Check if status name is unique (excluding current record)
             if (!await _service.IsStatusNameUniqueAsync(model.StatusName, model.StatusID))
             {
-                ModelState.AddModelError("StatusName", "Status name already exists. Please choose a different name.");
+                ModelState.AddModelError("StatusName", "Status name already exists.");
                 return View(model);
             }
 
-            // Check existence using the existing service method
-            var existing = await _service.GetPropertyStatusByIdAsync(model.StatusID);
-            if (existing == null)
-                return NotFound();
-
             await _service.UpdatePropertyStatusAsync(model);
+            TempData["Success"] = "Status updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -148,7 +139,14 @@ namespace Estately.WebApp.Controllers
                 return NotFound();
             }
 
+            if (await _service.IsStatusUsedAsync(id))
+            {
+                TempData["Error"] = "Cannot delete status because it is used by properties.";
+                return RedirectToAction(nameof(Delete), new { id });
+            }
+
             await _service.DeletePropertyStatusAsync(id);
+            TempData["Success"] = "Status deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -180,4 +178,4 @@ namespace Estately.WebApp.Controllers
         //    return false;
         //}
     }
-    }
+}

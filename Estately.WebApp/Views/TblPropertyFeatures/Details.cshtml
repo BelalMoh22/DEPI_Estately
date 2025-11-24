@@ -1,0 +1,46 @@
+﻿@model Estately.Services.ViewModels.PropertyFeatureViewModel
+
+@{
+    ViewData["Title"] = "Property Feature Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="table-container">
+    <h4 class="mb-3">Property Feature Details</h4>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>Feature ID</th>
+            <td>@Model.FeatureID</td>
+        </tr>
+
+        <tr>
+            <th>Feature Name</th>
+            <td>@Model.FeatureName</td>
+        </tr>
+
+        <tr>
+            <th>Description</th>
+            <td>@Model.Description</td>
+        </tr>
+
+        <tr>
+            <th>Is Amenity</th>
+            <td>@(Model.IsAmenity == true ? "Yes" : "No")</td>
+        </tr>
+
+        <tr>
+            <th>Created At</th>
+            <td>@(Model.CreatedAt?.ToString("yyyy-MM-dd") ?? "-")</td>
+        </tr>
+    </table>
+
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model.FeatureID" class="btn btn-admin">
+            <i class="bi bi-pencil me-1"></i>Edit
+        </a>
+        <a asp-action="Index" class="btn btn-secondary ms-2">
+            <i class="bi bi-arrow-left-circle me-1"></i>Back to List
+        </a>
+    </div>
+</div>

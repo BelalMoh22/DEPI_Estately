@@ -15,7 +15,6 @@ namespace Estately.Services.ViewModels
         [Display(Name = "Description")]
         public string? Description { get; set; }
 
-        // Optional: If you want to show related properties count
         [Display(Name = "Properties Count")]
         public int? PropertiesCount { get; set; }
     }
@@ -23,8 +22,5 @@ namespace Estately.Services.ViewModels
     public class PropertyStatusListViewModel : BaseViewModel
     {
         public List<PropertyStatusViewModel> PropertyStatuses { get; set; } = new();
-
-        // Optional: If you need dropdown data or related entities
-        // public List<LkpSomeRelatedViewModel> RelatedData { get; set; } = new();
     }
 }

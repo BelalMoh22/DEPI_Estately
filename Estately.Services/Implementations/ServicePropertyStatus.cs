@@ -1,6 +1,7 @@
-﻿using System.Linq.Expressions;
-using Estately.Services.Interfaces;
+﻿using Estately.Services.Interfaces;
 using Estately.Services.ViewModels;
+using System;
+using System.Linq.Expressions;
 
 namespace Estately.Services.Implementations
 {
@@ -176,6 +177,14 @@ namespace Estately.Services.Implementations
             return !allStatuses.Any(ps =>
                 ps.StatusName.Equals(statusName, StringComparison.OrdinalIgnoreCase));
         }
+        public async Task<bool> IsStatusUsedAsync(int id)
+        {
+            var properties = await _unitOfWork.PropertyRepository
+                .Search(p => p.StatusId == id);
+
+            return properties.Any();
+        }
+
 
         // ====================================================
         // HELPER: ENTITY -> VIEWMODEL

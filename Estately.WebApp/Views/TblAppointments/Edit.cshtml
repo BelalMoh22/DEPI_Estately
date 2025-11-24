@@ -14,24 +14,40 @@
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label asp-for="PropertyName" class="form-label"></label>
-                <input asp-for="PropertyName" class="form-control" readonly />
+                <label asp-for="PropertyID" class="form-label"></label>
+                @Html.DropDownListFor(m => m.PropertyID,
+                (SelectList)ViewBag.Properties,
+                                "-- Select Property --",
+                                new { @class = "form-control" })
+                <span asp-validation-for="PropertyID" class="text-danger"></span>
             </div>
 
             <div class="col-md-6 mb-3">
                 <label asp-for="EmployeeName" class="form-label"></label>
-                <input asp-for="EmployeeName" class="form-control" readonly />
+                @Html.DropDownListFor(m => m.EmployeeID,
+                (SelectList)ViewBag.Employees,
+                                "-- Select Employee --",
+                                new { @class = "form-control" })
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label asp-for="ClientName" class="form-label"></label>
-                <input asp-for="ClientName" class="form-control" readonly />
+                @Html.DropDownListFor(m => m.ClientProfileID,
+                                (SelectList)ViewBag.Clients,
+                                "-- Select Client --",
+                                new { @class = "form-control" })
             </div>
 
             <div class="col-md-6 mb-3">
                 <label asp-for="StatusName" class="form-label"></label>
-                <input asp-for="StatusName" class="form-control" readonly />
+                <label asp-for="StatusID" class="form-label"></label>
+                @Html.DropDownListFor(m => m.StatusID,
+                                (SelectList)ViewBag.Statuses,
+                                "-- Select Status --",
+                                new { @class = "form-control" })
+                <span asp-validation-for="StatusID" class="text-danger"></span>
             </div>
         </div>
 

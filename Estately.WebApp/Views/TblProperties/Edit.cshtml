@@ -162,7 +162,8 @@
                 <div class="mb-3">
                     <label class="form-label">Upload New Images</label>
                     <input type="file" id="fileInput" name="UploadedFiles" multiple class="form-control" accept="image/*" />
-                    <small class="form-text text-muted">You can select multiple images. Existing images are shown below.</small>
+                    <p class="form-text text-muted">You can select multiple images. Existing images are shown below.</p>
+                    <span asp-validation-for="UploadedFiles" class="text-danger"></span>
                 </div>
 
                 <h6>Existing Images</h6>
