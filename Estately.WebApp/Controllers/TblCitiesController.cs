@@ -65,6 +65,7 @@ namespace Estately.WebApp.Controllers
                 return View(model);
             }
             await _serviceCity.CreateCityAsync(model);
+            TempData["Success"] = "City created successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -103,6 +104,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _serviceCity.UpdateCityAsync(model);
+            TempData["Success"] = "City updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 

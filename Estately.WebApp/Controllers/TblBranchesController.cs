@@ -89,6 +89,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _serviceBranch.CreateBranchAsync(model);
+            TempData["Success"] = "Branch created successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -150,6 +151,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _serviceBranch.UpdateBranchAsync(model);
+            TempData["Success"] = "Branch updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -184,6 +186,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _serviceBranch.DeleteBranchAsync(id);
+            TempData["Success"] = "Branch deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

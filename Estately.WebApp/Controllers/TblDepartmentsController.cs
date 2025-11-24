@@ -93,6 +93,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _serviceDep.CreateDepartmentAsync(model);
+            TempData["Success"] = "Department created successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -159,6 +160,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _serviceDep.UpdateDepartmentAsync(model);
+            TempData["Success"] = "Department updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -189,6 +191,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _serviceDep.DeleteDepartmentAsync(id);
+            TempData["Success"] = "Department deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

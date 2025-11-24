@@ -54,6 +54,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _userTypeService.CreateUserTypeAsync(model);
+            TempData["Success"] = "User type created successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -85,6 +86,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _userTypeService.UpdateUserTypeAsync(model);
+            TempData["Success"] = "User type updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -116,6 +118,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _userTypeService.DeleteUserTypeAsync(id);
+            TempData["Success"] = "User type deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
     }

@@ -61,6 +61,7 @@ namespace Estately.WebApp.Controllers
                 return NotFound();
 
             await _serviceUser.UpdateUserAsync(model);
+            TempData["Success"] = "User updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -82,6 +83,7 @@ namespace Estately.WebApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _serviceUser.DeleteUserAsync(id);
+            TempData["Success"] = "User deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 
