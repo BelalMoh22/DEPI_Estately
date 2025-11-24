@@ -1,0 +1,57 @@
+﻿@model Estately.Services.ViewModels.PropertyFeatureViewModel
+
+@{
+    ViewData["Title"] = "Create Property Feature";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .btn-create {
+        background-color: #00204A !important;
+        color: white !important;
+        transition: 0.3s ease !important;
+    }
+
+        .btn-create:hover {
+            background-color: #003A87 !important;
+        }
+</style>
+
+<div class="table-container">
+    <h4>Create Property Feature</h4>
+
+    <form asp-action="Create" method="post" class="mt-4">
+        <div class="mb-3">
+            <label>Feature Name <span class="text-danger">*</span></label>
+            <input asp-for="FeatureName" class="form-control" />
+            <span asp-validation-for="FeatureName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label>Description</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3 form-check">
+            <input asp-for="IsAmenity" class="form-check-input" />
+            <label asp-for="IsAmenity" class="form-check-label">Is Amenity?</label>
+            <span asp-validation-for="IsAmenity" class="text-danger"></span>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-create">
+                <i class="bi bi-check-circle me-2"></i>Create
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle me-2"></i>Back to List
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

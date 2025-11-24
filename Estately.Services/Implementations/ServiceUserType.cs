@@ -157,17 +157,21 @@ namespace Estately.Services.Implementations
         // ====================================================
         // 10. CHECK IF USER TYPE NAME IS UNIQUE
         // ====================================================
-        public async Task<bool> IsUserTypeNameUniqueAsync(string userTypeName, int? excludeId = null)
+        public async Task<bool> IsUserTypeNameUniqueAsync(string userTypeName, int? userTypeId)
         {
-            var existing = await _unitOfWork.UserTypeRepository.Search(ut =>
-                ut.UserTypeName.ToLower() == userTypeName.ToLower());
+            var exists = await _unitOfWork.UserTypeRepository.Search(ut =>
+                ut.UserTypeName.ToLower() == userTypeName.ToLower()
+                && (userTypeId == null || ut.UserTypeID != userTypeId.Value));
 
-            if (excludeId.HasValue)
-            {
-                existing = existing.Where(ut => ut.UserTypeID != excludeId.Value);
-            }
+            return !exists.Any();
+        }
 
-            return !existing.Any();
+        public async Task<bool> IsTypeUsedAsync(int typeId)
+        {
+            var properties = await _unitOfWork.UserRepository
+                .Search(p => p.UserTypeID == typeId);
+
+            return properties.Any();
         }
         // ====================================================
         // HELPER: ENTITY -> VIEWMODEL

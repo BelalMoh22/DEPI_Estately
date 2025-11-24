@@ -23,32 +23,286 @@ namespace Estately.Services.Implementations
                 "PropertyType",
                 "Status",
                 "Zone",
+                "Agent",
                 "TblPropertyImages",
                 "TblPropertyFeaturesMappings"
             );
 
-            var query = props.Where(p => p.IsDeleted == false).AsQueryable();
+            var query = props.Where(p => p != null && p.IsDeleted == false).AsQueryable();
 
+            // Search term filter (optional)
             if (!string.IsNullOrWhiteSpace(search))
             {
-                search = search.ToLower();
+                search = search.ToLower().Trim();
                 query = query.Where(p =>
                     (p.Address ?? "").ToLower().Contains(search) ||
                     (p.PropertyCode ?? "").ToLower().Contains(search) ||
-                    (p.DeveloperProfile!.DeveloperTitle ?? "").ToLower().Contains(search)
+                    (p.DeveloperProfile != null && (p.DeveloperProfile.DeveloperTitle ?? "").ToLower().Contains(search))
                 );
             }
 
+            // Ensure page and pageSize are valid
+            page = page < 1 ? 1 : page;
+            pageSize = pageSize < 1 ? 10 : pageSize;
+
+            // Get total count before pagination
             int total = query.Count();
 
-            var paged = query.OrderBy(p => p.PropertyID)
-                             .Skip((page - 1) * pageSize)
-                             .Take(pageSize)
-                             .ToList();
+            // Handle empty results
+            if (total == 0)
+            {
+                return new PropertyListViewModel
+                {
+                    Properties = new List<PropertyViewModel>(),
+                    Page = page,
+                    PageSize = pageSize,
+                    TotalCount = 0,
+                    SearchTerm = search,
+                    Features = await GetAllFeaturesAsync()
+                };
+            }
+
+            // Apply pagination with proper null checks
+            var paged = query
+                .Where(p => p != null && p.PropertyID > 0) // Additional safety check
+                .OrderBy(p => p.PropertyID)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
             return new PropertyListViewModel
             {
-                Properties = paged.Select(ConvertToViewModel).ToList(),
+                Properties = paged.Where(p => p != null).Select(ConvertToViewModel).ToList(),
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = total,
+                SearchTerm = search,
+                Features = await GetAllFeaturesAsync()
+            };
+        }
+
+        // ----------------------------------------------------
+        // FILTERED LIST
+        // ----------------------------------------------------
+        public async Task<PropertyListViewModel> GetPropertiesFilteredAsync(
+            int page,
+            int pageSize,
+            string? search = null,
+            string? city = null,
+            string? zones = null,
+            string? developers = null,
+            string? propertyTypes = null,
+            decimal? minPrice = null,
+            decimal? maxPrice = null,
+            decimal? minArea = null,
+            decimal? maxArea = null,
+            int? bedrooms = null,
+            int? bathrooms = null,
+            string? amenities = null)
+        {
+            var props = await _unitOfWork.PropertyRepository.ReadAllIncluding(
+                "DeveloperProfile",
+                "PropertyType",
+                "Status",
+                "Zone",
+                "Zone.City",
+                "TblPropertyImages",
+                "TblPropertyFeaturesMappings",
+                "TblPropertyFeaturesMappings.Feature"
+            );
+
+            var query = props.Where(p => p != null && p.IsDeleted == false).AsQueryable();
+
+            // Search term filter (optional)
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.ToLower().Trim();
+                query = query.Where(p =>
+                    (p.Address ?? "").ToLower().Contains(search) ||
+                    (p.PropertyCode ?? "").ToLower().Contains(search) ||
+                    (p.DeveloperProfile != null && (p.DeveloperProfile.DeveloperTitle ?? "").ToLower().Contains(search)) ||
+                    (p.Zone != null && (p.Zone.ZoneName ?? "").ToLower().Contains(search)) ||
+                    (p.Zone != null && p.Zone.City != null && (p.Zone.City.CityName ?? "").ToLower().Contains(search))
+                );
+            }
+
+            // City filter - show all properties in all zones of selected city
+            if (!string.IsNullOrWhiteSpace(city) && int.TryParse(city, out var cityId))
+            {
+                query = query.Where(p => p.Zone != null && p.Zone.City != null && p.Zone.City.CityID == cityId);
+            }
+
+            // Zones filter (kept for backward compatibility)
+            if (!string.IsNullOrWhiteSpace(zones))
+            {
+                var zoneIds = zones.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(z => int.TryParse(z.Trim(), out var id) ? id : (int?)null)
+                    .Where(id => id.HasValue)
+                    .Select(id => id!.Value)
+                    .ToList();
+                
+                if (zoneIds.Any())
+                {
+                    query = query.Where(p => zoneIds.Contains(p.ZoneID));
+                }
+            }
+
+            // Developers filter - support both ID and DeveloperName
+            if (!string.IsNullOrWhiteSpace(developers))
+            {
+                var developerParts = developers.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(d => d.Trim())
+                    .ToList();
+                
+                if (developerParts.Any())
+                {
+                    // Try to parse as IDs first
+                    var developerIds = developerParts
+                        .Select(d => int.TryParse(d, out var id) ? id : (int?)null)
+                        .Where(id => id.HasValue)
+                        .Select(id => id!.Value)
+                        .ToList();
+                    
+                    // Also get developers by name
+                    var allDevelopers = await _unitOfWork.DeveloperProfileRepository.ReadAllAsync();
+                    var developersByName = allDevelopers
+                        .Where(d => developerParts.Any(part => 
+                            (d.DeveloperName ?? "").Equals(part, StringComparison.OrdinalIgnoreCase) ||
+                            (d.DeveloperTitle ?? "").Equals(part, StringComparison.OrdinalIgnoreCase)))
+                        .Select(d => d.DeveloperProfileID)
+                        .ToList();
+                    
+                    // Combine IDs
+                    var allDeveloperIds = developerIds.Union(developersByName).Distinct().ToList();
+                    
+                    if (allDeveloperIds.Any())
+                    {
+                        query = query.Where(p => p.DeveloperProfileID.HasValue && allDeveloperIds.Contains(p.DeveloperProfileID.Value));
+                    }
+                }
+            }
+
+            // Property types filter
+            if (!string.IsNullOrWhiteSpace(propertyTypes))
+            {
+                var typeNames = propertyTypes.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(t => t.Trim())
+                    .ToList();
+                
+                if (typeNames.Any())
+                {
+                    query = query.Where(p => p.PropertyType != null && typeNames.Contains(p.PropertyType.TypeName));
+                }
+            }
+
+            // Price range filter
+            if (minPrice.HasValue)
+            {
+                query = query.Where(p => p.Price >= minPrice.Value);
+            }
+            if (maxPrice.HasValue)
+            {
+                query = query.Where(p => p.Price <= maxPrice.Value);
+            }
+
+            // Area range filter
+            if (minArea.HasValue)
+            {
+                query = query.Where(p => p.Area >= minArea.Value);
+            }
+            if (maxArea.HasValue)
+            {
+                query = query.Where(p => p.Area <= maxArea.Value);
+            }
+
+            // Bedrooms filter
+            if (bedrooms.HasValue)
+            {
+                if (bedrooms.Value >= 5)
+                {
+                    query = query.Where(p => p.BedsNo >= 5);
+                }
+                else
+                {
+                    query = query.Where(p => p.BedsNo == bedrooms.Value);
+                }
+            }
+
+            // Bathrooms filter
+            if (bathrooms.HasValue)
+            {
+                if (bathrooms.Value >= 5)
+                {
+                    query = query.Where(p => p.BathsNo >= 5);
+                }
+                else
+                {
+                    query = query.Where(p => p.BathsNo == bathrooms.Value);
+                }
+            }
+
+            // Amenities filter
+            if (!string.IsNullOrWhiteSpace(amenities))
+            {
+                var amenityNames = amenities.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(a => a.Trim())
+                    .ToList();
+                
+                if (amenityNames.Any())
+                {
+                    // Get feature IDs for the amenity names
+                    var allFeatures = await _unitOfWork.PropertyFeatureRepository.ReadAllAsync();
+                    var featureIds = allFeatures
+                        .Where(f => amenityNames.Contains(f.FeatureName, StringComparer.OrdinalIgnoreCase))
+                        .Select(f => f.FeatureID)
+                        .ToList();
+                    
+                    if (featureIds.Any())
+                    {
+                        var propertyIdsWithFeatures = await _unitOfWork.PropertyFeaturesMappingRepository.ReadAllAsync();
+                        var matchingPropertyIds = propertyIdsWithFeatures
+                            .Where(m => featureIds.Contains(m.FeatureID))
+                            .Select(m => m.PropertyID)
+                            .Distinct()
+                            .ToList();
+                        
+                        query = query.Where(p => matchingPropertyIds.Contains(p.PropertyID));
+                    }
+                }
+            }
+
+            // Ensure page and pageSize are valid
+            page = page < 1 ? 1 : page;
+            pageSize = pageSize < 1 ? 10 : pageSize;
+
+            // Get total count before pagination
+            int total = query.Count();
+
+            // Handle empty results
+            if (total == 0)
+            {
+                return new PropertyListViewModel
+                {
+                    Properties = new List<PropertyViewModel>(),
+                    Page = page,
+                    PageSize = pageSize,
+                    TotalCount = 0,
+                    SearchTerm = search,
+                    Features = await GetAllFeaturesAsync()
+                };
+            }
+
+            // Apply pagination with proper null checks
+            var paged = query
+                .Where(p => p != null && p.PropertyID > 0) // Additional safety check
+                .OrderBy(p => p.PropertyID)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return new PropertyListViewModel
+            {
+                Properties = paged.Where(p => p != null).Select(ConvertToViewModel).ToList(),
                 Page = page,
                 PageSize = pageSize,
                 TotalCount = total,
@@ -67,6 +321,7 @@ namespace Estately.Services.Implementations
                 "PropertyType",
                 "Status",
                 "Zone",
+                "Agent",
                 "TblPropertyImages",
                 "TblPropertyFeaturesMappings"
             );
@@ -138,7 +393,7 @@ namespace Estately.Services.Implementations
             var entity = await _unitOfWork.PropertyRepository.GetByIdAsync(model.PropertyID);
             if (entity == null) return;
 
-            // Update scalar fields on the already-tracked entity to avoid EF tracking conflicts
+            // EF is tracking this entity, so modifying fields is enough
             entity.Address = model.Address;
             entity.Area = model.Area;
             entity.Price = model.Price;
@@ -156,29 +411,29 @@ namespace Estately.Services.Implementations
             entity.ExpectedRentPrice = model.ExpectedRentPrice;
             entity.YearBuilt = model.YearBuilt;
             entity.ListingDate = model.ListingDate;
-            entity.IsDeleted = model.IsDeleted ?? entity.IsDeleted;
 
-            await _unitOfWork.PropertyRepository.UpdateAsync(entity);
+            // ❌ Remove this line:
+            // await _unitOfWork.PropertyRepository.UpdateAsync(entity);
 
-            // Add new images (existing ones are only removed when the user clicks X,
-            // which is handled in the controller via DeleteImageFromDiskAndDb)
+            // Save new images
             if (model.Images != null)
             {
                 foreach (var img in model.Images)
                 {
-                    await _unitOfWork.PropertyImageRepository.AddAsync(
-                        new TblPropertyImage
-                        {
-                            PropertyID = model.PropertyID,
-                            ImagePath = img.ImagePath,
-                            UploadedDate = DateTime.Now
-                        });
+                    await _unitOfWork.PropertyImageRepository.AddAsync(new TblPropertyImage
+                    {
+                        PropertyID = model.PropertyID,
+                        ImagePath = img.ImagePath,
+                        UploadedDate = DateTime.Now
+                    });
                 }
             }
 
-            // Replace feature mappings
-            var maps = await _unitOfWork.PropertyFeaturesMappingRepository.ReadAllAsync();
-            var oldMaps = maps.Where(f => f.PropertyID == model.PropertyID);
+            // Replace features
+            var maps = await _unitOfWork.PropertyFeaturesMappingRepository
+                                        .ReadAllAsync();
+
+            var oldMaps = maps.Where(f => f.PropertyID == model.PropertyID).ToList();
 
             foreach (var m in oldMaps)
             {
@@ -196,8 +451,10 @@ namespace Estately.Services.Implementations
                     });
             }
 
+            // Final save
             await _unitOfWork.CompleteAsync();
         }
+
 
         // ----------------------------------------------------
         // DELETE
@@ -206,6 +463,15 @@ namespace Estately.Services.Implementations
         {
             var entity = await _unitOfWork.PropertyRepository.GetByIdAsync(id);
             if (entity == null) return;
+            // Only allow delete when status is "Unavailable"
+            var statuses = await _unitOfWork.PropertyStatusRepository.ReadAllAsync();
+            var unavailableStatus = statuses.FirstOrDefault(s => s.StatusName == "Unavailable");
+
+            if (unavailableStatus == null || entity.StatusId != unavailableStatus.StatusID)
+            {
+                // Do not delete if status is not "Unavailable"
+                return;
+            }
 
             entity.IsDeleted = true;
 
@@ -307,8 +573,12 @@ namespace Estately.Services.Implementations
                 DeveloperTitle = p.DeveloperProfile?.DeveloperTitle,
                 PropertyTypeName = p.PropertyType?.TypeName,
                 StatusName = p.Status.StatusName ?? "Available",
-                ZoneName = p.Zone.ZoneName,
+                ZoneName = p.Zone?.ZoneName ?? "",
+                CityName = p.Zone?.City?.CityName ?? "",
                 AgentName = $"{p.Agent?.FirstName} {p.Agent?.LastName}",
+                StatusName = p.Status?.StatusName ?? "Available",
+                ZoneName = p.Zone?.ZoneName,
+                AgentName = p.Agent != null ? $"{p.Agent.FirstName} {p.Agent.LastName}" : null,
 
                 Images = p.TblPropertyImages?
                     .Select(i => new PropertyImageViewModel
@@ -349,7 +619,6 @@ namespace Estately.Services.Implementations
                 IsDeleted = vm.IsDeleted ?? false
             };
         }
-
         // ----------------------------------------------------
         // REQUIRED INTERFACE METHODS (ADDED)
         // ----------------------------------------------------

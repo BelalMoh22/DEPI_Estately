@@ -1,0 +1,59 @@
+﻿@model Estately.Services.ViewModels.PropertyFeatureViewModel
+
+@{
+    ViewData["Title"] = "Edit Property Feature";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .btn-save {
+        background-color: #00204A !important;
+        color: white !important;
+        transition: 0.3s ease !important;
+    }
+
+        .btn-save:hover {
+            background-color: #003A87 !important;
+        }
+</style>
+
+<div class="table-container">
+    <h4>Edit Property Feature</h4>
+
+    <form asp-action="Edit" method="post" class="mt-4">
+        <input type="hidden" asp-for="FeatureID" />
+
+        <div class="mb-3">
+            <label class="form-label">Feature Name</label>
+            <input asp-for="FeatureName" class="form-control" />
+            <span asp-validation-for="FeatureName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <input asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3 form-check">
+            <input asp-for="IsAmenity" class="form-check-input" />
+            <label asp-for="IsAmenity" class="form-check-label">Is Amenity?</label>
+            <span asp-validation-for="IsAmenity" class="text-danger"></span>
+        </div>
+
+        <div class="mt-4">
+            <button class="btn btn-admin">
+                <i class="bi bi-save me-2"></i>Save Changes
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle me-2"></i>Back to List
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -55,7 +55,7 @@ namespace Estately.WebApp.Controllers
             }
 
             await _service.UpdateEmployeeAsync(vm);
-
+            TempData["Success"] = "Employee updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -86,6 +86,7 @@ namespace Estately.WebApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _service.DeleteEmployeeAsync(id);
+            TempData["Success"] = "Employee deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

@@ -157,12 +157,38 @@
         <div class="row">
             <div class="custom-pagination-container">
                 <div class="custom-pagination">
+                    @{
+                        var queryParams = new Dictionary<string, string>();
+                        if (!string.IsNullOrEmpty(Context.Request.Query["search"]))
+                            queryParams["search"] = Context.Request.Query["search"];
+                        if (!string.IsNullOrEmpty(Context.Request.Query["zones"]))
+                            queryParams["zones"] = Context.Request.Query["zones"];
+                        if (!string.IsNullOrEmpty(Context.Request.Query["developers"]))
+                            queryParams["developers"] = Context.Request.Query["developers"];
+                        if (!string.IsNullOrEmpty(Context.Request.Query["propertyTypes"]))
+                            queryParams["propertyTypes"] = Context.Request.Query["propertyTypes"];
+                        if (!string.IsNullOrEmpty(Context.Request.Query["minPrice"]))
+                            queryParams["minPrice"] = Context.Request.Query["minPrice"];
+                        if (!string.IsNullOrEmpty(Context.Request.Query["maxPrice"]))
+                            queryParams["maxPrice"] = Context.Request.Query["maxPrice"];
+                        if (!string.IsNullOrEmpty(Context.Request.Query["minArea"]))
+                            queryParams["minArea"] = Context.Request.Query["minArea"];
+                        if (!string.IsNullOrEmpty(Context.Request.Query["maxArea"]))
+                            queryParams["maxArea"] = Context.Request.Query["maxArea"];
+                        if (!string.IsNullOrEmpty(Context.Request.Query["bedrooms"]))
+                            queryParams["bedrooms"] = Context.Request.Query["bedrooms"];
+                        if (!string.IsNullOrEmpty(Context.Request.Query["bathrooms"]))
+                            queryParams["bathrooms"] = Context.Request.Query["bathrooms"];
+                        if (!string.IsNullOrEmpty(Context.Request.Query["amenities"]))
+                            queryParams["amenities"] = Context.Request.Query["amenities"];
+                        
+                        var queryString = string.Join("&", queryParams.Select(kvp => $"{kvp.Key}={Uri.EscapeDataString(kvp.Value)}"));
+                        if (!string.IsNullOrEmpty(queryString)) queryString = "&" + queryString;
+                    }
 
                     @if (Model.Page > 1)
                     {
-                        <a asp-action="Properties"
-                           asp-route-page="@(Model.Page - 1)"
-                           asp-route-pageSize="@Model.PageSize"
+                        <a href="@($"/App/Properties?page={Model.Page - 1}&pageSize={Model.PageSize}{queryString}")"
                            class="page-btn">Prev</a>
                     }
                     else
@@ -172,17 +198,13 @@
 
                     @for (int i = 1; i <= Model.TotalPages; i++)
                     {
-                        <a asp-action="Properties"
-                           asp-route-page="@i"
-                           asp-route-pageSize="@Model.PageSize"
+                        <a href="@($"/App/Properties?page={i}&pageSize={Model.PageSize}{queryString}")"
                            class="page-btn @(i == Model.Page ? "active" : "")">@i</a>
                     }
 
                     @if (Model.Page < Model.TotalPages)
                     {
-                        <a asp-action="Properties"
-                           asp-route-page="@(Model.Page + 1)"
-                           asp-route-pageSize="@Model.PageSize"
+                        <a href="@($"/App/Properties?page={Model.Page + 1}&pageSize={Model.PageSize}{queryString}")"
                            class="page-btn">Next</a>
                     }
                     else

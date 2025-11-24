@@ -1,6 +1,7 @@
-﻿using System.Linq.Expressions;
-using Estately.Services.Interfaces;
+﻿using Estately.Services.Interfaces;
 using Estately.Services.ViewModels;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Estately.Services.Implementations
 {
@@ -136,6 +137,21 @@ namespace Estately.Services.Implementations
             };
         }
 
-        
+        public async Task<bool> CityNameExistsAsync(string cityName, int? cityId)
+        {
+            var existingCities = await _unitOfWork.CityRepository.Search(
+                c => c.CityName.ToLower() == cityName.ToLower()
+                    && (cityId == null || c.CityID != cityId.Value));
+
+            return existingCities.Any();
+        }
+        //public async Task<bool> CityNameExistsForEditAsync(string cityName, int cityId)
+        //{
+        //    var cities = await _unitOfWork.CityRepository.Search(
+        //        c => c.CityName.ToLower() == cityName.ToLower()
+        //        && c.CityID != cityId);
+
+        //    return cities.Any();
+        //}
     }
 }

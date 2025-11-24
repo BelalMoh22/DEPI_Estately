@@ -1,8 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Estately.Services.Implementations;
 using Estately.Services.Interfaces;
 using Estately.Services.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace Estately.WebApp.Controllers
 {
@@ -17,42 +18,25 @@ namespace Estately.WebApp.Controllers
         // GET: LkpUserTypes
         public async Task<IActionResult> Index(int page = 1, int pageSize = 10, string? search = null)
         {
-            try
-            {
-                var model = await _userTypeService.GetUserTypesPagedAsync(page, pageSize, search);
-                return View(model);
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = "An error occurred while loading user types.";
-                return View(new UserTypeListViewModel());
-            }
+            var model = await _userTypeService.GetUserTypesPagedAsync(page, pageSize, search);
+            return View(model);
         }
 
         // GET: LkpUserTypes/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            try
-            {
-                var userType = await _userTypeService.GetUserTypeByIdAsync(id);
-                if (userType == null)
-                {
-                    TempData["ErrorMessage"] = "User type not found.";
-                    return RedirectToAction(nameof(Index));
-                }
-                return View(userType);
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = "An error occurred while loading user type details.";
-                return RedirectToAction(nameof(Index));
-            }
+            var model = await _userTypeService.GetUserTypeByIdAsync(id);
+
+            if (model == null)
+                return NotFound();
+
+            return View(model);
         }
 
         // GET: LkpUserTypes/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            return View(new UserTypeViewModel());
         }
 
         // POST: LkpUserTypes/Create
@@ -60,47 +44,28 @@ namespace Estately.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UserTypeViewModel model)
         {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    if (!await _userTypeService.IsUserTypeNameUniqueAsync(model.UserTypeName))
-                    {
-                        ModelState.AddModelError("UserTypeName", "User Type Name already exists.");
-                        return View(model);
-                    }
+            if (!ModelState.IsValid)
+                return View(model);
 
-                    await _userTypeService.CreateUserTypeAsync(model);
-                    TempData["SuccessMessage"] = "User type created successfully.";
-                    return RedirectToAction(nameof(Index));
-                }
-                return View(model);
-            }
-            catch (Exception ex)
+            if (!await _userTypeService.IsUserTypeNameUniqueAsync(model.UserTypeName))
             {
-                ModelState.AddModelError("", "An error occurred while creating the user type.");
+                ModelState.AddModelError("UserTypeName", "User Type Name already exists.");
                 return View(model);
             }
+
+            await _userTypeService.CreateUserTypeAsync(model);
+            TempData["Success"] = "User type created successfully.";
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: LkpUserTypes/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            try
-            {
-                var userType = await _userTypeService.GetUserTypeByIdAsync(id);
-                if (userType == null)
-                {
-                    TempData["ErrorMessage"] = "User type not found.";
-                    return RedirectToAction(nameof(Index));
-                }
-                return View(userType);
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = "An error occurred while loading user type for editing.";
-                return RedirectToAction(nameof(Index));
-            }
+            var model = await _userTypeService.GetUserTypeByIdAsync(id);
+            if (model == null)
+                return NotFound();
+
+            return View(model);
         }
 
         // POST: LkpUserTypes/Edit/5
@@ -108,53 +73,31 @@ namespace Estately.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, UserTypeViewModel model)
         {
-            try
+            if (id != model.UserTypeID)
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            if (!await _userTypeService.IsUserTypeNameUniqueAsync(model.UserTypeName, model.UserTypeID))
             {
-                if (id != model.UserTypeID)
-                {
-                    TempData["ErrorMessage"] = "User type ID mismatch.";
-                    return RedirectToAction(nameof(Index));
-                }
-
-                if (ModelState.IsValid)
-                {
-                    if (!await _userTypeService.IsUserTypeNameUniqueAsync(model.UserTypeName, id))
-                    {
-                        ModelState.AddModelError("UserTypeName", "User Type Name already exists.");
-                        return View(model);
-                    }
-
-                    await _userTypeService.UpdateUserTypeAsync(model);
-                    TempData["SuccessMessage"] = "User type updated successfully.";
-                    return RedirectToAction(nameof(Index));
-                }
+                ModelState.AddModelError("UserTypeName", "This user type name already exists.");
                 return View(model);
             }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", "An error occurred while updating the user type.");
-                return View(model);
-            }
+
+            await _userTypeService.UpdateUserTypeAsync(model);
+            TempData["Success"] = "User type updated successfully.";
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: LkpUserTypes/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var userType = await _userTypeService.GetUserTypeByIdAsync(id);
-                if (userType == null)
-                {
-                    TempData["ErrorMessage"] = "User type not found.";
-                    return RedirectToAction(nameof(Index));
-                }
-                return View(userType);
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = "An error occurred while loading user type for deletion.";
-                return RedirectToAction(nameof(Index));
-            }
+            var model = await _userTypeService.GetUserTypeByIdAsync(id);
+            if (model == null)
+                return NotFound();
+
+            return View(model);
         }
 
         // POST: LkpUserTypes/Delete/5
@@ -162,22 +105,21 @@ namespace Estately.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            try
+            var model = await _userTypeService.GetUserTypeByIdAsync(id);
+            if (model == null)
             {
-                await _userTypeService.DeleteUserTypeAsync(id);
-                TempData["SuccessMessage"] = "User type deleted successfully.";
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch (InvalidOperationException ex)
+
+            if (await _userTypeService.IsTypeUsedAsync(id))
             {
-                TempData["ErrorMessage"] = ex.Message;
-                return RedirectToAction(nameof(Index));
+                TempData["Error"] = "Cannot delete this usertype because it contains users. You must delete those users first.";
+                return RedirectToAction(nameof(Delete), new { id });
             }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = "An error occurred while deleting the user type.";
-                return RedirectToAction(nameof(Index));
-            }
+
+            await _userTypeService.DeleteUserTypeAsync(id);
+            TempData["Success"] = "User type deleted successfully.";
+            return RedirectToAction(nameof(Index));
         }
     }
 }

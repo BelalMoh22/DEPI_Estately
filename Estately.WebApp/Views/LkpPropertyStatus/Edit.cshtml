@@ -18,7 +18,7 @@
 </style>
 
 <div class="table-container">
-    <h1>Edit Property Status</h1>
+    <h4>Edit Property Status</h4>
 
     <form asp-action="Edit" method="post" class="mt-4">
 
@@ -36,8 +36,14 @@
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
 
-        <button class="btn btn-save">Save</button>
-        <a asp-action="Index" class="btn btn-secondary">Back</a>
+        <div class="mt-4">
+            <button class="btn btn-admin">
+                <i class="bi bi-save me-2"></i>Save Changes
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle me-2"></i>Back to List
+            </a>
+        </div>
     </form>
 </div>
 

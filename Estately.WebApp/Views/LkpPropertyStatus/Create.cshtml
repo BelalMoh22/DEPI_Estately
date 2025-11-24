@@ -18,7 +18,7 @@
 </style>
 
 <div class="table-container">
-    <h1>Create Property Status</h1>
+    <h4>Create Property Status</h4>
 
     <form asp-action="Create" method="post" class="mt-4">
 
@@ -41,8 +41,14 @@
         <span asp-validation-for="PropertiesCount" class="text-danger"></span>
     </div> *@
 
-        <button class="btn btn-create">Create</button>
-        <a asp-action="Index" class="btn btn-secondary">Back</a>
+        <div class="mt-4">
+            <button type="submit" class="btn btn-create">
+                <i class="bi bi-check-circle me-2"></i>Create
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle me-2"></i>Back to List
+            </a>
+        </div>
 
     </form>
 </div>

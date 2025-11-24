@@ -14,7 +14,14 @@ namespace Estately.Services.Implementations
         public async Task<AppointmentListViewModel> GetAppointmentsPagedAsync(int page, int pageSize, string? search)
         {
             // Step 1: Load all appointments with related data
-            var appointments = await _unitOfWork.AppointmentRepository.ReadAllIncluding("Status", "Property", "EmployeeClient");
+            var appointments = await _unitOfWork.AppointmentRepository.ReadAllIncluding(
+                "Status",
+                "Property",
+                "EmployeeClient",
+                "EmployeeClient.Employee",
+                "EmployeeClient.ClientProfile"
+            );
+
             var query = appointments.AsQueryable();
 
             // Step 2: Filtering (case-insensitive search)
@@ -77,7 +84,14 @@ namespace Estately.Services.Implementations
         // ====================================================
         public async Task<AppointmentViewModel?> GetAppointmentByIdAsync(int id)
         {
-            var appointments = await _unitOfWork.AppointmentRepository.ReadAllIncluding("Status", "Property", "EmployeeClient");
+            var appointments = await _unitOfWork.AppointmentRepository.ReadAllIncluding(
+                "Status",
+                "Property",
+                "EmployeeClient",
+                "EmployeeClient.Employee",
+                "EmployeeClient.ClientProfile"
+            );
+
             var appointment = appointments.FirstOrDefault(x => x.AppointmentID == id);
             return appointment == null ? null : ConvertToViewModel(appointment);
         }

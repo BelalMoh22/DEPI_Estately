@@ -171,5 +171,12 @@ namespace Estately.Services.Implementations
                 City = z.City?.CityName
             };
         }
+
+        public async Task<bool> ZoneHasPropertiesAsync(int zoneId)
+        {
+            // Check if any property in TblProperty uses this ZoneID
+            var properties = await _unitOfWork.PropertyRepository.Search(p => p.ZoneID == zoneId);
+            return properties.Any();
+        }
     }
 }
