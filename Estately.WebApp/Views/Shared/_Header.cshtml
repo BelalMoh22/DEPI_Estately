@@ -1,4 +1,4 @@
-    <!-- Header -->
+@* <!-- Header -->
 <header class="first-section fixed-top site-header">
     <nav class="navbar navbar-expand-lg navbar-dark py-3">
         <div class="container-fluid">
@@ -16,34 +16,76 @@
             <div class="d-lg-flex d-none justify-content-center flex-grow-1">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")" asp-action="Index" asp-controller="App">Home</a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")"
+                           asp-action="Index" asp-controller="App">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Properties" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")" asp-action="Properties" asp-controller="App">Properties</a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Properties" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")"
+                           asp-action="Properties" asp-controller="App">Properties</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Favorites" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")" asp-action="Favorites" asp-controller="App">Favorites</a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Favorites" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")"
+                           asp-action="Favorites" asp-controller="App">Favorites</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Services" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")" asp-action="Services" asp-controller="App">Services</a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Services" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")"
+                           asp-action="Services" asp-controller="App">Services</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "About" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")" asp-action="About" asp-controller="App">About</a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "About" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")"
+                           asp-action="About" asp-controller="App">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Contact" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")" asp-action="Contact" asp-controller="App">Contact</a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Contact" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")"
+                           asp-action="Contact" asp-controller="App">Contact</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Blog" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")" asp-action="Blog" asp-controller="App">Blog</a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Blog" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")"
+                           asp-action="Blog" asp-controller="App">Blog</a>
                     </li>
                 </ul>
             </div>
 
-            <div class="d-none d-lg-flex align-items-center gap-3">
-                <a href="#" class="btn btn-outline-light btn-sm login">Login</a>
-                <a asp-action="Advertise" asp-controller="App" class="btn btn-outline-light btn-sm login">
-                    Advertise
-                </a>
+<div class="d-none d-lg-flex align-items-center gap-3">
+@if (User.Identity != null && User.Identity.IsAuthenticated)
+{
+    var userTypeId = User.FindFirst("UserTypeId")?.Value; 
+    var isAdmin = userTypeId == "4"; 
+    var accountController = isAdmin ? "Admin" : "App"; 
+    var accountAction = isAdmin
+        ? "Dashboard"
+        : userTypeId == "1" ? "ClientAccount"
+        : userTypeId == "2" ? "EmployeeAccount"
+        : userTypeId == "3" ? "DeveloperAccount"
+        : "MyAccount";
+
+    <a asp-action="@accountAction" asp-controller="@accountController" class="btn btn-outline-light btn-sm login">
+        <i class="bi bi-person-circle"></i>
+    </a>
+
+    @if (isAdmin)
+    {
+        <a asp-action="Dashboard" asp-controller="Admin" class="btn btn-outline-light btn-sm login>Back to Dashboard</a>
+    }
+
+    <form asp-action="Logout" asp-controller="Accounts" method="post" class="d-inline">
+         <button type="submit" class="btn btn-outline-light btn-sm logout">Logout</button>
+    </form>
+    <a asp-action="Advertise" asp-controller="App"
+        class="btn btn-outline-light btn-sm login">
+        Advertise
+    </a>
+}
+else
+{
+    <a asp-action="Login" asp-controller="Accounts"
+       class="btn btn-outline-light btn-sm login">Login</a>
+
+    <a asp-action="Advertise" asp-controller="App"
+       class="btn btn-outline-light btn-sm login">
+        Advertise
+    </a>
+}
             </div>
         </div>
         <!-- /.container-fluid -->
@@ -64,44 +106,326 @@
                 data-bs-dismiss="offcanvas"
                 aria-label="Close"></button>
     </div>
-    <!-- /offcanvas-header -->
+
     <div class="offcanvas-body">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")" asp-action="Index" asp-controller="App">Home</a>
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")"
+                   asp-action="Index" asp-controller="App">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Properties" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")" asp-action="Properties" asp-controller="App">Properties</a>
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Properties" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")"
+                   asp-action="Properties" asp-controller="App">Properties</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Services" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")" asp-action="Services" asp-controller="App">Services</a>
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Services" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")"
+                   asp-action="Services" asp-controller="App">Services</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "About" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")" asp-action="About" asp-controller="App">About</a>
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "About" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")"
+                   asp-action="About" asp-controller="App">About</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Contact" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")" asp-action="Contact" asp-controller="App">Contact</a>
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Contact" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")"
+                   asp-action="Contact" asp-controller="App">Contact</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Blog" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")" asp-action="Blog" asp-controller="App">Blog</a>
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Blog" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")"
+                   asp-action="Blog" asp-controller="App">Blog</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Favorites" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")"
+                   asp-action="Favorites" asp-controller="App">Favorites</a>
             </li>
             <span class="line"></span>
-            <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Favorites" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")" asp-action="Favorites" asp-controller="App">Favorites</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "MyAccount" && ViewContext.RouteData.Values["controller"]?.ToString() == "App" ? "active" : "")" asp-action="MyAccount" asp-controller="App">My Account</a>
-            </li>
-            <span class="line"></span>
-        </ul>
-        <div class="mt-2">
-            <a href="#" class="btn btn-outline-light btn-sm login">Login</a>
-            <a asp-action="Advertise" asp-controller="App" class="btn btn-outline-light btn-sm login">
-                Advertise
-            </a>
+<div class="mt-2">
+@if (User.Identity != null && User.Identity.IsAuthenticated)
+{
+    var userTypeId = User.FindFirst("UserTypeId")?.Value;
+    var isAdmin = userTypeId == "4";
+    var accountController = isAdmin ? "Admin" : "App";
+
+    var accountAction =
+    isAdmin ? "Dashboard" :
+    userTypeId == "1" ? "ClientAccount" :
+    userTypeId == "2" ? "EmployeeAccount" :
+    userTypeId == "3" ? "DeveloperAccount" :
+    "MyAccount";
+
+    <a asp-action="@accountAction"
+        asp-controller="@accountController"
+        class="btn btn-outline-light btn-sm login mb-2">
+        <i class="bi bi-person-circle"></i>
+    </a>
+
+    @if (isAdmin)
+    {
+        <a asp-action="Dashboard"
+            asp-controller="Admin"
+            class="btn btn-warning btn-sm mb-2">
+            Back to Dashboard
+        </a>
+    }
+
+    <form asp-action="Logout"
+            asp-controller="Accounts"
+            method="post"
+            class="d-inline">
+        <button type="submit" class="btn btn-danger btn-sm login">
+            Logout
+        </button>
+        <a asp-action="Advertise" asp-controller="App"
+            class="btn btn-outline-light btn-sm login">
+            Advertise
+        </a>
+    </form>
+}
+
+else
+{
+    <a asp-action="Login" asp-controller="Accounts"
+       class="btn btn-outline-light btn-sm login">Login</a>
+
+    <a asp-action="Advertise" asp-controller="App"
+       class="btn btn-outline-light btn-sm login">Advertise</a>
+}
         </div>
     </div>
-    <!-- /offcanvas-body -->
-</div> <!-- /offcanvas -->
-<!-- End Of Header -->
-<!-- ============================================================================================================== -->
+</div> *@
+
+<!-- Header -->
+<header class="first-section fixed-top site-header">
+    <nav class="navbar navbar-expand-lg navbar-dark py-3">
+        <div class="container-fluid">
+
+            <!-- Mobile menu button -->
+            <button class="navbar-toggler d-lg-none toggle-button"
+                    type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#mobileMenu">
+                <i class="toggle-icon fa-solid fa-bars"></i>
+            </button>
+
+            <!-- Logo -->
+            <a class="logo navbar-brand fw-bold fs-4" asp-action="Index" asp-controller="App">Estately</a>
+
+            <!-- Desktop Menu -->
+            <div class="d-lg-flex d-none justify-content-center flex-grow-1">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
+                           asp-action="Index" asp-controller="App">Home</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Properties" ? "active" : "")"
+                           asp-action="Properties" asp-controller="App">Properties</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Favorites" ? "active" : "")"
+                           asp-action="Favorites" asp-controller="App">Favorites</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Services" ? "active" : "")"
+                           asp-action="Services" asp-controller="App">Services</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "About" ? "active" : "")"
+                           asp-action="About" asp-controller="App">About</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Contact" ? "active" : "")"
+                           asp-action="Contact" asp-controller="App">Contact</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Blog" ? "active" : "")"
+                           asp-action="Blog" asp-controller="App">Blog</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Desktop Right Side Buttons -->
+            <div class="d-none d-lg-flex align-items-center gap-3">
+
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    var userTypeId = User.FindFirst("UserTypeId")?.Value;
+                    var isAdmin = userTypeId == "4";
+                    var accountController = isAdmin ? "Admin" : "App";
+
+                    var accountAction =
+                    userTypeId switch
+                    {
+                        "4" => "Dashboard",
+                        "1" => "ClientAccount",
+                        "2" => "EmployeeAccount",
+                        "3" => "DeveloperAccount",
+                        _ => "MyAccount"
+                    };
+
+                    <!-- Avatar Button -->
+                    <a asp-action="@accountAction"
+                       asp-controller="@accountController"
+                       class="btn btn-outline-light btn-sm login">
+                        <i class="bi bi-person-circle"></i>
+                    </a>
+
+                    @if (isAdmin)
+                    {
+                        <a asp-action="Dashboard"
+                           asp-controller="Admin"
+                           class="btn btn-outline-light btn-sm login">
+                            Back to Dashboard
+                        </a>
+                    }
+
+                    <!-- Logout -->
+                    <form asp-action="Logout" asp-controller="Accounts" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-outline-light btn-sm logout">Logout</button>
+                    </form>
+
+                    <!-- Advertise -->
+                    <a asp-action="Advertise" asp-controller="App"
+                       class="btn btn-outline-light btn-sm login">
+                        Advertise
+                    </a>
+                }
+                else
+                {
+                    <!-- Login -->
+                    <a asp-action="Login" asp-controller="Accounts"
+                       class="btn btn-outline-light btn-sm login">Login</a>
+
+                    <!-- Advertise -->
+                    <a asp-action="Advertise" asp-controller="App"
+                       class="btn btn-outline-light btn-sm login">
+                        Advertise
+                    </a>
+                }
+
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Mobile Menu Offcanvas -->
+<div class="offcanvas offcanvas-start"
+     tabindex="-1"
+     id="mobileMenu"
+     aria-labelledby="mobileMenuLabel"
+     data-bs-auto-close="false">
+
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Menu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+
+    <div class="offcanvas-body">
+
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
+                   asp-action="Index" asp-controller="App">Home</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Properties" ? "active" : "")"
+                   asp-action="Properties" asp-controller="App">Properties</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Services" ? "active" : "")"
+                   asp-action="Services" asp-controller="App">Services</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "About" ? "active" : "")"
+                   asp-action="About" asp-controller="App">About</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Contact" ? "active" : "")"
+                   asp-action="Contact" asp-controller="App">Contact</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Blog" ? "active" : "")"
+                   asp-action="Blog" asp-controller="App">Blog</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Favorites" ? "active" : "")"
+                   asp-action="Favorites" asp-controller="App">Favorites</a>
+            </li>
+        </ul>
+
+        <span class="line my-3"></span>
+
+        <!-- Mobile Buttons -->
+        <div class="mt-2">
+
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                var userTypeId = User.FindFirst("UserTypeId")?.Value;
+                var isAdmin = userTypeId == "4";
+                var accountController = isAdmin ? "Admin" : "App";
+
+                var accountAction =
+                userTypeId switch
+                {
+                    "4" => "Dashboard",
+                    "1" => "ClientAccount",
+                    "2" => "EmployeeAccount",
+                    "3" => "DeveloperAccount",
+                    _ => "MyAccount"
+                };
+
+                <!-- Avatar -->
+                <a asp-action="@accountAction"
+                   asp-controller="@accountController"
+                   class="btn btn-outline-light btn-sm login mb-2">
+                    <i class="bi bi-person-circle"></i> My Account
+                </a>
+
+                @if (isAdmin)
+                {
+                    <a asp-action="Dashboard"
+                       asp-controller="Admin"
+                       class="btn btn-warning btn-sm mb-2">
+                        Back to Dashboard
+                    </a>
+                }
+
+                <!-- Logout -->
+                <form asp-action="Logout"
+                      asp-controller="Accounts"
+                      method="post"
+                      class="d-inline">
+                    <button type="submit" class="btn btn-danger btn-sm logout">
+                        Logout
+                    </button>
+                </form>
+
+                <!-- Advertise -->
+                <a asp-action="Advertise" asp-controller="App"
+                   class="btn btn-outline-light btn-sm login">
+                    Advertise
+                </a>
+            }
+            else
+            {
+                <a asp-action="Login" asp-controller="Accounts"
+                   class="btn btn-outline-light btn-sm login">Login</a>
+
+                <a asp-action="Advertise" asp-controller="App"
+                   class="btn btn-outline-light btn-sm login">Advertise</a>
+            }
+        </div>
+    </div>
+</div>

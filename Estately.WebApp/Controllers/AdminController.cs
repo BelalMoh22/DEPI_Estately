@@ -14,23 +14,18 @@ namespace Estately.WebApp.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-
-
-        // ============================================
-        // DASHBOARD
-        // ============================================
         public async Task<IActionResult> Dashboard()
         {
             var stats = new
             {
-                TotalUsers = (await _unitOfWork.UserRepository.ReadAllAsync()).Count(),
+                TotalUsers = (await _unitOfWork.UserRepository.GetAllAsync()).Count(),
                 TotalProperties = (await _unitOfWork.PropertyRepository.ReadAllAsync()).Count(),
                 TotalAppointments = (await _unitOfWork.AppointmentRepository.ReadAllAsync()).Count(),
                 TotalEmployees = (await _unitOfWork.EmployeeRepository.ReadAllAsync()).Count(),
                 TotalClients = (await _unitOfWork.ClientProfileRepository.ReadAllAsync()).Count(),
                 TotalBranches = (await _unitOfWork.BranchRepository.ReadAllAsync()).Count()
             };
-
+              
             ViewBag.Stats = stats;
             return View();
         }
