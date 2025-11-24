@@ -1,10 +1,5 @@
-﻿using Estately.Services.Interfaces;
-using Estately.Services.ViewModels;
-using Estately.Core.Entities;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
-
 namespace Estately.WebApp.Controllers
 {
     public class AppController : Controller
