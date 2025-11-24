@@ -1,10 +1,204 @@
+@model Estately.Services.ViewModels.ClientProfileViewModel
 @{
-    ViewData["Title"] = "Client Account";
+    var displayName = !string.IsNullOrWhiteSpace(Model?.FirstName) || !string.IsNullOrWhiteSpace(Model?.LastName)
+        ? $"{Model?.FirstName} {Model?.LastName}".Trim()
+        : Model?.Username ?? "Client Account";
+
+    var photoPath = !string.IsNullOrWhiteSpace(Model?.ProfilePhoto)
+        ? (Model.ProfilePhoto!.StartsWith("/") ? Model.ProfilePhoto : "/" + Model.ProfilePhoto)
+        : null;
+
+    ViewData["Title"] = displayName;
 }
 
 @section Styles {
+    <style>
+        .account-wrapper {
+            min-height: 70vh;
+            background: radial-gradient(circle at top, #e0f2fe 0, #f8fafc 55%, #f9fafb 100%);
+            padding: 32px 0;
+        }
+
+        .account-card {
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.10);
+            overflow: hidden;
+        }
+
+        .account-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #0f766e;
+            color: #e0f2f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: 600;
+            margin-right: 18px;
+            overflow: hidden;
+        }
+
+        .account-body {
+            padding: 26px 30px 30px;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #0f172a;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+
+        .btn-save {
+            border-radius: 999px;
+            padding: 10px 22px;
+            font-weight: 600;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #6b7280;
+            margin-bottom: 2px;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .account-section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #9ca3af;
+            margin-bottom: 10px;
+        }
+
+        .account-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+            margin: 12px 0 20px;
+        }
+    </style>
 }
 
-<div class="container py-5">
-    <h1 class="mb-4">Client Account</h1>
+<div class="account-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-6">
+                <div class="account-card">
+                    <div class="account-body">
+                        <form asp-action="UploadClientPhoto" method="post" enctype="multipart/form-data" id="photoUploadForm" class="d-flex align-items-center mb-4">
+                            <button type="button" class="btn p-0 border-0 bg-transparent me-2" onclick="document.getElementById('photoInput').click();">
+                                <div class="account-avatar">
+                                    @if (!string.IsNullOrWhiteSpace(photoPath))
+                                    {
+                                        <img src="@photoPath" alt="Profile photo" style="width:100%;height:100%;object-fit:cover;" />
+                                    }
+                                    else
+                                    {
+                                        <span>@(string.IsNullOrWhiteSpace(displayName) ? "?" : displayName.Trim()[0])</span>
+                                    }
+                                </div>
+                            </button>
+                            <button type="button" class="btn btn-light btn-sm rounded-circle me-3" style="width:32px;height:32px;padding:0;" onclick="document.getElementById('photoInput').click();">
+                                <i class="fa-solid fa-pen" style="font-size:12px;"></i>
+                            </button>
+                            <input type="file" name="photo" id="photoInput" class="d-none" accept="image/*" onchange="document.getElementById('photoUploadForm').submit();" />
+
+                            <div>
+                                <h2 class="mb-1">@displayName</h2>
+                                <div class="small text-muted">Manage your personal information</div>
+                            </div>
+                        </form>
+                        <div class="account-divider"></div>
+
+                        @if (ViewBag.EditMode == true)
+                        {
+                            <form asp-action="SaveClientAccount" method="post">
+                                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                                <input type="hidden" asp-for="ClientProfileID" />
+                                <input type="hidden" asp-for="UserID" />
+
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label asp-for="FirstName" class="form-label"></label>
+                                        <input asp-for="FirstName" class="form-control" />
+                                        <span asp-validation-for="FirstName" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label asp-for="LastName" class="form-label"></label>
+                                        <input asp-for="LastName" class="form-control" />
+                                        <span asp-validation-for="LastName" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label asp-for="Phone" class="form-label"></label>
+                                        <input asp-for="Phone" class="form-control" />
+                                        <span asp-validation-for="Phone" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label asp-for="Address" class="form-label"></label>
+                                        <input asp-for="Address" class="form-control" />
+                                        <span asp-validation-for="Address" class="text-danger small"></span>
+                                    </div>
+
+                                    
+                                </div>
+
+                                <div class="mt-4 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary btn-save">Save Changes</button>
+                                </div>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="account-section-title">Basic Info</div>
+                                    <div class="mb-2">
+                                        <div class="detail-label">First Name</div>
+                                        <div class="detail-value">@(string.IsNullOrWhiteSpace(Model?.FirstName) ? "-" : Model.FirstName)</div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <div class="detail-label">Last Name</div>
+                                        <div class="detail-value">@(string.IsNullOrWhiteSpace(Model?.LastName) ? "-" : Model.LastName)</div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="account-section-title">Contact</div>
+                                    <div class="mb-2">
+                                        <div class="detail-label">Phone</div>
+                                        <div class="detail-value">@(string.IsNullOrWhiteSpace(Model?.Phone) ? "-" : Model.Phone)</div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <div class="detail-label">Address</div>
+                                        <div class="detail-value">@(string.IsNullOrWhiteSpace(Model?.Address) ? "-" : Model.Address)</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 d-flex justify-content-end">
+                                <a asp-action="ClientAccount" asp-route-edit="true" class="btn btn-primary btn-save">Edit details</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

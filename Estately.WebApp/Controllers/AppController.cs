@@ -1,3 +1,11 @@
+﻿using Estately.Core.Entities;
+using Estately.Core.Entities.Identity;
+using Estately.Core.Interfaces;
+using Estately.Services.Interfaces;
+using Estately.Services.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
 ﻿using Estately.Services.Interfaces;
 using Estately.Services.ViewModels;
 using Estately.Core.Entities;
@@ -11,11 +19,15 @@ namespace Estately.WebApp.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IServiceProperty _serviceProperty;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IWebHostEnvironment _environment;
 
-        public AppController(IUnitOfWork unitOfWork, IServiceProperty serviceProperty)
+        public AppController(IUnitOfWork unitOfWork, IServiceProperty serviceProperty, UserManager<ApplicationUser> userManager, IWebHostEnvironment environment)
         {
             _unitOfWork = unitOfWork;
             _serviceProperty = serviceProperty;
+            _userManager = userManager;
+            _environment = environment;
         }
         public IActionResult Index()
         {
@@ -231,17 +243,413 @@ namespace Estately.WebApp.Controllers
         {
             return View();
         }
-        public IActionResult ClientAccount()
+
+        [HttpGet]
+        public async Task<IActionResult> ClientAccount(bool edit = false)
         {
-            return View();
+            if (User?.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            var appUser = await _userManager.FindByNameAsync(User.Identity.Name!);
+            if (appUser == null)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            var profile = await _unitOfWork.ClientProfileRepository
+                .Query()
+                .FirstOrDefaultAsync(p => p.UserID == appUser.Id);
+
+            var model = new ClientProfileViewModel
+            {
+                ClientProfileID = profile?.ClientProfileID ?? 0,
+                UserID = appUser.Id,
+                FirstName = profile?.FirstName,
+                LastName = profile?.LastName,
+                Phone = profile?.Phone,
+                Address = profile?.Address,
+                ProfilePhoto = profile?.ProfilePhoto,
+                Username = appUser.UserName
+            };
+
+            ViewBag.EditMode = edit;
+            return View(model);
         }
-        public IActionResult EmployeeAccount()
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveClientAccount(ClientProfileViewModel model)
         {
-            return View();
+            if (User?.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            var appUser = await _userManager.FindByNameAsync(User.Identity.Name!);
+            if (appUser == null)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                model.Username = appUser.UserName;
+                return View("ClientAccount", model);
+            }
+
+            var profile = await _unitOfWork.ClientProfileRepository
+                .Query()
+                .FirstOrDefaultAsync(p => p.UserID == appUser.Id);
+
+            if (profile == null)
+            {
+                profile = new TblClientProfile
+                {
+                    UserID = appUser.Id
+                };
+
+                await _unitOfWork.ClientProfileRepository.AddAsync(profile);
+            }
+
+            profile.FirstName = model.FirstName;
+            profile.LastName = model.LastName;
+            profile.Phone = model.Phone;
+            profile.Address = model.Address;
+
+            await _unitOfWork.CompleteAsync();
+
+            return RedirectToAction(nameof(ClientAccount), new { edit = false });
         }
-        public IActionResult DeveloperAccount()
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadClientPhoto(IFormFile photo)
         {
-            return View();
+            if (User?.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            var appUser = await _userManager.FindByNameAsync(User.Identity.Name!);
+            if (appUser == null)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            if (photo != null && photo.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_environment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), "Images", "Profiles");
+
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var fileName = $"client-{appUser.Id}-{DateTime.UtcNow.Ticks}{Path.GetExtension(photo.FileName)}";
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await photo.CopyToAsync(stream);
+                }
+
+                var relativePath = "/" + Path.Combine("Images", "Profiles", fileName).Replace("\\", "/");
+
+                var profile = await _unitOfWork.ClientProfileRepository
+                    .Query()
+                    .FirstOrDefaultAsync(p => p.UserID == appUser.Id);
+
+                if (profile == null)
+                {
+                    profile = new TblClientProfile
+                    {
+                        UserID = appUser.Id
+                    };
+
+                    await _unitOfWork.ClientProfileRepository.AddAsync(profile);
+                }
+
+                profile.ProfilePhoto = relativePath;
+                await _unitOfWork.CompleteAsync();
+            }
+
+            return RedirectToAction(nameof(ClientAccount), new { edit = false });
+        }
+        [HttpGet]
+        public async Task<IActionResult> EmployeeAccount(bool edit = false)
+        {
+            if (User?.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            var appUser = await _userManager.FindByNameAsync(User.Identity.Name!);
+            if (appUser == null)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            var employee = await _unitOfWork.EmployeeRepository
+                .Query()
+                .FirstOrDefaultAsync(e => e.UserID == appUser.Id);
+
+            var model = new EmployeeViewModel
+            {
+                EmployeeID = employee?.EmployeeID ?? 0,
+                UserID = appUser.Id,
+                FirstName = employee?.FirstName ?? string.Empty,
+                LastName = employee?.LastName ?? string.Empty,
+                Gender = employee?.Gender ?? string.Empty,
+                Age = employee?.Age.ToString() ?? string.Empty,
+                Phone = employee?.Phone ?? string.Empty,
+                Nationalid = employee?.Nationalid ?? string.Empty,
+                ProfilePhoto = employee?.ProfilePhoto,
+                Username = appUser.UserName
+            };
+
+            ViewBag.EditMode = edit;
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveEmployeeAccount(EmployeeViewModel model)
+        {
+            if (User?.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            var appUser = await _userManager.FindByNameAsync(User.Identity.Name!);
+            if (appUser == null)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                model.Username = appUser.UserName;
+                ViewBag.EditMode = true;
+                return View("EmployeeAccount", model);
+            }
+
+            var employee = await _unitOfWork.EmployeeRepository
+                .Query()
+                .FirstOrDefaultAsync(e => e.UserID == appUser.Id);
+
+            if (employee == null)
+            {
+                employee = new TblEmployee
+                {
+                    UserID = appUser.Id
+                };
+
+                await _unitOfWork.EmployeeRepository.AddAsync(employee);
+            }
+
+            employee.FirstName = model.FirstName;
+            employee.LastName = model.LastName;
+            employee.Gender = model.Gender;
+            if (int.TryParse(model.Age, out var ageInt))
+            {
+                employee.Age = ageInt;
+            }
+            employee.Phone = model.Phone;
+            employee.Nationalid = model.Nationalid;
+
+            await _unitOfWork.CompleteAsync();
+
+            return RedirectToAction(nameof(EmployeeAccount), new { edit = false });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadEmployeePhoto(IFormFile photo)
+        {
+            if (User?.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            var appUser = await _userManager.FindByNameAsync(User.Identity.Name!);
+            if (appUser == null)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            if (photo != null && photo.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_environment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), "Images", "Profiles");
+
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var fileName = $"employee-{appUser.Id}-{DateTime.UtcNow.Ticks}{Path.GetExtension(photo.FileName)}";
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await photo.CopyToAsync(stream);
+                }
+
+                var relativePath = "/" + Path.Combine("Images", "Profiles", fileName).Replace("\\", "/");
+
+                var employee = await _unitOfWork.EmployeeRepository
+                    .Query()
+                    .FirstOrDefaultAsync(e => e.UserID == appUser.Id);
+
+                if (employee == null)
+                {
+                    employee = new TblEmployee
+                    {
+                        UserID = appUser.Id
+                    };
+
+                    await _unitOfWork.EmployeeRepository.AddAsync(employee);
+                }
+
+                employee.ProfilePhoto = relativePath;
+                await _unitOfWork.CompleteAsync();
+            }
+
+            return RedirectToAction(nameof(EmployeeAccount), new { edit = false });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeveloperAccount(bool edit = false)
+        {
+            if (User?.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            var appUser = await _userManager.FindByNameAsync(User.Identity.Name!);
+            if (appUser == null)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            var dev = await _unitOfWork.DeveloperProfileRepository
+                .Query()
+                .FirstOrDefaultAsync(d => d.UserID == appUser.Id);
+
+            var model = new DeveloperProfileViewModel
+            {
+                DeveloperProfileID = dev?.DeveloperProfileID ?? 0,
+                UserID = appUser.Id,
+                DeveloperTitle = dev?.DeveloperTitle ?? string.Empty,
+                WebsiteURL = dev?.WebsiteURL,
+                PortofolioPhoto = dev?.PortofolioPhoto,
+                Phone = dev?.Phone,
+                Username = appUser.UserName
+            };
+
+            ViewBag.EditMode = edit;
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveDeveloperAccount(DeveloperProfileViewModel model)
+        {
+            if (User?.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            var appUser = await _userManager.FindByNameAsync(User.Identity.Name!);
+            if (appUser == null)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                model.Username = appUser.UserName;
+                ViewBag.EditMode = true;
+                return View("DeveloperAccount", model);
+            }
+
+            var dev = await _unitOfWork.DeveloperProfileRepository
+                .Query()
+                .FirstOrDefaultAsync(d => d.UserID == appUser.Id);
+
+            if (dev == null)
+            {
+                dev = new TblDeveloperProfile
+                {
+                    UserID = appUser.Id
+                };
+
+                await _unitOfWork.DeveloperProfileRepository.AddAsync(dev);
+            }
+
+            dev.DeveloperTitle = model.DeveloperTitle;
+            dev.WebsiteURL = model.WebsiteURL;
+            dev.Phone = model.Phone;
+
+            await _unitOfWork.CompleteAsync();
+
+            return RedirectToAction(nameof(DeveloperAccount), new { edit = false });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadDeveloperPhoto(IFormFile photo)
+        {
+            if (User?.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            var appUser = await _userManager.FindByNameAsync(User.Identity.Name!);
+            if (appUser == null)
+            {
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            if (photo != null && photo.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_environment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), "Images", "Profiles");
+
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var fileName = $"developer-{appUser.Id}-{DateTime.UtcNow.Ticks}{Path.GetExtension(photo.FileName)}";
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await photo.CopyToAsync(stream);
+                }
+
+                var relativePath = "/" + Path.Combine("Images", "Profiles", fileName).Replace("\\", "/");
+
+                var dev = await _unitOfWork.DeveloperProfileRepository
+                    .Query()
+                    .FirstOrDefaultAsync(d => d.UserID == appUser.Id);
+
+                if (dev == null)
+                {
+                    dev = new TblDeveloperProfile
+                    {
+                        UserID = appUser.Id
+                    };
+
+                    await _unitOfWork.DeveloperProfileRepository.AddAsync(dev);
+                }
+
+                dev.PortofolioPhoto = relativePath;
+                await _unitOfWork.CompleteAsync();
+            }
+
+            return RedirectToAction(nameof(DeveloperAccount), new { edit = false });
         }
         [Authorize]
         public async Task<IActionResult> Favorites() 
