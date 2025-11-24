@@ -337,7 +337,12 @@ document.addEventListener("DOMContentLoaded", function () {
     suggestions.forEach((item) => {
       const div = document.createElement("div");
       div.className = "suggestion-item";
-      div.textContent = item.name || item.text;
+      // Prefer DeveloperTitle for developers, but keep fallbacks for other entities
+      div.textContent =
+        item.developerTitle ||
+        item.DeveloperTitle ||
+        item.name ||
+        item.text;
       div.dataset.value = item.id || item.value;
       searchSuggestions.appendChild(div);
     });
@@ -386,7 +391,85 @@ document.addEventListener("DOMContentLoaded", function () {
   const addZonesBtn = document.getElementById("addZonesBtn");
   const zonesDropdownMenu = document.getElementById("zonesDropdownMenu");
   const zonesList = document.getElementById("zonesList");
-  let allZones = []; // Store all zones for display
+
+  // Static zones data mirroring the database, shaped for the frontend ({ id, cityId, name })
+  const zonesData = [
+    // Cairo (CityID: 1)
+    { id: 1, cityId: 1, name: "Nasr City" },
+    { id: 2, cityId: 1, name: "Heliopolis" },
+    { id: 3, cityId: 1, name: "Maadi" },
+    { id: 4, cityId: 1, name: "New Cairo" },
+    { id: 5, cityId: 1, name: "Zamalek" },
+
+    // Giza (CityID: 2)
+    { id: 6, cityId: 2, name: "Dokki" },
+    { id: 7, cityId: 2, name: "Mohandessin" },
+    { id: 8, cityId: 2, name: "Haram" },
+    { id: 9, cityId: 2, name: "October City" },
+    { id: 10, cityId: 2, name: "Sheikh Zayed" },
+
+    // Alexandria (CityID: 3)
+    { id: 11, cityId: 3, name: "Stanley" },
+    { id: 12, cityId: 3, name: "Smouha" },
+    { id: 13, cityId: 3, name: "Glim" },
+    { id: 14, cityId: 3, name: "Miami" },
+    { id: 15, cityId: 3, name: "Sidi Gaber" },
+
+    // Mansoura (CityID: 4)
+    { id: 16, cityId: 4, name: "Al Gomhoria" },
+    { id: 17, cityId: 4, name: "Al Mashaya" },
+    { id: 18, cityId: 4, name: "Talkha" },
+    { id: 19, cityId: 4, name: "Al Mahatta" },
+
+    // Tanta (CityID: 5)
+    { id: 20, cityId: 5, name: "El Gish Street" },
+    { id: 21, cityId: 5, name: "Saad Street" },
+    { id: 22, cityId: 5, name: "Stanley" },
+    { id: 23, cityId: 5, name: "El Bahr Street" },
+
+    // Aswan (CityID: 6)
+    { id: 24, cityId: 6, name: "Aswan (Aswa)" },
+    { id: 25, cityId: 6, name: "El Shallal" },
+    { id: 26, cityId: 6, name: "El Sadat" },
+    { id: 27, cityId: 6, name: "Ferasan" },
+
+    // Luxor (CityID: 7)
+    { id: 28, cityId: 7, name: "East Bank" },
+    { id: 29, cityId: 7, name: "West Bank" },
+    { id: 30, cityId: 7, name: "Karnak" },
+    { id: 31, cityId: 7, name: "El Tod" },
+
+    // Hurghada (CityID: 8)
+    { id: 32, cityId: 8, name: "El Dahar" },
+    { id: 33, cityId: 8, name: "Sakkala" },
+    { id: 34, cityId: 8, name: "El Kawther" },
+    { id: 35, cityId: 8, name: "Makadi Bay" },
+
+    // Port Said (CityID: 10)
+    { id: 41, cityId: 10, name: "Al Manakh" },
+    { id: 42, cityId: 10, name: "Port Fouad" },
+    { id: 43, cityId: 10, name: "Al Sharp" }
+  ];
+
+  // Start with all zones loaded from the static mapping
+  let allZones = zonesData.slice();
+
+  // Helper: filter zones based on currently selected city (if any)
+  function getFilteredZonesForCurrentCity(sourceZones) {
+    if (!sourceZones || sourceZones.length === 0) return [];
+
+    // If no city is selected, return all zones
+    if (!selectedCityId || selectedCityId.toString().trim() === "") {
+      return sourceZones;
+    }
+
+    const cityIdStr = selectedCityId.toString();
+
+    // Filter strictly by the known cityId field from zonesData
+    return sourceZones.filter((zone) => {
+      return zone.cityId && zone.cityId.toString() === cityIdStr;
+    });
+  }
 
   // Load zones on page load
   if (zonesList) {
@@ -422,20 +505,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Load zones from API and render as clickable list
   function loadZonesList() {
     if (!zonesList) return;
     
-    fetch("/TblProperties/GetAllZones")
-      .then((response) => response.json())
-      .then((zones) => {
-        allZones = zones;
-        renderZonesList();
-      })
-      .catch((error) => {
-        console.error("Error loading zones:", error);
-        zonesList.innerHTML = '<div class="zones-loading">Error loading zones</div>';
-      });
+    // Use static zonesData to avoid relying on API city linkage
+    allZones = zonesData.slice();
+    renderZonesList();
   }
 
   // Render zones as clickable list items
@@ -449,7 +524,8 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
     
-    allZones.forEach((zone) => {
+    const filteredZones = getFilteredZonesForCurrentCity(allZones);
+    filteredZones.forEach((zone) => {
       const zoneItem = document.createElement("div");
       zoneItem.className = "zone-list-item";
       zoneItem.dataset.zoneId = zone.id;
@@ -837,6 +913,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const selectedCityInput = document.getElementById("selectedCityId");
   const selectedCityTextEl = document.getElementById("selectedCityText");
+  const mobileSelectedCityTextEl = document.getElementById("mobileSelectedCityText");
+  const mobileZonesTextEl = document.getElementById("mobileZonesText");
+  const mobileDevelopersTextEl = document.getElementById("mobileDevelopersText");
+  const mobileAmenitiesTextEl = document.getElementById("mobileAmenitiesText");
+  const mobilePropertyTypesTextEl = document.getElementById("mobilePropertyTypesText");
+  const mobileBedsBathsTextEl = document.getElementById("mobileBedsBathsText");
+  const mobilePriceRangeTextEl = document.getElementById("mobilePriceRangeText");
   const applyCityBtn = document.getElementById("applyCityBtn");
 
   let citiesData = []; // unified { id, name } list for mapping
@@ -1005,6 +1088,19 @@ document.addEventListener("DOMContentLoaded", function () {
       selectedCityTextEl.textContent = cityName;
     }
 
+    if (mobileSelectedCityTextEl) {
+      mobileSelectedCityTextEl.textContent = cityName;
+    }
+
+    // If zones have already been loaded for mobile, re-render them with the new city filter
+    if (typeof renderZonesList === "function" && Array.isArray(allZones) && allZones.length > 0) {
+      try {
+        renderZonesList();
+      } catch (err) {
+        console.warn("Zones re-render after city change failed:", err);
+      }
+    }
+
     // highlight active city button
     const container = document.getElementById("citiesListContainer");
     if (container) {
@@ -1129,16 +1225,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (desktopZonesModal && desktopZonesGrid && desktopZonesConfirm) {
     desktopZonesModal.addEventListener("show.bs.modal", function () {
+      const renderForCurrentCity = () => {
+        const sourceZones = desktopDropdownItems.zones || [];
+        const filtered = getFilteredZonesForCurrentCity(sourceZones);
+        renderDesktopMultiSelect(desktopZonesGrid, filtered, desktopSelectedZones, "name");
+      };
+
       if (desktopDropdownItems.zones.length === 0) {
-        fetch("/TblProperties/GetAllZones")
-          .then((r) => r.json())
-          .then((data) => {
-            desktopDropdownItems.zones = data || [];
-            renderDesktopMultiSelect(desktopZonesGrid, desktopDropdownItems.zones, desktopSelectedZones, "name");
-          })
-          .catch((err) => console.error("Error loading zones:", err));
+        // Use the same static zonesData mapping as mobile to ensure city/zone linkage
+        desktopDropdownItems.zones = zonesData.slice();
+        renderForCurrentCity();
       } else {
-        renderDesktopMultiSelect(desktopZonesGrid, desktopDropdownItems.zones, desktopSelectedZones, "name");
+        renderForCurrentCity();
       }
     });
 
@@ -1176,11 +1274,22 @@ document.addEventListener("DOMContentLoaded", function () {
           .then((r) => r.json())
           .then((data) => {
             desktopDropdownItems.developers = data || [];
-            renderDesktopMultiSelect(desktopDevelopersGrid, desktopDropdownItems.developers, desktopSelectedDevelopers, "name");
+            // Use DeveloperTitle where available
+            renderDesktopMultiSelect(
+              desktopDevelopersGrid,
+              desktopDropdownItems.developers,
+              desktopSelectedDevelopers,
+              "developerTitle"
+            );
           })
           .catch((err) => console.error("Error loading developers:", err));
       } else {
-        renderDesktopMultiSelect(desktopDevelopersGrid, desktopDropdownItems.developers, desktopSelectedDevelopers, "name");
+        renderDesktopMultiSelect(
+          desktopDevelopersGrid,
+          desktopDropdownItems.developers,
+          desktopSelectedDevelopers,
+          "developerTitle"
+        );
       }
     });
 
@@ -1402,14 +1511,66 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Simple desktop display updater stubs (can be enhanced to show badges if needed)
-  function updateDesktopAreaDisplay() {}
-  function updateDesktopZonesDisplay() {}
-  function updateDesktopDevelopersDisplay() {}
-  function updateDesktopAmenitiesDisplay() {}
-  function updateDesktopPropertyTypesDisplay() {}
-  function updateDesktopBedsBathsDisplay() {}
-  function updateDesktopPriceRangeDisplay() {}
+  // Simple desktop display updater functions (also update mobile labels)
+  function updateDesktopAreaDisplay() {
+    // Areas currently reflected only in query params; no label text change required
+  }
+
+  function updateDesktopZonesDisplay() {
+    const desktopZonesTextEl = document.getElementById("desktopZonesText");
+    const count = desktopSelectedZones ? desktopSelectedZones.length : 0;
+    const label = count > 0 ? `Zones (${count})` : "Zones";
+    if (desktopZonesTextEl) desktopZonesTextEl.textContent = label;
+    if (mobileZonesTextEl) mobileZonesTextEl.textContent = label;
+  }
+
+  function updateDesktopDevelopersDisplay() {
+    const desktopDevelopersTextEl = document.getElementById("desktopDevelopersText");
+    const count = desktopSelectedDevelopers ? desktopSelectedDevelopers.length : 0;
+    const label = count > 0 ? `Developers (${count})` : "Developers";
+    if (desktopDevelopersTextEl) desktopDevelopersTextEl.textContent = label;
+    if (mobileDevelopersTextEl) mobileDevelopersTextEl.textContent = label;
+  }
+
+  function updateDesktopAmenitiesDisplay() {
+    const desktopAmenitiesTextEl = document.getElementById("desktopAmenitiesText");
+    const count = desktopSelectedAmenities ? desktopSelectedAmenities.length : 0;
+    const label = count > 0 ? `Amenities (${count})` : "Amenities";
+    if (desktopAmenitiesTextEl) desktopAmenitiesTextEl.textContent = label;
+    if (mobileAmenitiesTextEl) mobileAmenitiesTextEl.textContent = label;
+  }
+
+  function updateDesktopPropertyTypesDisplay() {
+    const desktopPropertyTypesTextEl = document.getElementById("desktopPropertyTypesText");
+    const count = desktopSelectedPropertyTypes ? desktopSelectedPropertyTypes.length : 0;
+    const label = count > 0 ? `Property Types (${count})` : "Property Types";
+    if (desktopPropertyTypesTextEl) desktopPropertyTypesTextEl.textContent = label;
+    if (mobilePropertyTypesTextEl) mobilePropertyTypesTextEl.textContent = label;
+  }
+
+  function updateDesktopBedsBathsDisplay() {
+    const desktopBedsBathsTextEl = document.getElementById("desktopBedsBathsText");
+    let label = "Beds and Baths";
+    if (desktopSelectedBedrooms || desktopSelectedBathrooms) {
+      const beds = desktopSelectedBedrooms || "Any";
+      const baths = desktopSelectedBathrooms || "Any";
+      label = `${beds} Beds, ${baths} Baths`;
+    }
+    if (desktopBedsBathsTextEl) desktopBedsBathsTextEl.textContent = label;
+    if (mobileBedsBathsTextEl) mobileBedsBathsTextEl.textContent = label;
+  }
+
+  function updateDesktopPriceRangeDisplay() {
+    const desktopPriceRangeTextEl = document.getElementById("desktopPriceRangeText");
+    let label = "Price Range";
+    if (desktopMinPrice || desktopMaxPrice) {
+      const min = desktopMinPrice || "0";
+      const max = desktopMaxPrice || "50M";
+      label = `${min} - ${max}`;
+    }
+    if (desktopPriceRangeTextEl) desktopPriceRangeTextEl.textContent = label;
+    if (mobilePriceRangeTextEl) mobilePriceRangeTextEl.textContent = label;
+  }
 
   const desktopBedsBathsModal = document.getElementById("desktopBedsBathsModal");
   if (desktopBedsBathsModal) {

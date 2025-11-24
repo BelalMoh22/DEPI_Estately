@@ -574,8 +574,8 @@ namespace Estately.Services.Implementations
                 PropertyTypeName = p.PropertyType?.TypeName,
                 ZoneName = p.Zone?.ZoneName ?? "",
                 CityName = p.Zone?.City?.CityName ?? "",
-                StatusName = p.Status?.StatusName ?? "Available",
-                AgentName = p.Agent != null ? $"{p.Agent.FirstName} {p.Agent.LastName}" : null,
+                AgentName = $"{p.Agent?.FirstName} {p.Agent?.LastName}",
+               
 
                 Images = p.TblPropertyImages?
                     .Select(i => new PropertyImageViewModel
