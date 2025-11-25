@@ -125,7 +125,7 @@
 
                         @if (ViewBag.EditMode == true)
                         {
-                            <form asp-action="SaveDeveloperAccount" method="post">
+                            <form asp-action="SaveDeveloperAccount" method="post" id="developerAccountForm">
                                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                                 <input type="hidden" asp-for="DeveloperProfileID" />
@@ -151,8 +151,9 @@
                                     </div>
                                 </div>
 
-                                <div class="mt-4 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary btn-save">Save Changes</button>
+                                <div class="mt-4 d-flex justify-content-between">
+                                    <button type="button" class="btn btn-outline-secondary btn-save" onclick="window.location.href='@Url.Action("Index", "App")';">Back</button>
+                                    <button type="submit" class="btn button btn-save">Save Changes</button>
                                 </div>
                             </form>
                         }
@@ -180,8 +181,9 @@
                                 </div>
                             </div>
 
-                            <div class="mt-4 d-flex justify-content-end">
-                                <a asp-action="DeveloperAccount" asp-route-edit="true" class="btn btn-primary btn-save">Edit details</a>
+                            <div class="mt-4 d-flex justify-content-between">
+                                <button type="button" class="btn btn-outline-secondary btn-save" onclick="window.location.href='@Url.Action("Index", "App")';">Back</button>
+                                <a asp-action="DeveloperAccount" asp-route-edit="true" class="btn button btn-save">Edit details</a>
                             </div>
                         }
                     </div>
@@ -190,3 +192,44 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            const form = document.getElementById('developerAccountForm');
+            if (!form) return;
+
+            const phoneInput = form.querySelector('[name="Phone"]');
+
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function () {
+                    this.value = this.value.replace(/[^0-9+\s]/g, '');
+                });
+            }
+
+            form.addEventListener('submit', function (e) {
+                let hasError = false;
+                const phone = phoneInput;
+                const phoneError = form.querySelector('span[data-valmsg-for="Phone"]');
+
+                if (phoneError) phoneError.textContent = '';
+
+                if (phone && phone.value) {
+                    const normalized = phone.value.replace(/\s+/g, '');
+                    const phoneRegex = /^(?:\+201|01)\d{9}$/;
+                    if (!phoneRegex.test(normalized)) {
+                        if (phoneError) phoneError.textContent = 'Phone must be a valid Egyptian mobile number like 01206474100 or +201206474100 (digits only, spaces allowed).';
+                        hasError = true;
+                    } else {
+                        phone.value = normalized;
+                    }
+                }
+
+                if (hasError) {
+                    e.preventDefault();
+                }
+            });
+        })();
+    </script>
+}

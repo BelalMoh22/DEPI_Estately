@@ -127,7 +127,7 @@
 
                         @if (ViewBag.EditMode == true)
                         {
-                            <form asp-action="SaveEmployeeAccount" method="post">
+                            <form asp-action="SaveEmployeeAccount" method="post" id="employeeAccountForm">
                                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                                 <input type="hidden" asp-for="EmployeeID" />
@@ -148,7 +148,11 @@
 
                                     <div class="col-md-6">
                                         <label asp-for="Gender" class="form-label"></label>
-                                        <input asp-for="Gender" class="form-control" />
+                                        <select asp-for="Gender" class="form-control">
+                                            <option value="">Select Gender</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                        </select>
                                         <span asp-validation-for="Gender" class="text-danger small"></span>
                                     </div>
 
@@ -171,8 +175,9 @@
                                     </div>
                                 </div>
 
-                                <div class="mt-4 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary btn-save">Save Changes</button>
+                                <div class="mt-4 d-flex justify-content-between">
+                                    <button type="button" class="btn btn-outline-secondary btn-save" onclick="window.location.href='@Url.Action("Index", "App")';">Back</button>
+                                    <button type="submit" class="btn button btn-save">Save Changes</button>
                                 </div>
                             </form>
                         }
@@ -212,8 +217,9 @@
                                 </div>
                             </div>
 
-                            <div class="mt-4 d-flex justify-content-end">
-                                <a asp-action="EmployeeAccount" asp-route-edit="true" class="btn btn-primary btn-save">Edit details</a>
+                            <div class="mt-4 d-flex justify-content-between">
+                                <button type="button" class="btn btn-outline-secondary btn-save" onclick="window.location.href='@Url.Action("Index", "App")';">Back</button>
+                                <a asp-action="EmployeeAccount" asp-route-edit="true" class="btn button btn-save">Edit details</a>
                             </div>
                         }
                     </div>
@@ -222,3 +228,71 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            const form = document.getElementById('employeeAccountForm');
+            if (!form) return;
+
+            const alphaRegex = /^[A-Za-z\s]+$/;
+            const phoneInput = form.querySelector('[name="Phone"]');
+
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function () {
+                    this.value = this.value.replace(/[^0-9+\s]/g, '');
+                });
+            }
+
+            form.addEventListener('submit', function (e) {
+                let hasError = false;
+
+                const first = form.querySelector('[name="FirstName"]');
+                const last = form.querySelector('[name="LastName"]');
+                const age = form.querySelector('[name="Age"]');
+                const phone = phoneInput;
+
+                const firstError = form.querySelector('span[data-valmsg-for="FirstName"]');
+                const lastError = form.querySelector('span[data-valmsg-for="LastName"]');
+                const ageError = form.querySelector('span[data-valmsg-for="Age"]');
+                const phoneError = form.querySelector('span[data-valmsg-for="Phone"]');
+
+                if (firstError) firstError.textContent = '';
+                if (lastError) lastError.textContent = '';
+                if (ageError) ageError.textContent = '';
+                if (phoneError) phoneError.textContent = '';
+
+                if (first && first.value && !alphaRegex.test(first.value.trim())) {
+                    if (firstError) firstError.textContent = 'First Name must contain alphabetic characters only.';
+                    hasError = true;
+                }
+
+                if (last && last.value && !alphaRegex.test(last.value.trim())) {
+                    if (lastError) lastError.textContent = 'Last Name must contain alphabetic characters only.';
+                    hasError = true;
+                }
+
+                if (age && age.value && /[A-Za-z]/.test(age.value)) {
+                    if (ageError) ageError.textContent = 'Age must contain digits only.';
+                    hasError = true;
+                }
+
+                if (phone && phone.value) {
+                    const normalized = phone.value.replace(/\s+/g, '');
+                    const phoneRegex = /^(?:\+201|01)\d{9}$/;
+                    if (!phoneRegex.test(normalized)) {
+                        if (phoneError) phoneError.textContent = 'Phone must be a valid Egyptian mobile number like 01206474100 or +201206474100 (digits only, spaces allowed).';
+                        hasError = true;
+                    } else {
+                        phone.value = normalized;
+                    }
+                }
+
+                if (hasError) {
+                    e.preventDefault();
+                }
+            });
+        })();
+    </script>
+}

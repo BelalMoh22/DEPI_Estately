@@ -3,7 +3,6 @@
 <style>
     .auth-wrapper {
         min-height: 100vh;
-        background: #f8fafc;
         padding: 20px;
     }
 
@@ -31,7 +30,18 @@
         color: #6c757d;
     }
 </style>
-<div class="auth-wrapper d-flex justify-content-center align-items-center">
+
+<div class="hero">
+    <div class="hero-slide">
+        <div class="img overlay" style="background-image: url('@Url.Content("~/images/hero_bg_3.jpg")')"></div>
+        <div class="img overlay" style="background-image: url('@Url.Content("~/images/hero_bg_2.jpg")')"></div>
+        <div class="img overlay" style="background-image: url('@Url.Content("~/images/hero_bg_1.jpg")')"></div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-12 d-flex justify-content-center">
+                <div class="auth-wrapper d-flex justify-content-center align-items-center">
     <div class="auth-card shadow p-4 rounded-4">
 
         <h2 class="text-center mb-2 fw-bold header-Text">Create Account</h2>
@@ -61,7 +71,7 @@
             </div>
 
             <div class="mb-3 position-relative">
-                <label asp-for="ConfirmPassword" class="form-label"></label>
+                <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
                 <input asp-for="ConfirmPassword" type="password" class="form-control form-input password-field" />
                 <i class="fa-solid fa-eye toggle-password"></i>
                 <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
@@ -77,6 +87,10 @@
             </div>
 
         </form>
+    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
