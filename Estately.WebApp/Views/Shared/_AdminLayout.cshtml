@@ -32,6 +32,7 @@
             width: 250px;
             z-index: 1000;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto !important; /* allow menu to scroll if it is taller than the viewport */
         }
         .admin-sidebar .logo {
             padding: 20px;
@@ -244,9 +245,9 @@
             <a class="nav-link @(currentController == "Admin" ? "active" : "")" asp-controller="Admin" asp-action="Dashboard">
                 <i class="fa-solid fa-chart-column me-2"></i> Dashboard
             </a>
-            @* <a class="nav-link @(currentController == "TblUsers" ? "active" : "")" asp-controller="TblUsers" asp-action="Index">
+            <a class="nav-link @(currentController == "ApplicationUsers" ? "active" : "")" asp-controller="ApplicationUsers" asp-action="Index">
                 <i class="bi bi-people me-2"></i> Users
-            </a> *@
+            </a>
             <a class="nav-link @(currentController == "TblProperties" ? "active" : "")" asp-controller="TblProperties" asp-action="Index">
                 <i class="bi bi-house-door me-2"></i> Properties
             </a>

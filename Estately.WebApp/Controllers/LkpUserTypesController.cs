@@ -101,25 +101,27 @@ namespace Estately.WebApp.Controllers
         }
 
         // POST: LkpUserTypes/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var model = await _userTypeService.GetUserTypeByIdAsync(id);
-        //    if (model == null)
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var model = await _userTypeService.GetUserTypeByIdAsync(id);
+            if (model == null)
+            {
+                return NotFound();
+            }
 
-        //    if (await _userTypeService.IsTypeUsedAsync(id))
-        //    {
-        //        TempData["Error"] = "Cannot delete this usertype because it contains users. You must delete those users first.";
-        //        return RedirectToAction(nameof(Delete), new { id });
-        //    }
-
-        //    await _userTypeService.DeleteUserTypeAsync(id);
-        //    TempData["Success"] = "User type deleted successfully.";
-        //    return RedirectToAction(nameof(Index));
-        //}
+            try
+            {
+                await _userTypeService.DeleteUserTypeAsync(id);
+                TempData["Success"] = "User type deleted successfully.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (InvalidOperationException)
+            {
+                TempData["Error"] = "Cannot delete this user type because there are users and related records linked to it. Please delete the associated users and their profiles in other tables first.";
+                return RedirectToAction(nameof(Delete), new { id });
+            }
+        }
     }
 }

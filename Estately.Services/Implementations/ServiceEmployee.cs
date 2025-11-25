@@ -101,20 +101,10 @@
             var entity = await _unitOfWork.EmployeeRepository.GetByIdAsync(vm.EmployeeID);
             if (entity == null) return;
 
-            // Update the existing tracked entity to avoid EF tracking conflicts
-            entity.UserID = vm.UserID;
-            entity.FirstName = vm.FirstName;
-            entity.LastName = vm.LastName;
-            entity.Phone = vm.Phone;
-            entity.Gender = vm.Gender;
-            entity.Age = vm.Age;
-            entity.Nationalid = vm.Nationalid;
-            entity.JobTitleId = vm.JobTitleId;
+            // Only allow admin to change limited fields from the Edit screen
             entity.BranchDepartmentId = vm.BranchDepartmentId;
             entity.ReportsTo = vm.ReportsTo;
             entity.Salary = vm.Salary;
-            entity.ProfilePhoto = vm.ProfilePhoto;
-            entity.HireDate = vm.HireDate;
 
             await _unitOfWork.EmployeeRepository.UpdateAsync(entity);
             await _unitOfWork.CompleteAsync();

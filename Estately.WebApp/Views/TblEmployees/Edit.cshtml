@@ -8,7 +8,7 @@
 <div class="table-container">
     <h4>Edit Employee</h4>
 
-    <form asp-action="Edit" method="post" enctype="multipart/form-data" class="mt-4">
+    <form asp-action="Edit" method="post" class="mt-4">
 
         <input type="hidden" asp-for="EmployeeID" />
 
@@ -18,16 +18,12 @@
 
             <div class="col-md-6 mb-3">
                 <label>User (Login Email)</label>
-                <select asp-for="UserID" class="form-control"
-                        asp-items="@(new SelectList(Model.Users, "UserID", "Email"))">
-                    <option value="">-- Select User --</option>
-                </select>
-                <span asp-validation-for="UserID" class="text-danger"></span>
+                <input asp-for="Email" class="form-control"/>
             </div>
 
             <div class="col-md-6 mb-3">
                 <label>First Name</label>
-                <input asp-for="FirstName" class="form-control" />
+                <input asp-for="FirstName" class="form-control"/>
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
 
@@ -39,28 +35,25 @@
 
             <div class="col-md-6 mb-3">
                 <label>Phone</label>
-                <input asp-for="Phone" class="form-control" />
+                <input asp-for="Phone" class="form-control"/>
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
 
             <div class="col-md-6 mb-3">
                 <label>National ID</label>
-                <input asp-for="Nationalid" class="form-control" />
+                <input asp-for="Nationalid" class="form-control"/>
                 <span asp-validation-for="Nationalid" class="text-danger"></span>
             </div>
 
             <div class="col-md-4 mb-3">
                 <label>Gender</label>
-                <select asp-for="Gender" class="form-control">
-                    <option>Male</option>
-                    <option>Female</option>
-                </select>
+                <input asp-for="Gender" class="form-control"/>
                 <span asp-validation-for="Gender" class="text-danger"></span>
             </div>
 
             <div class="col-md-4 mb-3">
                 <label>Age</label>
-                <input asp-for="Age" class="form-control" />
+                <input asp-for="Age" class="form-control"/>
                 <span asp-validation-for="Age" class="text-danger"></span>
             </div>
 
@@ -72,8 +65,8 @@
 
             <div class="col-md-6 mb-3">
                 <label>Job Title</label>
-                <select asp-for="JobTitleId" class="form-control"
-                        asp-items="@(new SelectList(Model.JobTitles, "JobTitleId", "JobTitleName"))"></select>
+                <input class="form-control" value="@Model.JobTitleName" />
+                <input type="hidden" asp-for="JobTitleId" />
                 <span asp-validation-for="JobTitleId" class="text-danger"></span>
             </div>
 
@@ -102,10 +95,6 @@
                 <span asp-validation-for="ReportsTo" class="text-danger"></span>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label>Profile Photo</label>
-                <input asp-for="UploadedPhoto" type="file" class="form-control" />
-            </div>
         </div>
 
         <div class="mt-4">
