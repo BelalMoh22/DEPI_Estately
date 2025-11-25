@@ -24,7 +24,17 @@
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.15s ease-in-out;
-  white-space: nowrap;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.25;
+}
+
+/* Ensure long labels inside modal pills are not forced to a single line by .btn */
+.desktop-filter-modal .property-type-btn,
+.desktop-filter-modal .amenity-btn,
+.desktop-filter-modal .desktop-multiselect-btn,
+.desktop-filter-modal .option-btn {
+  white-space: normal !important;
 }
 
 .property-type-btn.selected,
