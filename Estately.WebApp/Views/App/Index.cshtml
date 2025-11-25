@@ -207,58 +207,6 @@
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var verifyBtn = document.getElementById('verifyAgentBtn');
-        var phoneInput = document.getElementById('phoneNumber');
-        var toastElement = document.getElementById('verifyToast');
-        var toastBody = document.getElementById('verifyToastBody');
-
-        if (!verifyBtn || !phoneInput || !toastElement || !toastBody || typeof bootstrap === 'undefined') {
-            return;
-        }
-
-        var toast = new bootstrap.Toast(toastElement);
-
-        verifyBtn.addEventListener('click', function () {
-            var phone = (phoneInput.value || '').trim();
-            if (!phone) {
-                toastBody.textContent = 'Please enter a phone number.';
-                toastElement.classList.remove('bg-success');
-                toastElement.classList.add('bg-danger');
-                toast.show();
-                return;
-            }
-
-            var url = '/App/VerifySalesAgent?phone=' + encodeURIComponent(phone);
-
-            fetch(url, {
-                method: 'GET'
-            })
-                .then(function (response) { return response.json(); })
-                .then(function (data) {
-                    if (data && data.isAgent) {
-                        toastBody.textContent = 'This phone number belongs to a verified sales agent.';
-                        toastElement.classList.remove('bg-danger');
-                        toastElement.classList.add('bg-success');
-                    } else {
-                        toastBody.textContent = 'This phone number is not registered as a sales agent.';
-                        toastElement.classList.remove('bg-success');
-                        toastElement.classList.add('bg-danger');
-                    }
-                    toast.show();
-                })
-                .catch(function () {
-                    toastBody.textContent = 'An error occurred while verifying the sales agent.';
-                    toastElement.classList.remove('bg-success');
-                    toastElement.classList.add('bg-danger');
-                    toast.show();
-                });
-        });
-    });
-</script>
-
 <!-- City Selection Modal -->
 <div class="modal fade desktop-filter-modal" id="cityModal" tabindex="-1" aria-labelledby="cityModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -691,18 +639,18 @@
             </div>
             <div class="modal-body">
                 <div class="range-slider-container">
-                    <input type="range" class="range-slider" min="0" max="5000000" step="100000" value="0" id="desktopPriceMin" />
-                    <input type="range" class="range-slider" min="0" max="5000000" step="100000" value="5000000" id="desktopPriceMax" />
+                    <input type="range" class="range-slider" min="0" max="10000000" step="100000" value="0" id="desktopPriceMin" />
+                    <input type="range" class="range-slider" min="0" max="10000000" step="100000" value="10000000" id="desktopPriceMax" />
                 </div>
                 <div class="range-inputs d-flex gap-3 mt-3">
                     <div class="range-input">
                         <label class="form-label small text-muted">Min Price</label>
-                        <input type="number" class="form-control" min="0" max="5000000" step="100000" value="0" id="desktopPriceMinInput" placeholder="Min Price" />
+                        <input type="number" class="form-control" min="0" max="10000000" step="100000" value="0" id="desktopPriceMinInput" placeholder="Min Price" />
                         <span class="unit">L.E</span>
                     </div>
                     <div class="range-input">
                         <label class="form-label small text-muted">Max Price</label>
-                        <input type="number" class="form-control" min="0" max="5000000" step="100000" value="5000000" id="desktopPriceMaxInput" placeholder="Max Price" />
+                        <input type="number" class="form-control" min="0" max="10000000" step="100000" value="10000000" id="desktopPriceMaxInput" placeholder="Max Price" />
                         <span class="unit">L.E</span>
                     </div>
                 </div>
@@ -1148,7 +1096,6 @@
     </div>
 </div>
 <!-- ============================================================================================================ -->
-<!-- section verify agent phone number -->
 <div class="section">
     <div class="row justify-content-center footer-cta" data-aos="fade-up">
         <div class="col-lg-7 mx-auto text-center">
@@ -1161,4 +1108,56 @@
     </div>
     <!-- /.row -->
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var verifyBtn = document.getElementById('verifyAgentBtn');
+        var phoneInput = document.getElementById('phoneNumber');
+        var toastElement = document.getElementById('verifyToast');
+        var toastBody = document.getElementById('verifyToastBody');
+
+        if (!verifyBtn || !phoneInput || !toastElement || !toastBody || typeof bootstrap === 'undefined') {
+            return;
+        }
+
+        var toast = new bootstrap.Toast(toastElement);
+
+        verifyBtn.addEventListener('click', function () {
+            var phone = (phoneInput.value || '').trim();
+            if (!phone) {
+                toastBody.textContent = 'Please enter a phone number.';
+                toastElement.classList.remove('bg-success');
+                toastElement.classList.add('bg-danger');
+                toast.show();
+                return;
+            }
+
+            var url = '/App/VerifySalesAgent?phone=' + encodeURIComponent(phone);
+
+            fetch(url, {
+                method: 'GET'
+            })
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    if (data && data.isAgent) {
+                        toastBody.textContent = 'This phone number belongs to a verified sales agent.';
+                        toastElement.classList.remove('bg-danger');
+                        toastElement.classList.add('bg-success');
+                    } else {
+                        toastBody.textContent = 'This phone number is not registered as a sales agent.';
+                        toastElement.classList.remove('bg-success');
+                        toastElement.classList.add('bg-danger');
+                    }
+                    toast.show();
+                })
+                .catch(function () {
+                    toastBody.textContent = 'An error occurred while verifying the sales agent.';
+                    toastElement.classList.remove('bg-success');
+                    toastElement.classList.add('bg-danger');
+                    toast.show();
+                });
+        });
+    });
+</script>
+
 

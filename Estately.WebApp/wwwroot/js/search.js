@@ -602,10 +602,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
-
-  // ============================================
-  // SEARCH FUNCTIONALITY WITH FILTERS
-  // ============================================
   // Remove any old event listeners and attach new ones
   const searchButtons = document.querySelectorAll(".search-button, .search-btn");
   searchButtons.forEach((btn) => {
@@ -749,7 +745,7 @@ document.addEventListener("DOMContentLoaded", function () {
         
       // Default values (no filter applied)
       const defaultMin = 0;
-      const defaultMax = 50000000;
+      const defaultMax = 10000000;
         
         // Only include minPrice if it's valid and greater than default (user has set a minimum)
         if (!isNaN(minVal) && minVal > defaultMin && minVal > 0) {
@@ -891,10 +887,6 @@ document.addEventListener("DOMContentLoaded", function () {
       performSearch(e);
     });
   }
-
-  // ============================================
-  // DESKTOP SEARCH DROPDOWNS FUNCTIONALITY
-  // ============================================
   
   // Store items globally for badge display and desktop modals
   const desktopDropdownItems = {
@@ -1152,10 +1144,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ============================================
-  // DESKTOP MODALS FOR AREA / ZONES / DEVELOPERS / AMENITIES
-  // ============================================
-
   function renderDesktopMultiSelect(gridEl, items, selectedArray, itemNameSelector) {
     if (!gridEl) return;
     gridEl.innerHTML = "";
@@ -1356,10 +1344,6 @@ document.addEventListener("DOMContentLoaded", function () {
       if (modal) modal.hide();
     });
   }
-
-  // ============================================
-  // DESKTOP FILTER MODALS FUNCTIONALITY
-  // ============================================
   
   // Desktop Property Types Modal - Use event delegation for dynamic content
   const desktopPropertyTypesGrid = document.getElementById("desktopPropertyTypesGrid");
@@ -1452,7 +1436,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (desktopPriceMinSlider && desktopPriceMaxSlider && desktopPriceMinInput && desktopPriceMaxInput) {
     // Initialize values (max is 50 million)
     const minSliderVal = parseInt(desktopPriceMinSlider.value) || 0;
-    const maxSliderVal = parseInt(desktopPriceMaxSlider.value) || 50000000;
+    const maxSliderVal = parseInt(desktopPriceMaxSlider.value) || 10000000;
     desktopPriceMinInput.value = minSliderVal;
     desktopPriceMaxInput.value = maxSliderVal;
     desktopPriceMinSlider.value = minSliderVal;
@@ -1486,7 +1470,7 @@ document.addEventListener("DOMContentLoaded", function () {
       let value = this.value.toString().replace(/[^\d]/g, "");
       value = parseInt(value) || 0;
       const min = parseInt(desktopPriceMinSlider.min) || 0;
-      const max = parseInt(desktopPriceMinSlider.max) || 50000000;
+        const max = parseInt(desktopPriceMinSlider.max) || 10000000;
       value = Math.max(min, Math.min(max, value));
       const maxValue = parseInt(desktopPriceMaxInput.value) || max;
       if (value > maxValue) value = maxValue;
@@ -1500,7 +1484,7 @@ document.addEventListener("DOMContentLoaded", function () {
       let value = this.value.toString().replace(/[^\d]/g, "");
       value = parseInt(value) || 0;
       const min = parseInt(desktopPriceMaxSlider.min) || 0;
-      const max = parseInt(desktopPriceMaxSlider.max) || 50000000;
+      const max = parseInt(desktopPriceMaxSlider.max) || 10000000;
       value = Math.max(min, Math.min(max, value));
       const minValue = parseInt(desktopPriceMinInput.value) || min;
       if (value < minValue) value = minValue;
@@ -1565,7 +1549,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let label = "Price Range";
     if (desktopMinPrice || desktopMaxPrice) {
       const min = desktopMinPrice || "0";
-      const max = desktopMaxPrice || "50M";
+      const max = desktopMaxPrice || "10M";
       label = `${min} - ${max}`;
     }
     if (desktopPriceRangeTextEl) desktopPriceRangeTextEl.textContent = label;
@@ -1601,7 +1585,7 @@ document.addEventListener("DOMContentLoaded", function () {
         desktopPriceMinSlider.value = minVal;
       }
       if (desktopPriceMaxInput && desktopPriceMaxSlider) {
-        const maxVal = desktopMaxPrice ? parseFloat(desktopMaxPrice) : 50000000;
+          const maxVal = desktopMaxPrice ? parseFloat(desktopMaxPrice) : 10000000;
         desktopPriceMaxInput.value = maxVal;
         desktopPriceMaxSlider.value = maxVal;
       }
@@ -1637,7 +1621,7 @@ function resetAllFilters() {
   const areaMaxSlider = document.getElementById("areaMax");
 
   if (priceMinSlider) priceMinSlider.value = priceMinSlider.min || "0";
-  if (priceMaxSlider) priceMaxSlider.value = priceMaxSlider.max || "100000000";
+    if (priceMaxSlider) priceMaxSlider.value = priceMaxSlider.max || "10000000";
   if (areaMinSlider) areaMinSlider.value = 50;
   if (areaMaxSlider) areaMaxSlider.value = 400;
 
@@ -1647,7 +1631,7 @@ function resetAllFilters() {
   const areaMaxInput = document.getElementById("areaMaxInput");
 
   if (priceMinInput) priceMinInput.value = priceMinSlider?.min || "0";
-  if (priceMaxInput) priceMaxInput.value = priceMaxSlider?.max || "100000000";
+    if (priceMaxInput) priceMaxInput.value = priceMaxSlider?.max || "10000000";
   if (areaMinInput) areaMinInput.value = "50";
   if (areaMaxInput) areaMaxInput.value = "400";
 
