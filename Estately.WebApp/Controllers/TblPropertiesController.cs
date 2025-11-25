@@ -72,9 +72,9 @@
         {
             var developers = await _unitOfWork.DeveloperProfileRepository.ReadAllAsync();
             var result = developers
-                .Where(d => !string.IsNullOrWhiteSpace(d.DeveloperName))
-                .Select(d => new { id = d.DeveloperProfileID, name = d.DeveloperName })
-                .OrderBy(d => d.name)
+                .Where(d => !string.IsNullOrWhiteSpace(d.DeveloperTitle))
+                .Select(d => new { id = d.DeveloperProfileID.ToString(), developerTitle = d.DeveloperTitle })
+                .OrderBy(d => d.developerTitle)
                 .ToList();
             return Json(result);
         }
