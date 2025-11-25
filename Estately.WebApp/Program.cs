@@ -33,8 +33,7 @@ namespace Estately.WebApp
             {
                 options.LoginPath = "/Accounts/Login";
             });
-
-
+S
             //builder.Services.AddControllersWithViews();
             builder.Services.AddControllersWithViews().AddJsonOptions(options =>
             {
