@@ -1,9 +1,5 @@
 ﻿using Estately.Core.Entities.Identity;
-using Estately.Services.Interfaces.Email;
-using Estately.Services.Implementations;
 using Microsoft.AspNetCore.Identity;
-using Estately.Services.Interfaces;
-
 namespace Estately.WebApp
 {
     public class Program
@@ -64,7 +60,6 @@ namespace Estately.WebApp
             builder.Services.AddScoped<IServiceAppointment, ServiceAppointment>();
             builder.Services.AddScoped<IServicePropertyFeature, ServicePropertyFeature>();
 
-            // Add this if not already there
             builder.Services.AddScoped<IServiceCity, ServiceCity>();
             builder.Services.AddScoped<IServicePropertyStatus, ServicePropertyStatus>();
             builder.Services.AddScoped<IServiceUser, ServiceUser>();
@@ -74,12 +69,12 @@ namespace Estately.WebApp
 
             // Add session support for admin authentication
             builder.Services.AddDistributedMemoryCache();
-            builder.Services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
+            //builder.Services.AddSession(options =>
+            //{
+            //    options.IdleTimeout = TimeSpan.FromMinutes(30);
+            //    options.Cookie.HttpOnly = true;
+            //    options.Cookie.IsEssential = true;
+            //});
 
             var app = builder.Build();
 
