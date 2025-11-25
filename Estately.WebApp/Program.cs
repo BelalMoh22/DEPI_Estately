@@ -2,6 +2,7 @@
 using Estately.Services.Interfaces.Email;
 using Estately.Services.Implementations;
 using Microsoft.AspNetCore.Identity;
+using Estately.Services.Interfaces;
 
 namespace Estately.WebApp
 {
@@ -66,6 +67,7 @@ namespace Estately.WebApp
             // Add this if not already there
             builder.Services.AddScoped<IServiceCity, ServiceCity>();
             builder.Services.AddScoped<IServicePropertyStatus, ServicePropertyStatus>();
+            builder.Services.AddScoped<IServiceUser, ServiceUser>();
             builder.Services.AddScoped<AccountService>();
             //builder.Services.AddScoped<IEmailSender,SmtpEmailSender>();
             //builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));

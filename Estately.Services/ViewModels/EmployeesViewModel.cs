@@ -7,29 +7,47 @@ namespace Estately.Services.ViewModels
     {
         public int EmployeeID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Job Title is required")]
+        [Display(Name = "Job Title")]
         public int JobTitleId { get; set; }
         public int? BranchDepartmentId { get; set; }
         public int? ReportsTo { get; set; }
-        [Required]
+        [Required(ErrorMessage = "User is required")]
+        [Display(Name = "User")]
         public int UserID { get; set; }
 
         public string FullName => $"{FirstName} {LastName}";
 
-        [Required]
+        [Required(ErrorMessage = "First Name is required")]
+        [StringLength(255)]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; } = string.Empty;
-        [Required]
+
+        [Required(ErrorMessage = "Last Name is required")]
+        [StringLength(255)]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; } = string.Empty;
-        [Required]
+
+        [Required(ErrorMessage = "Gender is required")]
+        [StringLength(50)]
         public string Gender { get; set; } = string.Empty;
-        [Required]
+
+        [Required(ErrorMessage = "Age is required")]
+        [Range(18, 65, ErrorMessage = "Age must be between 18 and 65.")]
         public int Age { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Phone is required")]
+        [StringLength(50)]
         public string Phone { get; set; } = string.Empty;
-        [Required]
+
+        [Required(ErrorMessage = "National ID is required")]
+        [StringLength(14)]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "National ID must be numeric.")]
         public string Nationalid { get; set; } = string.Empty;
 
+        [Range(0, double.MaxValue, ErrorMessage = "Salary must be a positive number.")]
         public decimal Salary { get; set; }
+
         public DateTime? HireDate { get; set; } = DateTime.Now;
 
         public string? ProfilePhoto { get; set; }

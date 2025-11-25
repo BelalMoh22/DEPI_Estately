@@ -1,8 +1,4 @@
-﻿// AppDBContext.cs
-// Generated from scratch for Estately project (Identity with int keys)
-// Reference diagram (uploaded): sandbox:/mnt/data/0e7a6b29-8569-46cf-a6c9-3a8b49c84aec.png
-using Microsoft.EntityFrameworkCore.Design;
-
+﻿using Microsoft.EntityFrameworkCore.Design;
 namespace Estately.Infrastructure.Data
 {
     public class AppDBContextFactory : IDesignTimeDbContextFactory<AppDBContext>
@@ -79,50 +75,31 @@ namespace Estately.Infrastructure.Data
             modelBuilder.Entity<ApplicationUserLogin>().ToTable("AspNetUserLogins");
             modelBuilder.Entity<ApplicationRoleClaim>().ToTable("AspNetRoleClaims");
             modelBuilder.Entity<ApplicationUserToken>().ToTable("AspNetUserTokens");
-
-            // ===============================
-            // ONE-TO-ONE PROFILES
-            // ===============================
-
-            // Client Profile (1:1)
             modelBuilder.Entity<TblClientProfile>()
                 .HasOne(p => p.User)
                 .WithOne(u => u.ClientProfile)
                 .HasForeignKey<TblClientProfile>(p => p.UserID)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            // Developer Profile (1:1)
             modelBuilder.Entity<TblDeveloperProfile>()
                 .HasOne(p => p.User)
                 .WithOne(u => u.DeveloperProfile)
                 .HasForeignKey<TblDeveloperProfile>(p => p.UserID)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            // Employee Profile (1:1)
             modelBuilder.Entity<TblEmployee>()
                 .HasOne(e => e.User)
                 .WithOne(u => u.EmployeeProfile)
                 .HasForeignKey<TblEmployee>(e => e.UserID)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            // ===============================
-            // USER TYPE (ONE-TO-MANY)
-            // ===============================
             modelBuilder.Entity<ApplicationUser>()
                 .HasOne(u => u.UserType)
                 .WithMany(t => t.Users)
                 .HasForeignKey(u => u.UserTypeID)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            // ===============================
-            // ONE-TO-MANY Documents & History
-            // ===============================
             modelBuilder.Entity<TblPropertyDocument>()
                 .HasOne(d => d.User)
                 .WithMany(u => u.PropertyDocuments)
                 .HasForeignKey(d => d.UserID)
                 .OnDelete(DeleteBehavior.Restrict);
-
             modelBuilder.Entity<TblPropertyHistory>()
                 .HasOne(h => h.User)
                 .WithMany(u => u.PropertyHistories)
