@@ -33,7 +33,6 @@ namespace Estately.WebApp
             {
                 options.LoginPath = "/Accounts/Login";
             });
-S
             //builder.Services.AddControllersWithViews();
             builder.Services.AddControllersWithViews().AddJsonOptions(options =>
             {
@@ -63,12 +62,12 @@ S
 
             // Add session support for admin authentication
             builder.Services.AddDistributedMemoryCache();
-            //builder.Services.AddSession(options =>
-            //{
-            //    options.IdleTimeout = TimeSpan.FromMinutes(30);
-            //    options.Cookie.HttpOnly = true;
-            //    options.Cookie.IsEssential = true;
-            //});
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
             var app = builder.Build();
 
@@ -101,7 +100,6 @@ S
             app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                //pattern: "{controller=Home}/{action=Index}/{id?}")
                 pattern: "{controller=App}/{action=Index}/{id?}")
                 .WithStaticAssets();
             app.Run();
