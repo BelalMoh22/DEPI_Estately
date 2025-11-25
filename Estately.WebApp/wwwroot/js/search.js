@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (priceMinSlider && priceMaxSlider && priceMinInput && priceMaxInput) {
     // Initialize values - ensure inputs match sliders
     const minSliderVal = parseInt(priceMinSlider.value) || 0;
-    const maxSliderVal = parseInt(priceMaxSlider.value) || 100000000;
+      const maxSliderVal = parseInt(priceMaxSlider.value) || 10000000;
     priceMinInput.value = minSliderVal;
     priceMaxInput.value = maxSliderVal;
     // Also ensure sliders are set correctly
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
       
       // Clamp value to valid range
       const min = parseInt(priceMinSlider.min) || 0;
-      const max = parseInt(priceMinSlider.max) || 100000000;
+        const max = parseInt(priceMinSlider.max) || 10000000;
       value = Math.max(min, Math.min(max, value));
       
       // Ensure min doesn't exceed max
