@@ -8,7 +8,7 @@
 <style>
     .property-img-wrapper {
         width: 100%;
-        height: 350px; /* Match card height from Properties page */
+        height: 350px;
         overflow: hidden;
         border-radius: 4px;
     }
@@ -19,9 +19,74 @@
         object-fit: cover;
     }
 
+    .property-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .property-actions .btn {
+        flex: 1 1 auto;
+        min-width: 120px;
+    }
+
+    /* Mobile (phones, 576px and down) */
     @@media (max-width: 576px) {
         .property-img-wrapper {
             height: 260px;
+        }
+
+        .property-actions {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .property-actions .btn {
+            width: 100%;
+            min-width: unset;
+        }
+
+        .specs {
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .heading {
+            font-size: 24px;
+        }
+
+        .section {
+            padding: 30px 0;
+        }
+    }
+
+    /* Tablets (768px and down) */
+    @@media (max-width: 768px) {
+        .property-img-wrapper {
+            height: 300px;
+        }
+
+        .property-actions .btn {
+            font-size: 14px;
+            padding: 8px 12px;
+        }
+    }
+
+    /* Small tablets and large phones (992px and down) */
+    @@media (max-width: 992px) {
+        .property-content {
+            padding: 15px;
+        }
+    }
+
+    /* Toast notification responsive */
+    @@media (max-width: 576px) {
+        .position-fixed.top-0.end-0 {
+            top: 10px !important;
+            right: 10px !important;
+            left: 10px !important;
+            padding: 10px !important;
         }
     }
 </style>
@@ -76,12 +141,12 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row g-3">
             @if (Model != null && Model.Any())
             {
                 foreach (var property in Model)
                 {
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                         <div class="property-item mb-30">
                             <a asp-action="PropertySingle" asp-controller="App" asp-route-id="@property.PropertyID" class="img">
                                 <div class="property-img-wrapper">
@@ -111,14 +176,16 @@
                                         </span>
                                     </div>
 
-                                    <a asp-action="PropertySingle" asp-controller="App" asp-route-id="@property.PropertyID"
-                                       class="btn button py-2 px-3">See details</a>
+                                    <div class="property-actions">
+                                        <a asp-action="PropertySingle" asp-controller="App" asp-route-id="@property.PropertyID"
+                                           class="btn button py-2 px-3">See details</a>
 
-                                    <form asp-action="RemoveFavorite" asp-controller="App" method="post" class="d-inline ms-2" data-preserve-scroll="true">
-                                        @Html.AntiForgeryToken()
-                                        <input type="hidden" name="propertyId" value="@property.PropertyID" />
-                                        <button type="submit" class="btn btn-outline-danger py-2 px-3">Remove from favorites</button>
-                                    </form>
+                                        <form asp-action="RemoveFavorite" asp-controller="App" method="post" class="d-inline" data-preserve-scroll="true">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="propertyId" value="@property.PropertyID" />
+                                            <button type="submit" class="btn btn-outline-danger py-2 px-3 w-100">Remove from favorites</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
 
@@ -129,7 +196,11 @@
             else
             {
                 <div class="col-12">
-                    <p class="text-black-50">You have no favorite properties yet.</p>
+                    <div class="text-center py-5">
+                        <i class="bi bi-heart" style="font-size: 48px; color: #ccc; margin-bottom: 15px;"></i>
+                        <p class="text-black-50 fs-5">You have no favorite properties yet.</p>
+                        <a asp-action="Properties" asp-controller="App" class="btn button mt-3">Browse Properties</a>
+                    </div>
                 </div>
             }
         </div>
