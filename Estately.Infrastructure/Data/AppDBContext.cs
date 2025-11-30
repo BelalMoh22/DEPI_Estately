@@ -1,20 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Design;
-namespace Estately.Infrastructure.Data
+﻿namespace Estately.Infrastructure.Data
 {
-    public class AppDBContextFactory : IDesignTimeDbContextFactory<AppDBContext>
-    {
-        public AppDBContext CreateDbContext(string[] args)
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<AppDBContext>();
-
-            var connectionString =
-                "Server=Belal-2004;Initial Catalog=EstatelyDB;Integrated Security=True;Trust Server Certificate=True;";
-            optionsBuilder.UseSqlServer(connectionString);
-
-            return new AppDBContext(optionsBuilder.Options);
-        }
-    }
-
     public partial class AppDBContext
       : IdentityDbContext<
           ApplicationUser,
@@ -33,18 +18,14 @@ namespace Estately.Infrastructure.Data
 
         #region DbSets
         public virtual DbSet<LkpAppointmentStatus> LkpAppointmentStatuses { get; set; }
-        public virtual DbSet<LkpDocumentType> LkpDocumentTypes { get; set; }
-        public virtual DbSet<LkpPropertyHistoryType> LkpPropertyHistoryTypes { get; set; }
         public virtual DbSet<LkpPropertyStatus> LkpPropertyStatuses { get; set; }
         public virtual DbSet<LkpPropertyType> LkpPropertyTypes { get; set; }
         public virtual DbSet<LkpUserType> LkpUserTypes { get; set; }
-
         public virtual DbSet<TblAppointment> TblAppointments { get; set; }
         public virtual DbSet<TblBranch> TblBranches { get; set; }
         public virtual DbSet<TblBranchDepartment> TblBranchDepartments { get; set; }
         public virtual DbSet<TblCity> TblCities { get; set; }
         public virtual DbSet<TblClientProfile> TblClientProfiles { get; set; }
-        public virtual DbSet<TblClientPropertyInterest> TblClientPropertyInterests { get; set; }
         public virtual DbSet<TblDepartment> TblDepartments { get; set; }
         public virtual DbSet<TblDeveloperProfile> TblDeveloperProfiles { get; set; }
         public virtual DbSet<TblEmployee> TblEmployees { get; set; }
@@ -52,10 +33,8 @@ namespace Estately.Infrastructure.Data
         public virtual DbSet<TblFavorite> TblFavorites { get; set; }
         public virtual DbSet<TblJobTitle> TblJobTitles { get; set; }
         public virtual DbSet<TblProperty> TblProperties { get; set; }
-        public virtual DbSet<TblPropertyDocument> TblPropertyDocuments { get; set; }
         public virtual DbSet<TblPropertyFeature> TblPropertyFeatures { get; set; }
         public virtual DbSet<TblPropertyFeaturesMapping> TblPropertyFeaturesMappings { get; set; }
-        public virtual DbSet<TblPropertyHistory> TblPropertyHistories { get; set; }
         public virtual DbSet<TblPropertyImage> TblPropertyImages { get; set; }
         public virtual DbSet<TblZone> TblZones { get; set; }
         #endregion
@@ -94,16 +73,6 @@ namespace Estately.Infrastructure.Data
                 .HasOne(u => u.UserType)
                 .WithMany(t => t.Users)
                 .HasForeignKey(u => u.UserTypeID)
-                .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<TblPropertyDocument>()
-                .HasOne(d => d.User)
-                .WithMany(u => u.PropertyDocuments)
-                .HasForeignKey(d => d.UserID)
-                .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<TblPropertyHistory>()
-                .HasOne(h => h.User)
-                .WithMany(u => u.PropertyHistories)
-                .HasForeignKey(h => h.UserID)
                 .OnDelete(DeleteBehavior.Restrict);
         }
 

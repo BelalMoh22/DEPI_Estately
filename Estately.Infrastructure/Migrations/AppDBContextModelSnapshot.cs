@@ -254,50 +254,6 @@ namespace Estately.Infrastructure.Migrations
                     b.ToTable("LkpAppointmentStatus");
                 });
 
-            modelBuilder.Entity("Estately.Core.Entities.LkpDocumentType", b =>
-                {
-                    b.Property<int>("DocumentTypeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DocumentTypeID"));
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.HasKey("DocumentTypeID");
-
-                    b.ToTable("LkpDocumentTypes");
-                });
-
-            modelBuilder.Entity("Estately.Core.Entities.LkpPropertyHistoryType", b =>
-                {
-                    b.Property<int>("HistoryTypeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HistoryTypeID"));
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.HasKey("HistoryTypeID");
-
-                    b.ToTable("LkpPropertyHistoryTypes");
-                });
-
             modelBuilder.Entity("Estately.Core.Entities.LkpPropertyStatus", b =>
                 {
                     b.Property<int>("StatusID")
@@ -518,36 +474,6 @@ namespace Estately.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("TblClientProfiles");
-                });
-
-            modelBuilder.Entity("Estately.Core.Entities.TblClientPropertyInterest", b =>
-                {
-                    b.Property<int>("InterestId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InterestId"));
-
-                    b.Property<int>("ClientProfileId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("InterestDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(800)
-                        .HasColumnType("nvarchar(800)");
-
-                    b.Property<int>("PropertyId")
-                        .HasColumnType("int");
-
-                    b.HasKey("InterestId");
-
-                    b.HasIndex("ClientProfileId");
-
-                    b.HasIndex("PropertyId");
-
-                    b.ToTable("TblClientPropertyInterests");
                 });
 
             modelBuilder.Entity("Estately.Core.Entities.TblDepartment", b =>
@@ -864,46 +790,6 @@ namespace Estately.Infrastructure.Migrations
                     b.ToTable("TblProperties");
                 });
 
-            modelBuilder.Entity("Estately.Core.Entities.TblPropertyDocument", b =>
-                {
-                    b.Property<int>("DocumentID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DocumentID"));
-
-                    b.Property<int>("DocumentTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("PropertyID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UploadedAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("UserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("DocumentID");
-
-                    b.HasIndex("DocumentTypeID");
-
-                    b.HasIndex("PropertyID");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("TblPropertyDocuments");
-                });
-
             modelBuilder.Entity("Estately.Core.Entities.TblPropertyFeature", b =>
                 {
                     b.Property<int>("FeatureID")
@@ -951,49 +837,6 @@ namespace Estately.Infrastructure.Migrations
                     b.HasIndex(new[] { "FeatureID" }, "IX_TblPropertyFeaturesMapping_FeatureID");
 
                     b.ToTable("TblPropertyFeaturesMapping");
-                });
-
-            modelBuilder.Entity("Estately.Core.Entities.TblPropertyHistory", b =>
-                {
-                    b.Property<int>("HistoryID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HistoryID"));
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<int>("HistoryTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NewValue")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("OldValue")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int>("PropertyID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("HistoryID");
-
-                    b.HasIndex("HistoryTypeID");
-
-                    b.HasIndex("PropertyID");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("TblPropertyHistory");
                 });
 
             modelBuilder.Entity("Estately.Core.Entities.TblPropertyImage", b =>
@@ -1165,25 +1008,6 @@ namespace Estately.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Estately.Core.Entities.TblClientPropertyInterest", b =>
-                {
-                    b.HasOne("Estately.Core.Entities.TblClientProfile", "ClientProfile")
-                        .WithMany("TblClientPropertyInterests")
-                        .HasForeignKey("ClientProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Estately.Core.Entities.TblProperty", "Property")
-                        .WithMany("TblClientPropertyInterests")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ClientProfile");
-
-                    b.Navigation("Property");
-                });
-
             modelBuilder.Entity("Estately.Core.Entities.TblDeveloperProfile", b =>
                 {
                     b.HasOne("Estately.Core.Entities.Identity.ApplicationUser", "User")
@@ -1301,32 +1125,6 @@ namespace Estately.Infrastructure.Migrations
                     b.Navigation("Zone");
                 });
 
-            modelBuilder.Entity("Estately.Core.Entities.TblPropertyDocument", b =>
-                {
-                    b.HasOne("Estately.Core.Entities.LkpDocumentType", "DocumentType")
-                        .WithMany("TblPropertyDocuments")
-                        .HasForeignKey("DocumentTypeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Estately.Core.Entities.TblProperty", "Property")
-                        .WithMany("TblPropertyDocuments")
-                        .HasForeignKey("PropertyID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Estately.Core.Entities.Identity.ApplicationUser", "User")
-                        .WithMany("PropertyDocuments")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("DocumentType");
-
-                    b.Navigation("Property");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Estately.Core.Entities.TblPropertyFeaturesMapping", b =>
                 {
                     b.HasOne("Estately.Core.Entities.TblPropertyFeature", "Feature")
@@ -1344,32 +1142,6 @@ namespace Estately.Infrastructure.Migrations
                     b.Navigation("Feature");
 
                     b.Navigation("Property");
-                });
-
-            modelBuilder.Entity("Estately.Core.Entities.TblPropertyHistory", b =>
-                {
-                    b.HasOne("Estately.Core.Entities.LkpPropertyHistoryType", "HistoryType")
-                        .WithMany("TblPropertyHistories")
-                        .HasForeignKey("HistoryTypeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Estately.Core.Entities.TblProperty", "Property")
-                        .WithMany("TblPropertyHistories")
-                        .HasForeignKey("PropertyID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Estately.Core.Entities.Identity.ApplicationUser", "User")
-                        .WithMany("PropertyHistories")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("HistoryType");
-
-                    b.Navigation("Property");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Estately.Core.Entities.TblPropertyImage", b =>
@@ -1401,26 +1173,12 @@ namespace Estately.Infrastructure.Migrations
                     b.Navigation("DeveloperProfile");
 
                     b.Navigation("EmployeeProfile");
-
-                    b.Navigation("PropertyDocuments");
-
-                    b.Navigation("PropertyHistories");
                 });
 
             modelBuilder.Entity("Estately.Core.Entities.LkpAppointmentStatus", b =>
                 {
                     b.Navigation("TblAppointment")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Estately.Core.Entities.LkpDocumentType", b =>
-                {
-                    b.Navigation("TblPropertyDocuments");
-                });
-
-            modelBuilder.Entity("Estately.Core.Entities.LkpPropertyHistoryType", b =>
-                {
-                    b.Navigation("TblPropertyHistories");
                 });
 
             modelBuilder.Entity("Estately.Core.Entities.LkpPropertyStatus", b =>
@@ -1455,8 +1213,6 @@ namespace Estately.Infrastructure.Migrations
 
             modelBuilder.Entity("Estately.Core.Entities.TblClientProfile", b =>
                 {
-                    b.Navigation("TblClientPropertyInterests");
-
                     b.Navigation("TblEmployeeClients");
 
                     b.Navigation("TblFavorites");
@@ -1495,15 +1251,9 @@ namespace Estately.Infrastructure.Migrations
                 {
                     b.Navigation("TblAppointments");
 
-                    b.Navigation("TblClientPropertyInterests");
-
                     b.Navigation("TblFavorites");
 
-                    b.Navigation("TblPropertyDocuments");
-
                     b.Navigation("TblPropertyFeaturesMappings");
-
-                    b.Navigation("TblPropertyHistories");
 
                     b.Navigation("TblPropertyImages");
                 });

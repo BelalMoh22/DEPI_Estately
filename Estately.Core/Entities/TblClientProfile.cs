@@ -32,9 +32,6 @@ public partial class TblClientProfile
     public DateTime? CreatedAt { get; set; }
 
     [InverseProperty("ClientProfile")]
-    public virtual ICollection<TblClientPropertyInterest>? TblClientPropertyInterests { get; set; } = new List<TblClientPropertyInterest>();
-
-    [InverseProperty("ClientProfile")]
     public virtual ICollection<TblEmployeeClient>? TblEmployeeClients { get; set; } = new List<TblEmployeeClient>();
 
     [InverseProperty("ClientProfile")]

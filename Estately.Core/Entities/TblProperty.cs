@@ -94,19 +94,10 @@ public partial class TblProperty
     public virtual ICollection<TblAppointment> TblAppointments { get; set; } = new List<TblAppointment>();
 
     [InverseProperty("Property")]
-    public virtual ICollection<TblClientPropertyInterest> TblClientPropertyInterests { get; set; } = new List<TblClientPropertyInterest>();
-
-    [InverseProperty("Property")]
     public virtual ICollection<TblFavorite> TblFavorites { get; set; } = new List<TblFavorite>();
 
     [InverseProperty("Property")]
-    public virtual ICollection<TblPropertyDocument> TblPropertyDocuments { get; set; } = new List<TblPropertyDocument>();
-
-    [InverseProperty("Property")]
     public virtual ICollection<TblPropertyFeaturesMapping> TblPropertyFeaturesMappings { get; set; } = new List<TblPropertyFeaturesMapping>();
-
-    [InverseProperty("Property")]
-    public virtual ICollection<TblPropertyHistory> TblPropertyHistories { get; set; } = new List<TblPropertyHistory>();
 
     [InverseProperty("Property")]
     public virtual ICollection<TblPropertyImage> TblPropertyImages { get; set; } = new List<TblPropertyImage>();

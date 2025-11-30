@@ -41,34 +41,6 @@ namespace Estately.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LkpDocumentTypes",
-                columns: table => new
-                {
-                    DocumentTypeID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LkpDocumentTypes", x => x.DocumentTypeID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "LkpPropertyHistoryTypes",
-                columns: table => new
-                {
-                    HistoryTypeID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LkpPropertyHistoryTypes", x => x.HistoryTypeID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "LkpPropertyStatus",
                 columns: table => new
                 {
@@ -591,34 +563,6 @@ namespace Estately.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TblClientPropertyInterests",
-                columns: table => new
-                {
-                    InterestId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ClientProfileId = table.Column<int>(type: "int", nullable: false),
-                    PropertyId = table.Column<int>(type: "int", nullable: false),
-                    InterestDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Notes = table.Column<string>(type: "nvarchar(800)", maxLength: 800, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TblClientPropertyInterests", x => x.InterestId);
-                    table.ForeignKey(
-                        name: "FK_TblClientPropertyInterests_TblClientProfiles_ClientProfileId",
-                        column: x => x.ClientProfileId,
-                        principalTable: "TblClientProfiles",
-                        principalColumn: "ClientProfileID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TblClientPropertyInterests_TblProperties_PropertyId",
-                        column: x => x.PropertyId,
-                        principalTable: "TblProperties",
-                        principalColumn: "PropertyID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TblFavorites",
                 columns: table => new
                 {
@@ -639,42 +583,6 @@ namespace Estately.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_TblFavorites_TblProperties_PropertyID",
-                        column: x => x.PropertyID,
-                        principalTable: "TblProperties",
-                        principalColumn: "PropertyID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TblPropertyDocuments",
-                columns: table => new
-                {
-                    DocumentID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PropertyID = table.Column<int>(type: "int", nullable: false),
-                    UserID = table.Column<int>(type: "int", nullable: true),
-                    DocumentTypeID = table.Column<int>(type: "int", nullable: false),
-                    FilePath = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
-                    UploadedAt = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Notes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TblPropertyDocuments", x => x.DocumentID);
-                    table.ForeignKey(
-                        name: "FK_TblPropertyDocuments_AspNetUsers_UserID",
-                        column: x => x.UserID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_TblPropertyDocuments_LkpDocumentTypes_DocumentTypeID",
-                        column: x => x.DocumentTypeID,
-                        principalTable: "LkpDocumentTypes",
-                        principalColumn: "DocumentTypeID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TblPropertyDocuments_TblProperties_PropertyID",
                         column: x => x.PropertyID,
                         principalTable: "TblProperties",
                         principalColumn: "PropertyID",
@@ -703,43 +611,6 @@ namespace Estately.Infrastructure.Migrations
                         column: x => x.FeatureID,
                         principalTable: "TblPropertyFeatures",
                         principalColumn: "FeatureID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TblPropertyHistory",
-                columns: table => new
-                {
-                    HistoryID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PropertyID = table.Column<int>(type: "int", nullable: false),
-                    UserID = table.Column<int>(type: "int", nullable: true),
-                    HistoryTypeID = table.Column<int>(type: "int", nullable: false),
-                    OldValue = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    NewValue = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    Notes = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TblPropertyHistory", x => x.HistoryID);
-                    table.ForeignKey(
-                        name: "FK_TblPropertyHistory_AspNetUsers_UserID",
-                        column: x => x.UserID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_TblPropertyHistory_LkpPropertyHistoryTypes_HistoryTypeID",
-                        column: x => x.HistoryTypeID,
-                        principalTable: "LkpPropertyHistoryTypes",
-                        principalColumn: "HistoryTypeID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TblPropertyHistory_TblProperties_PropertyID",
-                        column: x => x.PropertyID,
-                        principalTable: "TblProperties",
-                        principalColumn: "PropertyID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -841,16 +712,6 @@ namespace Estately.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_TblClientPropertyInterests_ClientProfileId",
-                table: "TblClientPropertyInterests",
-                column: "ClientProfileId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TblClientPropertyInterests_PropertyId",
-                table: "TblClientPropertyInterests",
-                column: "PropertyId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TblDeveloperProfiles",
                 table: "TblDeveloperProfiles",
                 column: "UserID",
@@ -929,39 +790,9 @@ namespace Estately.Infrastructure.Migrations
                 column: "ZoneID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TblPropertyDocuments_DocumentTypeID",
-                table: "TblPropertyDocuments",
-                column: "DocumentTypeID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TblPropertyDocuments_PropertyID",
-                table: "TblPropertyDocuments",
-                column: "PropertyID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TblPropertyDocuments_UserID",
-                table: "TblPropertyDocuments",
-                column: "UserID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TblPropertyFeaturesMapping_FeatureID",
                 table: "TblPropertyFeaturesMapping",
                 column: "FeatureID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TblPropertyHistory_HistoryTypeID",
-                table: "TblPropertyHistory",
-                column: "HistoryTypeID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TblPropertyHistory_PropertyID",
-                table: "TblPropertyHistory",
-                column: "PropertyID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TblPropertyHistory_UserID",
-                table: "TblPropertyHistory",
-                column: "UserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TblPropertyImages_PropertyID",
@@ -996,19 +827,10 @@ namespace Estately.Infrastructure.Migrations
                 name: "TblAppointments");
 
             migrationBuilder.DropTable(
-                name: "TblClientPropertyInterests");
-
-            migrationBuilder.DropTable(
                 name: "TblFavorites");
 
             migrationBuilder.DropTable(
-                name: "TblPropertyDocuments");
-
-            migrationBuilder.DropTable(
                 name: "TblPropertyFeaturesMapping");
-
-            migrationBuilder.DropTable(
-                name: "TblPropertyHistory");
 
             migrationBuilder.DropTable(
                 name: "TblPropertyImages");
@@ -1023,13 +845,7 @@ namespace Estately.Infrastructure.Migrations
                 name: "TblEmployeeClients");
 
             migrationBuilder.DropTable(
-                name: "LkpDocumentTypes");
-
-            migrationBuilder.DropTable(
                 name: "TblPropertyFeatures");
-
-            migrationBuilder.DropTable(
-                name: "LkpPropertyHistoryTypes");
 
             migrationBuilder.DropTable(
                 name: "TblProperties");

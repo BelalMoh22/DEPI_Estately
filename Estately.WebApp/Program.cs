@@ -71,14 +71,6 @@ namespace Estately.WebApp
 
             var app = builder.Build();
 
-            // SEED USERS
-            // ⭐ RUN SEEDING HERE
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            //    await DefaultUsersSeeder.SeedAsync(userManager);
-            //}
-
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
