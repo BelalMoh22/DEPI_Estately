@@ -1,84 +1,130 @@
 ﻿@model Estately.Services.ViewModels.LoginViewModel
 
 <style>
-    .auth-wrapper {
+    .hero {
         min-height: 100vh;
-        padding: 20px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+    }
+
+    .auth-wrapper {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 430px;
     }
 
     .auth-card {
-        max-width: 430px;
+        width: 100%;
         background: #fff;
         border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     }
 
     .form-input {
         border-radius: 12px;
-        padding: 10px 14px;
+        padding: 12px 16px;
+        border: 1px solid #e0e0e0;
+        transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+        border-color: #00204A;
+        box-shadow: 0 0 0 0.2rem rgba(0, 32, 74, 0.1);
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 8px;
     }
 
     .password-field {
-        padding-right: 40px;
+        padding-right: 45px;
     }
 
     .toggle-password {
         position: absolute;
-        right: 14px;
-        top: 38px;
+        right: 16px;
+        top: 72.5%;
+        transform: translateY(-72.5%);
         cursor: pointer;
         color: #6c757d;
+        transition: color 0.2s ease;
+        z-index: 10;
+    }
+
+    .toggle-password:hover {
+        color: #00204A;
+    }
+
+    .btn.button {
+        background: #00204A;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn.button:hover {
+        background: #003366;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 32, 74, 0.3);
+    }
+
+    .form-check-input:checked {
+        background-color: #00204A;
+        border-color: #00204A;
     }
 </style>
 
 <div class="hero">
     <div class="hero-slide">
-        <div class="img overlay" style="background-image: url('@Url.Content("~/images/hero_bg_3.jpg")')"></div>
-        <div class="img overlay" style="background-image: url('@Url.Content("~/images/hero_bg_2.jpg")')"></div>
-        <div class="img overlay" style="background-image: url('@Url.Content("~/images/hero_bg_1.jpg")')"></div>
+        <div class="img overlay"
+             style="background-image: url('@Url.Content("~/images/hero_bg_3.jpg")')"></div>
+        <div class="img overlay"
+             style="background-image: url('@Url.Content("~/images/hero_bg_2.jpg")')"></div>
+        <div class="img overlay"
+             style="background-image: url('@Url.Content("~/images/hero_bg_1.jpg")')"></div>
     </div>
 
-    <div class="container mt-5 mb-5" id="section2">
-        <div class="row justify-content-center align-items-center">
-            <div class="col-lg-12 d-flex justify-content-center">
-                <div class="auth-wrapper d-flex justify-content-center align-items-center">
-                    <div class="auth-card shadow p-4 rounded-4">
+    <div class="auth-wrapper" id="section2">
+        <div class="auth-card shadow-lg p-5">
+            <h2 class="text-center mb-2 fw-bold header-Text" style="font-size: 28px;">Welcome Back</h2>
+            <p class="text-center text-muted mb-4">Login to continue</p>
 
-                        <h2 class="text-center mb-2 fw-bold header-Text">Welcome Back</h2>
-                        <p class="text-center text-muted mb-4">Login to continue</p>
+            <form asp-action="Login" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3" role="alert"></div>
 
-                        <form asp-action="Login" method="post">
-                            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
-
-                            <div class="mb-3">
-                                <label asp-for="UserName" class="form-label"></label>
-                                <input asp-for="UserName" class="form-control form-input" />
-                                <span asp-validation-for="UserName" class="text-danger small"></span>
-                            </div>
-                            <!-- Password with toggle -->
-                            <div class="mb-3 position-relative">
-                                <label asp-for="Password" class="form-label"></label>
-                                <input asp-for="Password" type="password" class="form-control form-input password-field" />
-                                <i class="fa-solid fa-eye toggle-password"></i>
-                                <span asp-validation-for="Password" class="text-danger small"></span>
-                            </div>
-
-                            <div class="form-check mb-3">
-                                <input asp-for="RememberMe" class="form-check-input" />
-                                <label asp-for="RememberMe" class="form-check-label">Remember Me</label>
-                            </div>
-
-                            <button type="submit" class="btn button w-100 py-2 rounded-3 fw-bold text-white">
-                                Login
-                            </button>
-
-                            <div class="mt-2 text-center">
-                                <span class="text-muted">Don't have an account?</span>
-                                <a asp-action="Register" class="ms-1 text-decoration-none main-Text">Register here</a>
-                            </div>
-                        </form>
-                    </div>
+                <div class="mb-3">
+                    <label asp-for="UserName" class="form-label">Username</label>
+                    <input asp-for="UserName" class="form-control form-input" placeholder="Enter your username" />
+                    <span asp-validation-for="UserName" class="text-danger small"></span>
                 </div>
-            </div>
+
+                <!-- Password with toggle -->
+                <div class="mb-3 position-relative">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" type="password" class="form-control form-input password-field" placeholder="Enter your password" />
+                    <i class="fa-solid fa-eye toggle-password"></i>
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input asp-for="RememberMe" class="form-check-input" type="checkbox" />
+                    <label asp-for="RememberMe" class="form-check-label">Remember Me</label>
+                </div>
+
+                <button type="submit" class="btn button w-100 py-3 rounded-3 fw-bold text-white mb-3">
+                    Login
+                </button>
+
+                <div class="text-center">
+                    <span class="text-muted">Don't have an account? </span>
+                    <a asp-action="Register" class="text-decoration-none main-Text fw-semibold">Register here</a>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -88,9 +134,12 @@
     <script>
         document.querySelectorAll('.toggle-password').forEach(icon => {
             icon.addEventListener('click', function () {
-                const input = this.previousElementSibling;
-                input.type = input.type === 'password' ? 'text' : 'password';
-                this.classList.toggle('fa-eye-slash');
+                const parent = this.closest('.position-relative');
+                const input = parent.querySelector('input[type="password"], input[type="text"]');
+                if (input) {
+                    input.type = input.type === 'password' ? 'text' : 'password';
+                    this.classList.toggle('fa-eye-slash');
+                }
             });
         });
     </script>

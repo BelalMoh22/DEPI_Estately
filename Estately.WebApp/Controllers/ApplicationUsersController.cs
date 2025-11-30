@@ -75,6 +75,28 @@ namespace Estately.WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            // Check if user is an employee and has properties assigned
+            if (vm.UserTypeID == 2)
+            {
+                var employee = await _unitOfWork.EmployeeRepository
+                    .Query()
+                    .FirstOrDefaultAsync(e => e.UserID == id);
+
+                if (employee != null)
+                {
+                    var propertiesWithEmployee = await _unitOfWork.PropertyRepository
+                        .Query()
+                        .Where(p => p.AgentId == employee.EmployeeID && (p.IsDeleted == false || p.IsDeleted == null))
+                        .AnyAsync();
+
+                    if (propertiesWithEmployee)
+                    {
+                        TempData["Error"] = "Cannot delete employee. This employee is assigned to one or more properties. Please reassign or remove the properties first.";
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+            }
+
             await _serviceUser.DeleteUserAsync(id);
             TempData["Success"] = "User deleted successfully.";
             return RedirectToAction(nameof(Index));

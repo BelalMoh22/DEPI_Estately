@@ -167,8 +167,8 @@ namespace Estately.WebApp.Controllers
                 return View(model);
             }
 
-            // Automatically sign in after register
-            var signIn = await _service.SignInAsync(newUser!, false);
+            // Automatically sign in after register with persistent cookie
+            var signIn = await _service.SignInAsync(newUser!, true);
 
             if (!signIn.Succeeded)
             {

@@ -18,9 +18,48 @@ namespace Estately.WebApp.Controllers
             _userManager = userManager;
             _environment = environment;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            // Get 5 properties from database
+            var model = await _serviceProperty.GetPropertiesFilteredAsync(
+                page: 1,
+                pageSize: 5
+            );
+
+            // Process images for display
+            foreach (var property in model.Properties)
+            {
+                if (string.IsNullOrWhiteSpace(property.FirstImage) || property.FirstImage == "default.jpg")
+                {
+                    // Try to get first image from property images
+                    var prop = await _unitOfWork.PropertyRepository.GetByIdIncludingAsync(
+                        property.PropertyID,
+                        "TblPropertyImages"
+                    );
+
+                    if (prop?.TblPropertyImages != null && prop.TblPropertyImages.Any())
+                    {
+                        var firstImg = prop.TblPropertyImages
+                            .OrderBy(i => i.ImageID)
+                            .FirstOrDefault();
+                        
+                        if (firstImg != null)
+                        {
+                            property.FirstImage = firstImg.ImagePath.Contains('/') 
+                                ? firstImg.ImagePath 
+                                : $"Images/Properties/{firstImg.ImagePath}";
+                        }
+                    }
+
+                    // Final fallback
+                    if (string.IsNullOrWhiteSpace(property.FirstImage) || property.FirstImage == "default.jpg")
+                    {
+                        property.FirstImage = "Images/Properties/default.jpg";
+                    }
+                }
+            }
+
+            return View(model);
         }
         public IActionResult About()
         {
@@ -169,11 +208,24 @@ namespace Estately.WebApp.Controllers
                     "Zone",
                     "Zone.City",
                     "PropertyType",
-                    "Status"
+                    "Status",
+                    "Agent",
+                    "TblPropertyFeaturesMappings",
+                    "TblPropertyFeaturesMappings.Feature"
                 );
 
             if (property == null)
                 return NotFound();
+
+            // Get property features
+            var features = property.TblPropertyFeaturesMappings?
+                .Where(m => m.Feature != null)
+                .Select(m => new PropertyFeatureViewModel
+                {
+                    FeatureID = m.Feature.FeatureID,
+                    FeatureName = m.Feature.FeatureName ?? ""
+                })
+                .ToList() ?? new List<PropertyFeatureViewModel>();
 
             var model = new SinglePropertyViewModel
             {
@@ -193,6 +245,9 @@ namespace Estately.WebApp.Controllers
                 ExpectedRent = (int?)property.ExpectedRentPrice ?? 0,
                 Latitude = property.Latitude,
                 Longitude = property.Longitude,
+                Features = features,
+                AgentPhone = property.Agent?.Phone,
+                AgentName = property.Agent != null ? $"{property.Agent.FirstName} {property.Agent.LastName}" : null,
 
                 Images = property.TblPropertyImages
                     .OrderBy(i => i.ImageID)

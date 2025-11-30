@@ -73,20 +73,23 @@
                         _ => "MyAccount"
                     };
 
-                    <!-- Avatar Button -->
-                    <a asp-action="@accountAction"
-                       asp-controller="@accountController"
-                       class="btn btn-outline-light btn-sm login">
-                        <i class="bi bi-person-circle"></i>
-                    </a>
+                    <!-- Avatar Button (hidden for admin) -->
+                    @if (!isAdmin)
+                    {
+                        <a asp-action="@accountAction"
+                           asp-controller="@accountController"
+                           class="btn btn-outline-light btn-sm login">
+                            <i class="bi bi-person-circle"></i>
+                        </a>
+                    }
 
                     @if (isAdmin)
                     {
                         <a asp-action="Dashboard"
                            asp-controller="Admin"
                            class="btn btn-outline-light btn-sm login">
-                            Go to Dashboard
-                        </a>
+                           Dashboard
+                       </a>
                     }
 
                     <!-- Logout -->
@@ -190,12 +193,15 @@
                     _ => "MyAccount"
                 };
 
-                <!-- Avatar -->
-                <a asp-action="@accountAction"
-                   asp-controller="@accountController"
-                   class="btn btn-outline-light btn-sm login mb-2">
-                    <i class="bi bi-person-circle"></i> My Account
-                </a>
+                <!-- Avatar (hidden for admin) -->
+                @if (!isAdmin)
+                {
+                    <a asp-action="@accountAction"
+                       asp-controller="@accountController"
+                       class="btn btn-outline-light btn-sm login mb-2">
+                        <i class="bi bi-person-circle"></i> My Account
+                    </a>
+                }
 
                 @if (isAdmin)
                 {

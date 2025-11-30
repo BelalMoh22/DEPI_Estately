@@ -134,9 +134,52 @@
                         </div>
 
                     </div>
+
+                    <!-- WhatsApp Contact Button -->
+                    <div class="mt-4">
+                        @{
+                            // Fixed phone number: 01206474100
+                            var whatsappPhone = "01206474100".Replace(" ", "").Replace("-", "").Replace("+", "").Replace("(", "").Replace(")", "");
+                            // If starts with 0, replace with country code (Egypt: 20)
+                            if (whatsappPhone.StartsWith("0"))
+                            {
+                                whatsappPhone = "20" + whatsappPhone.Substring(1);
+                            }
+                            var whatsappMessage = $"Hello, I'm interested in the property at {Model.Address} (Ref: {Model.PropertyCode})";
+                            var whatsappUrl = $"https://wa.me/{whatsappPhone}?text={Uri.EscapeDataString(whatsappMessage)}";
+                        }
+                        <a href="@whatsappUrl" 
+                           target="_blank" 
+                           class="btn btn-success w-100 py-3"
+                           style="background-color: #25D366; border-color: #25D366;">
+                            <i class="fab fa-whatsapp me-2"></i>
+                            Contact via WhatsApp
+                        </a>
+                    </div>
                 </div>
             </div>
 
         </div>
+
+        <!-- PROPERTY FEATURES SECTION -->
+        @if (Model.Features != null && Model.Features.Any())
+        {
+            <div class="row mt-5">
+                <div class="col-12">
+                    <h3 class="heading header-Text mb-4">Property Features</h3>
+                    <div class="row">
+                        @foreach (var feature in Model.Features)
+                        {
+                            <div class="col-md-4 col-sm-6 mb-3">
+                                <div class="d-flex align-items-center p-3 rounded" style="background:#f8f9fa; border:1px solid #e5e5e5;">
+                                    <i class="fa-solid fa-check-circle text-success me-3"></i>
+                                    <span class="fw-medium">@feature.FeatureName</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 </div>

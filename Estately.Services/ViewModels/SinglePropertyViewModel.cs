@@ -28,6 +28,13 @@ namespace Estately.Services.ViewModels
         // Unlimited images
         public List<string> Images { get; set; } = new();
 
+        // Property features
+        public List<PropertyFeatureViewModel> Features { get; set; } = new();
+
+        // Agent contact info for WhatsApp
+        public string? AgentPhone { get; set; }
+        public string? AgentName { get; set; }
+
         // Optional relations
         public virtual LkpPropertyType? PropertyType { get; set; }
         public virtual LkpPropertyStatus? PropertyStatus { get; set; }
